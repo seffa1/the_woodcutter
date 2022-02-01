@@ -3,13 +3,6 @@ import pygame as pg
 
 vec = pg.math.Vector2
 
-
-
-
-
-
-
-
 # Any object in the game i think?
 class Entity(pg.sprite.Sprite):
     def __init__(self, x, y, width, height):
@@ -22,7 +15,7 @@ class Entity(pg.sprite.Sprite):
         self.animation_config = {}  # Stores the frame durations and looping variable
         self.animation_images = {}  # Stores the images of the animation
         self.actions = {}  # Stores the state of actions defined by the animations, False by default
-        self.static_image = None
+        self.static_image = None  # If theres no idle animation or any animations at all, like for scenery
 
     def set_type(self, type: str):
         self.type = type
