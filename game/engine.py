@@ -5,10 +5,10 @@ vec = pg.math.Vector2
 
 # Any object in the game i think?
 class Entity(pg.sprite.Sprite):
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, name):
         super().__init__()
         # Specifices the name of the entity which matches up with their animation files
-        self.type = None
+        self.name = None
         self.pos = vec(x, y)
         self.rect = pg.Rect(x, y, width, height)
         self.flip = False
