@@ -2,14 +2,18 @@ import pygame as pg
 import sys
 from .utils import draw_text
 import engine as e
+from .entity_manager import Entity_Manager
 
 
 class Game:
     def __init__(self, screen, clock):
+        # Game setup
         self.screen = screen
         self.clock = clock
         self.width, self.height = self.screen.get_size()
-        player = e.Entity(screen.get_width()/2, screen.get_height()/2 - 30, 30, 35)
+
+        # Managers
+        self.entity_manager = Entity_Manager()
 
     def run(self):
         self.playing = True

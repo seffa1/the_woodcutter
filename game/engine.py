@@ -1,24 +1,25 @@
 import pygame as pg
 
-
 vec = pg.math.Vector2
+
 
 # Any object in the game i think?
 class Entity(pg.sprite.Sprite):
-    def __init__(self, x, y, width, height, name):
+    def __init__(self, x: int, y: int, width: int, height: int, type=None):
         super().__init__()
-        # Specifices the name of the entity which matches up with their animation files
+        # Specifies the name of the entity which matches up with their animation files
         self.name = None
         self.pos = vec(x, y)
         self.rect = pg.Rect(x, y, width, height)
         self.flip = False
+        self.animation_type = type
         self.animation_config = {}  # Stores the frame durations and looping variable
         self.animation_images = {}  # Stores the images of the animation
         self.actions = {}  # Stores the state of actions defined by the animations, False by default
         self.static_image = None  # If theres no idle animation or any animations at all, like for scenery
 
     def set_type(self, type: str):
-        self.type = type
+        self.animation_type = type
 
     def set_position(self, x: int, y: int):
         self.pos.x = x
@@ -33,7 +34,6 @@ class Entity(pg.sprite.Sprite):
     # path = assets/animations/player/idle
     # frame_lengths = [10, 10, 20, 10] for each frame
     def load_animation(self, path: str, frame_lengths: list, looping=True):
-
         type = str(path.split('/')[-1])  # idle
 
         config = frame_lengths.append(looping)
@@ -47,15 +47,3 @@ class Entity(pg.sprite.Sprite):
 
         self.animation_images[type] = image_list
         self.actions[type] = False
-
-
-
-
-
-
-
-
-
-
-
-
