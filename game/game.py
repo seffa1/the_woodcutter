@@ -25,7 +25,6 @@ class Game:
         self.OFFSET_X = 375
         self.OFFSET_Y = 300
 
-
         # Managers
         self.entity_manager = Entity_Manager()
 
@@ -34,7 +33,6 @@ class Game:
         # self.player.set_static_image('assets/animations/player/idle/idle_0.png')
         self.player = Player(100, 100, 30, 35, 'player', ACC=.6, FRIC=-.15)
         self.player.set_static_image('assets/animations/player/idle/idle_0.png')
-
 
         # Temporary stuff to be moved elsewhere
         self.background_images = []
@@ -47,7 +45,6 @@ class Game:
         self.grass_tile_top = pg.image.load('assets/images/tiles/Tile_02.png').convert_alpha()
         self.dirt_tile = pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha()
         self.tile_rects = []
-
 
 
     # Also temporary to be moved elsewheere
@@ -117,9 +114,6 @@ class Game:
                     self.display.blit(self.dirt_tile, (x * self.TILE_SIZE - self.scroll[0], y * self.TILE_SIZE - self.scroll[1]))
                 if tile == '2':
                     self.display.blit(self.grass_tile_top, (x * self.TILE_SIZE - self.scroll[0], y * self.TILE_SIZE - self.scroll[1]))
-
-                # Any tile that's not air, gets tracked as a rect for collisions
-                if tile != '0':
                     self.tile_rects.append(pg.Rect(x * self.TILE_SIZE, y * self.TILE_SIZE, self.TILE_SIZE, self.TILE_SIZE))
                 x += 1
             y += 1
@@ -133,7 +127,7 @@ class Game:
             self.screen,
             f'fps: {round(self.clock.get_fps())}',
             25,
-            (0, 0, 0),
+            (255, 0, 0),
             (3, 3)
         )
 

@@ -71,6 +71,7 @@ class Entity(pg.sprite.Sprite):
         for tile in tiles:
             if rect.colliderect(tile):
                 hit_list.append(tile)
+        # print(len(hit_list))
         return hit_list
 
     def move(self, tiles):
@@ -82,8 +83,6 @@ class Entity(pg.sprite.Sprite):
         # Apply acceleration
         if self.acc_right:
             self.acc.x = self.ACC
-            print(self.ACC)
-            # print(self.acc.x)
         if self.acc_left:
             self.acc.x = -self.ACC
         # If we are holding both right and left controls, you dont move
@@ -106,12 +105,14 @@ class Entity(pg.sprite.Sprite):
         # Check for collisions in the x axis
         # hit_list = self.collision_test(self.rect, tiles)
 
+
         # Y axis
         self.vel.y += self.acc.y
         self.move_position(0, self.vel.y)
 
         # Check for collisions in the y axis
-        hit_list = self.collision_test(self.rect, tiles)
+        hit_list = self.collision_test(self.rect, tiles) # TODO The hit list is growing over time, causing the program to crash
+        print(len(hit_list))
         for tile in hit_list:
             # If you are falling
             if self.vel.y > 0:
