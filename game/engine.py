@@ -1,5 +1,6 @@
 import pygame as pg
 
+
 vec = pg.math.Vector2
 
 
@@ -13,6 +14,7 @@ class Entity(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.rect = pg.Rect(x, y, width, height)
+        self.MAX_X_VEL = None
         self.flip = False
         self.animation_type = type
         self.animation_config = {}  # Stores the frame durations and looping variable
@@ -25,6 +27,9 @@ class Entity(pg.sprite.Sprite):
 
     def set_static_image(self, path: str):
         self.static_image = pg.image.load(path).convert_alpha()
+
+    def set_MAX_X_VEL(self, vel: int):
+        self.MAX_X_VEL = vel
 
     # path = assets/animations/player/idle
     # frame_lengths = [10, 10, 20, 10] for each frame
@@ -49,7 +54,18 @@ class Entity(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def move(self, acceleration: list):
+    def move(self, acceleration: vec):
+        # Apply acceleration
+        self.vel.x += acceleration.x
+
+        # Check for max velocity
+        if self.MAX_X_VEL is not None:
+            # Limits the vel in both directions
+            if abs(self.vel.x) > self.MAX_X_VEL:
+                if self.vel.x < 0:
+                    self.vel.x = -self.MAX_X_VEL
+                else:
+                    self.vel.x = self.MAX_X_VEL
 
 
 
