@@ -1,19 +1,27 @@
 import pygame as pg
 import sys
 from .utils import draw_text
-import engine as e
+from .engine import Entity
 from .entity_manager import Entity_Manager
 
+# TODO
+#   Frame Rate Independence
 
 class Game:
-    def __init__(self, screen, clock):
+    def __init__(self, screen, clock, display, WINDOW_SIZE):
         # Game setup
         self.screen = screen
         self.clock = clock
+        self.display = display
+        self.WINDOW_SIZE = WINDOW_SIZE
         self.width, self.height = self.screen.get_size()
 
         # Managers
         self.entity_manager = Entity_Manager()
+
+        # Player
+        self.player = Entity(100, 100, 30, 35, 'player')
+        self.player.set_static_image('assets/animations/player/idle/idle_0.png')
 
     def run(self):
         self.playing = True
@@ -36,14 +44,21 @@ class Game:
         pass
 
     def draw(self):
-        self.screen.fill((0, 0, 0))
+        # Fill the background
+        self.display.fill((0, 0, 0))
 
+        # Draw player
+        self.player.draw(self.display)
+
+        # Draw the UI
         draw_text(
-            self.screen,
+            self.display,
             f'fps: {round(self.clock.get_fps())}',
             25,
             (255, 255, 255),
             (10, 10)
         )
+
+        self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
         pg.display.flip()

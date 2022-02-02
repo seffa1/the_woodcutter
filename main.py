@@ -4,12 +4,15 @@ from game.menu import StartMenu, GameMenu
 
 
 def main():
-
-    running = True
-
+    # Initialize pygame
     pg.init()
     pg.mixer.init()
-    screen = pg.display.set_mode((0, 0), pg.FULLSCREEN)
+
+    # Configure game settings
+    WINDOW_SIZE = (1280, 1024)
+    screen = pg.display.set_mode(WINDOW_SIZE, 0, 32)
+    SCALE_FACTOR = 3
+    display = pg.Surface((WINDOW_SIZE[0]/SCALE_FACTOR, WINDOW_SIZE[1]/SCALE_FACTOR))
     clock = pg.time.Clock()
 
     # implement menus
@@ -17,12 +20,15 @@ def main():
     game_menu = GameMenu(screen, clock)
 
     # implement game
-    game = Game(screen, clock)
+    game = Game(screen, clock, display, WINDOW_SIZE)
 
+    # Program loop
+    running = True
     while running:
 
         # start menu goes here
-        playing = start_menu.run()
+        # playing = start_menu.run()
+        playing = True
 
         while playing:
             # game loop here

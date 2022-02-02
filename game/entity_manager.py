@@ -1,8 +1,8 @@
 import pygame as pg
-import engine as e
+import game.engine as e
 
 
-# Instantiates, kills, updates, and draws entities
+# Instantiates, stores, and kills entities for each level
 class Entity_Manager:
     def __init__(self):
         self.groups = {}

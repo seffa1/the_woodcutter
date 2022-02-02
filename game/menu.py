@@ -2,8 +2,7 @@ import pygame as pg
 import sys
 from .utils import *
 
-#TODO
-# Frame Rate Independence, display for scaling, game state manager
+
 
 class StartMenu:
 
