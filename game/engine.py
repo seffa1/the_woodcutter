@@ -66,15 +66,16 @@ class Entity(pg.sprite.Sprite):
         self.rect.x += x
         self.rect.y += y
 
-    def collision_test(self, rect, tiles: list):
+    def collision_test(self, rect, tile_rects: list):
         hit_list = []
-        for tile in tiles:
+        print(f'length tile rects: {len(tile_rects)}')
+        for tile in tile_rects:
             if rect.colliderect(tile):
                 hit_list.append(tile)
         # print(len(hit_list))
         return hit_list
 
-    def move(self, tiles):
+    def move(self, tile_rects):
         # Reset collisions
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
         # Reset acceleration
@@ -111,8 +112,8 @@ class Entity(pg.sprite.Sprite):
         self.move_position(0, self.vel.y)
 
         # Check for collisions in the y axis
-        hit_list = self.collision_test(self.rect, tiles) # TODO The hit list is growing over time, causing the program to crash
-        print(len(hit_list))
+        hit_list = self.collision_test(self.rect, tile_rects) # TODO The hit list is growing over time, causing the program to crash
+        print(f'hit list length: {len(hit_list)}')
         for tile in hit_list:
             # If you are falling
             if self.vel.y > 0:
@@ -121,8 +122,8 @@ class Entity(pg.sprite.Sprite):
                 self.set_position(self.rect.x, self.rect.y)  # Move everything else based on that
                 self.vel.y = 1
 
-    def update(self, tiles):
-        self.move(tiles)
+    def update(self, tile_rects):
+        self.move(tile_rects)
 
     def draw(self, display, scroll, hitbox=True):
         if hitbox:

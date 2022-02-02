@@ -106,6 +106,7 @@ class Game:
             self.display.blit(image, (0, 0))
 
         # Temp tile rendering
+        self.tile_rects = []
         y = 0
         for layer in self.load_map('game/maps/1.txt'):
             x = 0
