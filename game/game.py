@@ -3,9 +3,11 @@ import sys
 from .utils import draw_text
 from .engine import Entity
 from .entity_manager import Entity_Manager
+from .player import Player
 
 # TODO
 #   Frame Rate Independence
+
 
 class Game:
     def __init__(self, screen, clock, display, WINDOW_SIZE):
@@ -20,8 +22,20 @@ class Game:
         self.entity_manager = Entity_Manager()
 
         # Player
-        self.player = Entity(100, 100, 30, 35, 'player')
+        # self.player = Entity(100, 100, 30, 35, 'player')
+        # self.player.set_static_image('assets/animations/player/idle/idle_0.png')
+        self.player = Player(100, 100, 30, 35, 'player')
         self.player.set_static_image('assets/animations/player/idle/idle_0.png')
+
+
+        # Temporary stuff
+        self.background_images = []
+        path = 'assets/images/backgrounds/rocks_1'
+        for i in range(0, 7):
+            img_path = path + '/' + str(i + 1) + '.png'
+            image = pg.image.load(img_path).convert_alpha()
+            scaled_image = pg.transform.scale(image, (self.display.get_width(), self.display.get_height()))
+            self.background_images.append(scaled_image)
 
     def run(self):
         self.playing = True
@@ -46,6 +60,10 @@ class Game:
     def draw(self):
         # Fill the background
         self.display.fill((0, 0, 0))
+
+        # Temp background
+        for image in self.background_images:
+            self.display.blit(image, (0, 0))
 
         # Draw player
         self.player.draw(self.display)

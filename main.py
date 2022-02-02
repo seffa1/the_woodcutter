@@ -9,7 +9,8 @@ def main():
     pg.mixer.init()
 
     # Configure game settings
-    WINDOW_SIZE = (1280, 1024)
+    # WINDOW_SIZE = (1280, 1024)  # non-laptop
+    WINDOW_SIZE = (1600, 900)  # laptop
     screen = pg.display.set_mode(WINDOW_SIZE, 0, 32)
     SCALE_FACTOR = 3
     display = pg.Surface((WINDOW_SIZE[0]/SCALE_FACTOR, WINDOW_SIZE[1]/SCALE_FACTOR))
@@ -36,6 +37,7 @@ def main():
             # pause loop here
             playing = game_menu.run()
             running = playing
+
 
 if __name__ == "__main__":
     main()

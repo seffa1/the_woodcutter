@@ -49,7 +49,9 @@ class Entity(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    # def move(self, acceleration: list):
+    def move(self, acceleration: list):
+
+
 
     def draw(self, screen):
         screen.blit(self.static_image, self.pos)
