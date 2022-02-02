@@ -12,7 +12,7 @@ def main():
     # WINDOW_SIZE = (1280, 1024)  # non-laptop
     WINDOW_SIZE = (1600, 900)  # laptop
     screen = pg.display.set_mode(WINDOW_SIZE, 0, 32)
-    SCALE_FACTOR = 3
+    SCALE_FACTOR = 2
     display = pg.Surface((WINDOW_SIZE[0]/SCALE_FACTOR, WINDOW_SIZE[1]/SCALE_FACTOR))
     clock = pg.time.Clock()
 

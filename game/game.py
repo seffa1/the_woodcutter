@@ -7,7 +7,7 @@ from .player import Player
 
 # TODO
 #   Frame Rate Independence
-
+vec = pg.math.Vector2
 
 class Game:
     def __init__(self, screen, clock, display, WINDOW_SIZE):
@@ -16,7 +16,15 @@ class Game:
         self.clock = clock
         self.display = display
         self.WINDOW_SIZE = WINDOW_SIZE
+        self.TILE_SIZE = 32
         self.width, self.height = self.screen.get_size()
+
+        # Camera Scroll
+        self.true_scroll = [0, 0]  # The scroll as a percise float
+        self.scroll = [0, 0]  # The scroll rounded to an int
+        self.OFFSET_X = 375
+        self.OFFSET_Y = 300
+
 
         # Managers
         self.entity_manager = Entity_Manager()
@@ -24,11 +32,11 @@ class Game:
         # Player
         # self.player = Entity(100, 100, 30, 35, 'player')
         # self.player.set_static_image('assets/animations/player/idle/idle_0.png')
-        self.player = Player(100, 100, 30, 35, 'player')
+        self.player = Player(100, 100, 30, 35, 'player', ACC=.6, FRIC=-.15)
         self.player.set_static_image('assets/animations/player/idle/idle_0.png')
 
 
-        # Temporary stuff
+        # Temporary stuff to be moved elsewhere
         self.background_images = []
         path = 'assets/images/backgrounds/rocks_1'
         for i in range(0, 7):
@@ -36,6 +44,21 @@ class Game:
             image = pg.image.load(img_path).convert_alpha()
             scaled_image = pg.transform.scale(image, (self.display.get_width(), self.display.get_height()))
             self.background_images.append(scaled_image)
+        self.grass_tile_top = pg.image.load('assets/images/tiles/Tile_02.png').convert_alpha()
+        self.dirt_tile = pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha()
+        self.tile_rects = []
+
+
+
+    # Also temporary to be moved elsewheere
+    def load_map(self, path: str):
+        with open (path, 'r') as file:
+            data = file.read()
+            data = data.split('\n')
+            game_map = []
+            for row in data:
+                game_map.append(list(row))
+            return game_map
 
     def run(self):
         self.playing = True
@@ -53,9 +76,29 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.playing = False
+                if event.key == pg.K_d:
+                    self.player.acc_right = True
+                if event.key == pg.K_a:
+                    self.player.acc_left = True
+            if event.type == pg.KEYUP:
+                if event.key == pg.K_d:
+                    self.player.acc_right = False
+                if event.key == pg.K_a:
+                    self.player.acc_left = False
+
 
     def update(self):
-        pass
+        # Scroll
+        # Sets the "cameras" position. The divisor adds the lagging behind, smoothing effect
+        self.true_scroll[0] += (self.player.rect.x - self.true_scroll[0] - self.OFFSET_X) / 20
+        self.true_scroll[1] += (self.player.rect.y - self.true_scroll[1] - self.OFFSET_Y) / 20
+        scroll = self.true_scroll.copy()
+        # Rounds the float to an int for the drawings not to get choppy
+        self.scroll[0] = int(scroll[0])
+        self.scroll[1] = int(scroll[1])
+
+        # Update the player
+        self.player.update(self.tile_rects)
 
     def draw(self):
         # Fill the background
@@ -65,18 +108,33 @@ class Game:
         for image in self.background_images:
             self.display.blit(image, (0, 0))
 
+        # Temp tile rendering
+        y = 0
+        for layer in self.load_map('game/maps/1.txt'):
+            x = 0
+            for tile in layer:
+                if tile == '1':
+                    self.display.blit(self.dirt_tile, (x * self.TILE_SIZE - self.scroll[0], y * self.TILE_SIZE - self.scroll[1]))
+                if tile == '2':
+                    self.display.blit(self.grass_tile_top, (x * self.TILE_SIZE - self.scroll[0], y * self.TILE_SIZE - self.scroll[1]))
+
+                # Any tile that's not air, gets tracked as a rect for collisions
+                if tile != '0':
+                    self.tile_rects.append(pg.Rect(x * self.TILE_SIZE, y * self.TILE_SIZE, self.TILE_SIZE, self.TILE_SIZE))
+                x += 1
+            y += 1
+
         # Draw player
-        self.player.draw(self.display)
+        self.player.draw(self.display, self.scroll)
 
         # Draw the UI
+        self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
         draw_text(
-            self.display,
+            self.screen,
             f'fps: {round(self.clock.get_fps())}',
             25,
-            (255, 255, 255),
-            (10, 10)
+            (0, 0, 0),
+            (3, 3)
         )
-
-        self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
         pg.display.flip()
