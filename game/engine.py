@@ -68,11 +68,9 @@ class Entity(pg.sprite.Sprite):
 
     def collision_test(self, rect, tile_rects: list):
         hit_list = []
-        print(f'length tile rects: {len(tile_rects)}')
         for tile in tile_rects:
             if rect.colliderect(tile):
                 hit_list.append(tile)
-        # print(len(hit_list))
         return hit_list
 
     def move(self, tile_rects):
@@ -94,6 +92,7 @@ class Entity(pg.sprite.Sprite):
         # The faster we are moving, the more we DEccelerate
         # Down side of this is we cant control the accerate and deccelerate curves independtently
         # We good make two FRIC values, and use one for speeding up, and one for slowing down
+        if abs(self.vel.x) < 0.0001: self.vel.x = 0
         self.acc.x += self.vel.x * self.FRIC
 
         # Adjust velocity
@@ -113,7 +112,6 @@ class Entity(pg.sprite.Sprite):
 
         # Check for collisions in the y axis
         hit_list = self.collision_test(self.rect, tile_rects) # TODO The hit list is growing over time, causing the program to crash
-        print(f'hit list length: {len(hit_list)}')
         for tile in hit_list:
             # If you are falling
             if self.vel.y > 0:
@@ -126,8 +124,12 @@ class Entity(pg.sprite.Sprite):
         self.move(tile_rects)
 
     def draw(self, display, scroll, hitbox=True):
+        print(f'bottom: {self.collision_types["bottom"]}')
+        print(f'acc: {self.acc}')
+        print(f'vel: {self.vel}\n\n')
         if hitbox:
-            pg.draw.rect(display, (0, 255, 0), self.rect)
+            hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
+            pg.draw.rect(display, (0, 255, 0), hit_rect)
         display.blit(self.static_image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
 
 
