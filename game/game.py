@@ -7,6 +7,10 @@ from .player import Player
 
 # TODO
 #   Frame Rate Independence
+#   Batch Rendering of ground for less collisions checks
+#   Only checking collisions on tiles close to player
+#   Move level creation over to other classes
+
 vec = pg.math.Vector2
 
 class Game:
@@ -77,15 +81,15 @@ class Game:
                     self.player.acc_right = True
                 if event.key == pg.K_a:
                     self.player.acc_left = True
-                if event.key == pg.K_SPACE:
-                    self.player.jump = True
+                if event.key == pg.K_w:
+                    self.player.jump()
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.acc_right = False
                 if event.key == pg.K_a:
                     self.player.acc_left = False
-                if event.key == pg.K_SPACE:
-                    self.player.jump = False
+                if event.key == pg.K_w:
+                    self.player.jump_cancel()
 
 
     def update(self):

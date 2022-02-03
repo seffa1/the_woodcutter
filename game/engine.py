@@ -15,8 +15,9 @@ class Entity(pg.sprite.Sprite):
         self.acc = vec(0, 0)  # A function of our current velocity and friction
         self.ACC = ACC  # How much we instead to accelerate when we press a key
         self.FRIC = FRIC  # How much friction, this causes a variable acceleration, so we reach a max speed with a curve
-        self.GRAV = .5
-        self.JUMP_ACC = -4
+        self.GRAV = .4
+        self.JUMP_VEL = -5
+        self.jumping = False
         self.rect = pg.Rect(x, y, width, height)
         self.flip = False  # A function of self.movement
         self.animation_type = type
@@ -26,11 +27,11 @@ class Entity(pg.sprite.Sprite):
         self.static_image = None  # If theres no idle animation or any animations at all, like for scenery
         self.acc_right = False  # A function of user keyboard inputs
         self.acc_left = False  # A function of user keyboard inputs
-        self.jump = False
         self.movement = {'moving_right': False, 'moving_left': False}  # Used to update flip for drawing directionally
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
         self.rect.topleft = self.pos
-
+        self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
+        self.air_timer = 0 # Keeps track of how many frames youve been in 'coyote time'
 
     def set_position(self, x, y):
         self.pos.x = x
@@ -69,6 +70,11 @@ class Entity(pg.sprite.Sprite):
         # Adjust velocity
         self.vel.x += self.acc.x
         if abs(self.vel.x) < 0.01: self.vel.x = 0
+        # If velocity ends up negative, flip the image
+        if self.vel.x < 0:
+            self.flip = True
+        if self.vel.x > 0:
+            self.flip = False
 
         # Adjust position
         self.pos.x += self.vel.x
@@ -78,12 +84,8 @@ class Entity(pg.sprite.Sprite):
         # Check for collisions in the x axis
         # hit_list = self.collision_test(self.rect, tiles)
 
-
         # Y axis
-        if not self.jump:
-            self.acc.y = self.GRAV
-        else:
-            self.acc.y = self.JUMP_ACC
+        self.acc.y = self.GRAV
         self.vel.y += self.acc.y
         self.pos.y += self.vel.y
         self.rect.topleft = self.pos
@@ -97,6 +99,15 @@ class Entity(pg.sprite.Sprite):
                 self.rect.bottom = tile.top  # Change the rect's position because of convientient methods
                 self.pos.y = self.rect.topleft[1]
                 self.vel.y = 1
+
+    def jump(self):
+        if self.air_timer < self.AIR_TIME:
+            self.vel.y = self.JUMP_VEL
+
+    def jump_cancel(self):
+        pass
+        # if self.vel.y < -3:
+        #     self.vel.y = -3
 
     def set_type(self, type: str):
         self.animation_type = type
@@ -123,12 +134,19 @@ class Entity(pg.sprite.Sprite):
 
     def update(self, tile_rects):
         self.move(tile_rects)
+        if self.collision_types['bottom']:
+            self.air_timer = 0
+        else:
+            self.air_timer += 1
 
     def draw(self, display, scroll, hitbox=False):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)
-        display.blit(self.static_image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
+
+        # Flip the image if we need to, and then blit it
+        player_image = pg.transform.flip(self.static_image, self.flip, False)
+        display.blit(player_image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
 
 
 
