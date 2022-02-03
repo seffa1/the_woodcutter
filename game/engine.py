@@ -16,6 +16,7 @@ class Entity(pg.sprite.Sprite):
         self.ACC = ACC  # How much we instead to accelerate when we press a key
         self.FRIC = FRIC  # How much friction, this causes a variable acceleration, so we reach a max speed with a curve
         self.GRAV = .5
+        self.JUMP_ACC = -4
         self.rect = pg.Rect(x, y, width, height)
         self.flip = False  # A function of self.movement
         self.animation_type = type
@@ -25,6 +26,7 @@ class Entity(pg.sprite.Sprite):
         self.static_image = None  # If theres no idle animation or any animations at all, like for scenery
         self.acc_right = False  # A function of user keyboard inputs
         self.acc_left = False  # A function of user keyboard inputs
+        self.jump = False
         self.movement = {'moving_right': False, 'moving_left': False}  # Used to update flip for drawing directionally
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
         self.rect.topleft = self.pos
@@ -78,7 +80,10 @@ class Entity(pg.sprite.Sprite):
 
 
         # Y axis
-        self.acc.y = self.GRAV
+        if not self.jump:
+            self.acc.y = self.GRAV
+        else:
+            self.acc.y = self.JUMP_ACC
         self.vel.y += self.acc.y
         self.pos.y += self.vel.y
         self.rect.topleft = self.pos
@@ -120,8 +125,6 @@ class Entity(pg.sprite.Sprite):
         self.move(tile_rects)
 
     def draw(self, display, scroll, hitbox=False):
-        print(f'acc: {self.acc}')
-        print(f'vel: {self.vel}\n\n')
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)

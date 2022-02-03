@@ -77,18 +77,22 @@ class Game:
                     self.player.acc_right = True
                 if event.key == pg.K_a:
                     self.player.acc_left = True
+                if event.key == pg.K_SPACE:
+                    self.player.jump = True
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.acc_right = False
                 if event.key == pg.K_a:
                     self.player.acc_left = False
+                if event.key == pg.K_SPACE:
+                    self.player.jump = False
 
 
     def update(self):
         # Scroll
         # Sets the "cameras" position. The divisor adds the lagging behind, smoothing effect
-        self.true_scroll[0] += (self.player.rect.x - self.true_scroll[0] - self.OFFSET_X) / 1
-        self.true_scroll[1] += (self.player.rect.y - self.true_scroll[1] - self.OFFSET_Y) / 1
+        self.true_scroll[0] += (self.player.rect.x - self.true_scroll[0] - self.OFFSET_X) / 20
+        self.true_scroll[1] += (self.player.rect.y - self.true_scroll[1] - self.OFFSET_Y) / 20
         scroll = self.true_scroll.copy()
         # Rounds the float to an int for the drawings not to get choppy
         self.scroll[0] = int(scroll[0])
