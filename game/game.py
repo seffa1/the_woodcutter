@@ -33,10 +33,10 @@ class Game:
         self.entity_manager = Entity_Manager()
 
         # Player
-        # self.player = Entity(100, 100, 30, 35, 'player')
-        # self.player.set_static_image('assets/animations/player/idle/idle_0.png')
         self.player = Player(100, 100, 30, 35, 'player', ACC=.6, FRIC=-.15)
         self.player.set_static_image('assets/animations/player/idle/idle_0.png')
+        self.player.animation_frames['idle'] = self.player.load_animation('assets/animations/player/idle', [10, 10, 10, 10])
+        self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [10, 10, 10, 10, 10, 10])
 
         # Temporary stuff to be moved elsewhere
         self.background_images = []
