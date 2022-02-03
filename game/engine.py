@@ -24,18 +24,80 @@ class Entity(pg.sprite.Sprite):
         self.actions = {}  # Stores the state of actions defined by the animations, False by default
         self.static_image = None  # If theres no idle animation or any animations at all, like for scenery
         self.acc_right = False  # A function of user keyboard inputs
-        self.acc_left = False# A function of user keyboard inputs
+        self.acc_left = False  # A function of user keyboard inputs
         self.movement = {'moving_right': False, 'moving_left': False}  # Used to update flip for drawing directionally
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
+        self.rect.topleft = self.pos
+
+
+    def set_position(self, x, y):
+        self.pos.x = x
+        self.pos.y = y
+        self.rect.topleft = self.pos
+
+    def collision_test(self, rect, tile_rects: list):
+        hit_list = []
+        for tile in tile_rects:
+            if rect.colliderect(tile):
+                hit_list.append(tile)
+        return hit_list
+
+    def move(self, tile_rects):
+        # Reset collisions
+        self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
+        # Reset acceleration
+        self.acc.x = 0
+
+        # Apply acceleration
+        if self.acc_left:
+            self.acc.x = -self.ACC
+        if self.acc_right:
+            self.acc.x = self.ACC
+        # If we are holding both right and left controls, you dont move
+        if self.acc_left and self.acc_right:
+            self.acc.x = 0
+
+        # The faster we are moving, the less we accelerate
+        # The faster we are moving, the more we DEccelerate
+        # Down side of this is we cant control the accerate and deccelerate curves independtently
+        # We good make two FRIC values, and use one for speeding up, and one for slowing down
+        # if abs(self.vel.x) < 0.0001: self.vel.x = 0
+        self.acc.x += self.vel.x * self.FRIC
+
+        # Adjust velocity
+        self.vel.x += self.acc.x
+        if abs(self.vel.x) < 0.01: self.vel.x = 0
+
+        # Adjust position
+        self.pos.x += self.vel.x
+        self.rect.topleft = self.pos
+
+
+        # Check for collisions in the x axis
+        # hit_list = self.collision_test(self.rect, tiles)
+
+
+        # Y axis
+        self.acc.y = self.GRAV
+        self.vel.y += self.acc.y
+        self.pos.y += self.vel.y
+        self.rect.topleft = self.pos
+
+        # Check for collisions in the y axis
+        hit_list = self.collision_test(self.rect, tile_rects) # TODO The hit list is growing over time, causing the program to crash
+        for tile in hit_list:
+            # If you are falling
+            if self.vel.y > 1:
+                self.collision_types['bottom'] = True
+                self.rect.bottom = tile.top  # Change the rect's position because of convientient methods
+                self.pos.y = self.rect.topleft[1]
+                self.vel.y = 1
 
     def set_type(self, type: str):
         self.animation_type = type
 
     def set_static_image(self, path: str):
         self.static_image = pg.image.load(path).convert_alpha()
-
-    def set_MAX_X_VEL(self, vel: int):
-        self.MAX_X_VEL = vel
 
     # path = assets/animations/player/idle
     # frame_lengths = [10, 10, 20, 10] for each frame
@@ -54,77 +116,10 @@ class Entity(pg.sprite.Sprite):
         self.animation_images[type] = image_list
         self.actions[type] = False
 
-    def set_position(self, x: int, y: int):
-        self.pos.x = x
-        self.pos.y = y
-        self.rect.x = x
-        self.rect.y = y
-
-    def move_position(self, x: int, y: int):
-        self.pos.x += x
-        self.pos.y += y
-        self.rect.x += x
-        self.rect.y += y
-
-    def collision_test(self, rect, tile_rects: list):
-        hit_list = []
-        for tile in tile_rects:
-            if rect.colliderect(tile):
-                hit_list.append(tile)
-        return hit_list
-
-    def move(self, tile_rects):
-        # Reset collisions
-        self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
-        # Reset acceleration
-        self.acc.x = 0
-        self.acc.y = self.GRAV
-        # Apply acceleration
-        if self.acc_right:
-            self.acc.x = self.ACC
-        if self.acc_left:
-            self.acc.x = -self.ACC
-        # If we are holding both right and left controls, you dont move
-        if self.acc_left and self.acc_right:
-            self.acc.x = 0
-
-        # The faster we are moving, the less we accelerate
-        # The faster we are moving, the more we DEccelerate
-        # Down side of this is we cant control the accerate and deccelerate curves independtently
-        # We good make two FRIC values, and use one for speeding up, and one for slowing down
-        if abs(self.vel.x) < 0.0001: self.vel.x = 0
-        self.acc.x += self.vel.x * self.FRIC
-
-        # Adjust velocity
-        self.vel.x += self.acc.x
-
-        # Adjust position
-        delta_x = self.vel.x + 0.5 * self.acc.x
-        self.move_position(delta_x, 0)
-
-        # Check for collisions in the x axis
-        # hit_list = self.collision_test(self.rect, tiles)
-
-
-        # Y axis
-        self.vel.y += self.acc.y
-        self.move_position(0, self.vel.y)
-
-        # Check for collisions in the y axis
-        hit_list = self.collision_test(self.rect, tile_rects) # TODO The hit list is growing over time, causing the program to crash
-        for tile in hit_list:
-            # If you are falling
-            if self.vel.y > 0:
-                self.collision_types['bottom'] = True
-                self.rect.bottom = tile.top  # Change the rect's position because of convientient methods
-                self.set_position(self.rect.x, self.rect.y)  # Move everything else based on that
-                self.vel.y = 1
-
     def update(self, tile_rects):
         self.move(tile_rects)
 
-    def draw(self, display, scroll, hitbox=True):
-        print(f'bottom: {self.collision_types["bottom"]}')
+    def draw(self, display, scroll, hitbox=False):
         print(f'acc: {self.acc}')
         print(f'vel: {self.vel}\n\n')
         if hitbox:

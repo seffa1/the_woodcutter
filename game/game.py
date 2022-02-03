@@ -87,8 +87,8 @@ class Game:
     def update(self):
         # Scroll
         # Sets the "cameras" position. The divisor adds the lagging behind, smoothing effect
-        self.true_scroll[0] += (self.player.rect.x - self.true_scroll[0] - self.OFFSET_X) / 30
-        self.true_scroll[1] += (self.player.rect.y - self.true_scroll[1] - self.OFFSET_Y) / 30
+        self.true_scroll[0] += (self.player.rect.x - self.true_scroll[0] - self.OFFSET_X) / 1
+        self.true_scroll[1] += (self.player.rect.y - self.true_scroll[1] - self.OFFSET_Y) / 1
         scroll = self.true_scroll.copy()
         # Rounds the float to an int for the drawings not to get choppy
         self.scroll[0] = int(scroll[0])
@@ -124,12 +124,11 @@ class Game:
 
         # Draw the UI
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
-        draw_text(
-            self.screen,
-            f'fps: {round(self.clock.get_fps())}',
-            25,
-            (255, 0, 0),
-            (3, 3)
-        )
+
+
+        draw_text(self.screen, f'fps: {round(self.clock.get_fps())}', 25, (255, 0, 0), (3, 3))
+        draw_text(self.screen, f'player pos: {self.player.pos}', 25, (255, 0, 0), (3, 23))
+        draw_text(self.screen, f'p_rect pos: {self.player.rect.topleft}', 25, (255, 0, 0), (3, 43))
+        draw_text(self.screen, f'vel pos: {self.player.vel}', 25, (255, 0, 0), (3, 63))
 
         pg.display.flip()
