@@ -161,9 +161,11 @@ class Entity(pg.sprite.Sprite):
     def actions(self):
         """ Determine the current action and update the image accordingly """
         walk_threshold = 0.5
+
         # Idle check
         if abs(self.vel.x) <= walk_threshold:
             self.action, self.frame = self.change_actions(self.action, self.frame, 'idle')
+
         # Walking / Running Check
         if self.vel.x > walk_threshold:
             if not self.run:
@@ -178,6 +180,7 @@ class Entity(pg.sprite.Sprite):
                 self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
             self.flip = True
 
+        # Update the current image
         self.frame += 1
         if self.frame >= len(self.animation_frames[self.action]):
             self.frame = 0
