@@ -26,6 +26,7 @@ class Entity(pg.sprite.Sprite):
         self.JUMP_VEL = -5
         self.RUN_ACC = .2  # Gets added to the walking speed
         self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
+        self.MAX_FALL_SPEED = 6
 
         # Actions
         self.jumping = False
@@ -100,6 +101,8 @@ class Entity(pg.sprite.Sprite):
 
         # Adjust velocity
         self.vel.x += self.acc.x
+        # This is to prevent velocity from decreasing infinetly when we slow down as the friction equation above
+        # Creates an asymptot at our max speed and at zero
         if abs(self.vel.x) < 0.01: self.vel.x = 0
 
         # Adjust position
@@ -122,6 +125,8 @@ class Entity(pg.sprite.Sprite):
         # Y axis
         self.acc.y = self.GRAV
         self.vel.y += self.acc.y
+        if self.vel.y > self.MAX_FALL_SPEED:
+            self.vel.y = self.MAX_FALL_SPEED
         self.pos.y += self.vel.y
         self.rect.topleft = self.pos
 
