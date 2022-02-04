@@ -6,20 +6,22 @@ vec = pg.math.Vector2
 
 # Any object in the game i think?
 class Entity(pg.sprite.Sprite):
-    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, ACC=0, FRIC=0):
+    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0):
         super().__init__()
         # Physics
         self.pos = vec(x, y)  # A funtion of out velocity and any collisions
         self.vel = vec(0, 0)  # A function of our current acceleration
         self.acc = vec(0, 0)  # A function of our current velocity and friction
-        self.ACC = ACC  # How much we instead to accelerate when we press a key
+        self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
         self.FRIC = FRIC  # How much friction, this causes a variable acceleration, so we reach a max speed with a curve
         self.GRAV = .4
         self.JUMP_VEL = -5
         self.jumping = False
         self.rect = pg.Rect(x, y, width, height)
-        self.acc_right = False  # A function of user keyboard inputs
-        self.acc_left = False  # A function of user keyboard inputs
+        self.walk_right = False  # A function of user keyboard inputs
+        self.walk_left = False  # A function of user keyboard inputs
+        self.run = False  # Running only applies if the player is already walking in a direction
+        self.RUN_ACC = .2  # Gets added to the walking speed
         self.movement = {'moving_right': False, 'moving_left': False}  # Used to update flip for drawing directionally
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
         self.rect.topleft = self.pos
@@ -50,32 +52,6 @@ class Entity(pg.sprite.Sprite):
 
         return animation_frame_data  # ['idle_1', 'idle_1', 'idle_1'....., 'idle_2', 'idle_2'...]
 
-    def change_actions(self, current_action, current_frame, new_action):
-        """ Only reset animation frames if going from one animation to another """
-        if current_action != new_action:
-            current_action = new_action
-            current_frame = 0
-        return current_action, current_frame
-
-    def actions(self):
-        """ Determine the current action and update the image accordingly """
-        if self.vel.x == 0:
-            self.action, self.frame = self.change_actions(self.action, self.frame, 'idle')
-        if self.vel.x > 0:
-            self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
-            self.flip = False
-        if self.vel.x < 0:
-            self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
-            self.flip = True
-
-        self.frame += 1
-        if self.frame >= len(self.animation_frames[self.action]):
-            self.frame = 0
-        image_id = self.animation_frames[self.action][self.frame]
-        image = self.animation_images[image_id]
-        self.image = image
-
-
     def set_position(self, x, y):
         self.pos.x = x
         self.pos.y = y
@@ -95,12 +71,16 @@ class Entity(pg.sprite.Sprite):
         self.acc.x = 0
 
         # Apply acceleration
-        if self.acc_left:
-            self.acc.x = -self.ACC
-        if self.acc_right:
-            self.acc.x = self.ACC
+        if self.walk_left:
+            self.acc.x = -self.WALK_ACC
+            if self.run:
+                self.acc.x -= self.RUN_ACC
+        if self.walk_right:
+            self.acc.x = self.WALK_ACC
+            if self.run:
+                self.acc.x += self.RUN_ACC
         # If we are holding both right and left controls, you dont move
-        if self.acc_left and self.acc_right:
+        if self.walk_left and self.walk_right:
             self.acc.x = 0
 
         # The faster we are moving, the less we accelerate
@@ -114,13 +94,22 @@ class Entity(pg.sprite.Sprite):
         self.vel.x += self.acc.x
         if abs(self.vel.x) < 0.01: self.vel.x = 0
 
-
         # Adjust position
         self.pos.x += self.vel.x
         self.rect.topleft = self.pos
 
         # Check for collisions in the x axis
-        # hit_list = self.collision_test(self.rect, tiles)
+        hit_list = self.collision_test(self.rect, tile_rects)
+        for tile in hit_list:
+            if self.vel.x > 0:
+                self.collision_types['right'] = True
+                self.rect.right = tile.left
+                self.pos.x = self.rect.topleft[0]
+            if self.vel.x < 0:
+                self.collision_types['left'] = True
+                self.rect.left = tile.right
+                self.pos.x = self.rect.topleft[0]
+
 
         # Updates from x-axis collisions
 
@@ -139,6 +128,11 @@ class Entity(pg.sprite.Sprite):
                 self.rect.bottom = tile.top  # Change the rect's position because of convientient methods
                 self.pos.y = self.rect.topleft[1]
                 self.vel.y = 1
+            if self.vel.y < 1:
+                self.collision_types['top'] = True
+                self.rect.top = tile.bottom
+                self.pos.y = self.rect.topleft[1]
+                self.vel.y = 0
 
         # Updates from y-axis collisions
         if self.collision_types['bottom']:
@@ -146,14 +140,43 @@ class Entity(pg.sprite.Sprite):
         else:
             self.air_timer += 1
 
+    def change_actions(self, current_action, current_frame, new_action):
+        """ Only reset animation frames if going from one animation to another """
+        if current_action != new_action:
+            current_action = new_action
+            current_frame = 0
+        return current_action, current_frame
+
+    def actions(self):
+        """ Determine the current action and update the image accordingly """
+        walk_threshold = 0.5
+        # Idle check
+        if abs(self.vel.x) <= walk_threshold:
+            self.action, self.frame = self.change_actions(self.action, self.frame, 'idle')
+        # Walking / Running Check
+        if self.vel.x > walk_threshold:
+            if not self.run:
+                self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
+            else:
+                self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
+            self.flip = False
+        if self.vel.x < -walk_threshold:
+            if not self.run:
+                self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
+            else:
+                self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
+            self.flip = True
+
+        self.frame += 1
+        if self.frame >= len(self.animation_frames[self.action]):
+            self.frame = 0
+        image_id = self.animation_frames[self.action][self.frame]
+        image = self.animation_images[image_id]
+        self.image = image
+
     def jump(self):
         if self.air_timer < self.AIR_TIME:
             self.vel.y = self.JUMP_VEL
-
-    def jump_cancel(self):
-        pass
-        # if self.vel.y < -3:
-        #     self.vel.y = -3
 
     def set_type(self, type: str):
         self.animation_type = type

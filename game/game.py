@@ -14,42 +14,46 @@ from .player import Player
 vec = pg.math.Vector2
 
 class Game:
-    def __init__(self, screen, clock, display, WINDOW_SIZE):
+    def __init__(self, screen, clock, display, WINDOW_SIZE, SCALE_FACTOR):
         # Game setup
         self.screen = screen
         self.clock = clock
         self.display = display
         self.WINDOW_SIZE = WINDOW_SIZE
-        self.TILE_SIZE = 32
+        self.SCALE_FACTOR = SCALE_FACTOR
+        self.TILE_SIZE = 24
         self.width, self.height = self.screen.get_size()
 
         # Camera Scroll
         self.true_scroll = [0, 0]  # The scroll as a percise float
         self.scroll = [0, 0]  # The scroll rounded to an int
-        self.OFFSET_X = 375
-        self.OFFSET_Y = 300
+        self.OFFSET_X = WINDOW_SIZE[0] / SCALE_FACTOR / 2
+        self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 2
 
         # Managers
         self.entity_manager = Entity_Manager()
 
         # Player
-        self.player = Player(100, 100, 30, 35, 'player', ACC=.6, FRIC=-.15)
+        self.player = Player(100, 100, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
         self.player.set_static_image('assets/animations/player/idle/idle_0.png')
         self.player.animation_frames['idle'] = self.player.load_animation('assets/animations/player/idle', [10, 10, 10, 10])
-        self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [10, 10, 10, 10, 10, 10])
+        self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [5, 5, 5, 5, 5, 5])
+        self.player.animation_frames['run'] = self.player.load_animation('assets/animations/player/run', [5, 5, 5, 5, 5, 5])
 
         # Temporary stuff to be moved elsewhere
         self.background_images = []
         path = 'assets/images/backgrounds/rocks_1'
+        paralax_dif = .02
+        paralax = 0
         for i in range(0, 7):
             img_path = path + '/' + str(i + 1) + '.png'
             image = pg.image.load(img_path).convert_alpha()
-            scaled_image = pg.transform.scale(image, (self.display.get_width(), self.display.get_height()))
-            self.background_images.append(scaled_image)
-        self.grass_tile_top = pg.image.load('assets/images/tiles/Tile_02.png').convert_alpha()
-        self.dirt_tile = pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha()
+            scaled_image = pg.transform.scale(image, (self.display.get_width()*1.5, self.display.get_height()*1.5))
+            self.background_images.append([scaled_image, paralax])
+            paralax += paralax_dif
+        self.grass_tile_top = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_02.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.dirt_tile = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha() ,(self.TILE_SIZE, self.TILE_SIZE))
         self.tile_rects = []
-
 
     # Also temporary to be moved elsewheere
     def load_map(self, path: str):
@@ -74,22 +78,29 @@ class Game:
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+
+            mods = pg.key.get_mods()
+            if mods & pg.KMOD_SHIFT:
+                self.player.run = True
+            else:
+                self.player.run = False
+
+
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.playing = False
                 if event.key == pg.K_d:
-                    self.player.acc_right = True
+                    self.player.walk_right = True
                 if event.key == pg.K_a:
-                    self.player.acc_left = True
+                    self.player.walk_left = True
                 if event.key == pg.K_w:
                     self.player.jump()
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
-                    self.player.acc_right = False
+                    self.player.walk_right = False
                 if event.key == pg.K_a:
-                    self.player.acc_left = False
-                if event.key == pg.K_w:
-                    self.player.jump_cancel()
+                    self.player.walk_left = False
+
 
 
     def update(self):
@@ -111,7 +122,7 @@ class Game:
 
         # Temp background
         for image in self.background_images:
-            self.display.blit(image, (0, 0))
+            self.display.blit(image[0], (-image[1]*self.scroll[0], -image[1]*self.scroll[1] - image[0].get_height()/3))
 
         # Temp tile rendering
         self.tile_rects = []
@@ -138,5 +149,6 @@ class Game:
         draw_text(self.screen, f'player pos: {self.player.pos}', 25, (255, 0, 0), (3, 23))
         draw_text(self.screen, f'p_rect pos: {self.player.rect.topleft}', 25, (255, 0, 0), (3, 43))
         draw_text(self.screen, f'vel pos: {self.player.vel}', 25, (255, 0, 0), (3, 63))
+        draw_text(self.screen, f'action: {self.player.action}', 25, (255, 0, 0), (3, 83))
 
         pg.display.flip()
