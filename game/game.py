@@ -39,6 +39,8 @@ class Game:
         self.player.animation_frames['idle'] = self.player.load_animation('assets/animations/player/idle', [10, 10, 10, 10])
         self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [5, 5, 5, 5, 5, 5])
         self.player.animation_frames['run'] = self.player.load_animation('assets/animations/player/run', [5, 5, 5, 5, 5, 5])
+        self.player.animation_frames['role'] = self.player.load_animation('assets/animations/player/role', [5, 5, 5, 5, 5, 5])
+        self.player.animation_frames['attack_1'] = self.player.load_animation('assets/animations/player/attack_1', [5, 5, 5, 5, 5, 5])
 
         # Temporary stuff to be moved elsewhere
         self.background_images = []
@@ -95,6 +97,8 @@ class Game:
                     self.player.walk_left = True
                 if event.key == pg.K_w:
                     self.player.jump()
+                if event.key == pg.K_SPACE and not self.player.role:
+                    self.player.role = True
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.walk_right = False

@@ -12,26 +12,34 @@ class Entity(pg.sprite.Sprite):
         self.pos = vec(x, y)  # A funtion of out velocity and any collisions
         self.vel = vec(0, 0)  # A function of our current acceleration
         self.acc = vec(0, 0)  # A function of our current velocity and friction
+        self.rect = pg.Rect(x, y, width, height)
+        self.rect.topleft = self.pos
+
+        # Timers
+        self.air_timer = 0  # Keeps track of how many frames youve been in 'coyote time'
+        self.role_timer = 0
+
+        # Constants
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
         self.FRIC = FRIC  # How much friction, this causes a variable acceleration, so we reach a max speed with a curve
         self.GRAV = .4
         self.JUMP_VEL = -5
+        self.RUN_ACC = .2  # Gets added to the walking speed
+        self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
+
+        # Actions
         self.jumping = False
-        self.rect = pg.Rect(x, y, width, height)
         self.walk_right = False  # A function of user keyboard inputs
         self.walk_left = False  # A function of user keyboard inputs
         self.run = False  # Running only applies if the player is already walking in a direction
-        self.RUN_ACC = .2  # Gets added to the walking speed
-        self.movement = {'moving_right': False, 'moving_left': False}  # Used to update flip for drawing directionally
+        self.role = False
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
-        self.rect.topleft = self.pos
-        self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
-        self.air_timer = 0 # Keeps track of how many frames youve been in 'coyote time'
+
         # Animation / Rendering
+        self.action = 'idle'
         self.flip = False  # A function of self.movement
         self.animation_frames = {}  # 'idle': ['idle_1', 'idle_1', 'idle_1'....., 'idle_2', 'idle_2'...]
         self.animation_images = {}  # 'idle_1': idle_1_img, 'idle_2': idle_2_image, ....
-        self.action = 'idle'
         self.image = None  # Current image, gets updated if there are animations with this entitiy
         self.frame = 0  # Keeps track of the current animation frame
 
@@ -110,8 +118,6 @@ class Entity(pg.sprite.Sprite):
                 self.rect.left = tile.right
                 self.pos.x = self.rect.topleft[0]
 
-
-        # Updates from x-axis collisions
 
         # Y axis
         self.acc.y = self.GRAV
