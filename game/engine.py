@@ -17,7 +17,7 @@ class Entity(pg.sprite.Sprite):
 
         # Timers
         self.air_timer = 0  # Keeps track of how many frames youve been in 'coyote time'
-        self.role_timer = 0
+        self.roll_timer = None
 
         # Constants
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
@@ -27,14 +27,18 @@ class Entity(pg.sprite.Sprite):
         self.RUN_ACC = .2  # Gets added to the walking speed
         self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
         self.MAX_FALL_SPEED = 6
+        self.ROLL_VEL = 3
 
         # Actions
         self.jumping = False
         self.walk_right = False  # A function of user keyboard inputs
         self.walk_left = False  # A function of user keyboard inputs
         self.run = False  # Running only applies if the player is already walking in a direction
-        self.role = False
+        self.roll = False
+        self.attacking = False  # Applies to any attack at all
+        self.attack = {'1': False}  # Keeps track of which attack we are using, replace nums with attack names
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
+
 
         # Animation / Rendering
         self.action = 'idle'
@@ -73,40 +77,49 @@ class Entity(pg.sprite.Sprite):
                 hit_list.append(tile)
         return hit_list
 
-    def move(self, tile_rects):
+    def move(self, tile_rects, dt):
         # Reset collisions
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
         # Reset acceleration
         self.acc.x = 0
 
-        # Apply acceleration
-        if self.walk_left:
-            self.acc.x = -self.WALK_ACC
-            if self.run:
-                self.acc.x -= self.RUN_ACC
-        if self.walk_right:
-            self.acc.x = self.WALK_ACC
-            if self.run:
-                self.acc.x += self.RUN_ACC
-        # If we are holding both right and left controls, you dont move
-        if self.walk_left and self.walk_right:
-            self.acc.x = 0
+        # Calculate acceleration
+        if not self.roll:
+            if self.walk_left:
+                self.acc.x = -self.WALK_ACC
+                if self.run:
+                    self.acc.x -= self.RUN_ACC
+            if self.walk_right:
+                self.acc.x = self.WALK_ACC
+                if self.run:
+                    self.acc.x += self.RUN_ACC
+            # If we are holding both right and left controls, you dont move
+            if self.walk_left and self.walk_right:
+                self.acc.x = 0
 
-        # The faster we are moving, the less we accelerate
-        # The faster we are moving, the more we DEccelerate
-        # Down side of this is we cant control the accerate and deccelerate curves independtently
-        # We good make two FRIC values, and use one for speeding up, and one for slowing down
-        # if abs(self.vel.x) < 0.0001: self.vel.x = 0
-        self.acc.x += self.vel.x * self.FRIC
+            # The faster we are moving, the less we accelerate
+            # The faster we are moving, the more we DEccelerate
+            # Down side of this is we cant control the accerate and deccelerate curves independtently
+            # We good make two FRIC values, and use one for speeding up, and one for slowing down
+            # if abs(self.vel.x) < 0.0001: self.vel.x = 0
+            self.acc.x += self.vel.x * self.FRIC
 
         # Adjust velocity
-        self.vel.x += self.acc.x
-        # This is to prevent velocity from decreasing infinetly when we slow down as the friction equation above
-        # Creates an asymptot at our max speed and at zero
-        if abs(self.vel.x) < 0.01: self.vel.x = 0
+            self.vel.x += self.acc.x
+            # This is to prevent velocity from decreasing infinetly when we slow down as the friction equation above
+            # Creates an asymptot at our max speed and at zero
+            if abs(self.vel.x) < 0.01:
+                self.vel.x = 0
+        else:
+            # Whatever direction we are facing is what direction we roll with a fixed speed
+            if not self.flip:  # Facing right
+                self.vel.x = self.ROLL_VEL
+            else:  # Facing left
+                self.vel.x = -self.ROLL_VEL
+
 
         # Adjust position
-        self.pos.x += self.vel.x
+        self.pos.x += self.vel.x * dt
         self.rect.topleft = self.pos
 
         # Check for collisions in the x axis
@@ -127,7 +140,7 @@ class Entity(pg.sprite.Sprite):
         self.vel.y += self.acc.y
         if self.vel.y > self.MAX_FALL_SPEED:
             self.vel.y = self.MAX_FALL_SPEED
-        self.pos.y += self.vel.y
+        self.pos.y += self.vel.y * dt
         self.rect.topleft = self.pos
 
         # Check for collisions in the y axis
@@ -162,28 +175,36 @@ class Entity(pg.sprite.Sprite):
         """ Determine the current action and update the image accordingly """
         walk_threshold = 0.5
 
+        # Roll Check
+        if self.roll:
+            self.action, self.frame = self.change_actions(self.action, self.frame, 'roll')
+
+        else:
         # Idle check
-        if abs(self.vel.x) <= walk_threshold:
-            self.action, self.frame = self.change_actions(self.action, self.frame, 'idle')
+            if abs(self.vel.x) <= walk_threshold:
+                self.action, self.frame = self.change_actions(self.action, self.frame, 'idle')
 
         # Walking / Running Check
-        if self.vel.x > walk_threshold:
-            if not self.run:
-                self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
-            else:
-                self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
-            self.flip = False
-        if self.vel.x < -walk_threshold:
-            if not self.run:
-                self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
-            else:
-                self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
-            self.flip = True
+            if self.vel.x > walk_threshold:
+                if not self.run:
+                    self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
+                else:
+                    self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
+                self.flip = False
+            if self.vel.x < -walk_threshold:
+                if not self.run:
+                    self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
+                else:
+                    self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
+                self.flip = True
 
         # Update the current image
         self.frame += 1
+        print(self.frame)
         if self.frame >= len(self.animation_frames[self.action]):
             self.frame = 0
+            if self.roll:
+                self.roll = False
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
@@ -198,8 +219,8 @@ class Entity(pg.sprite.Sprite):
     def set_static_image(self, path: str):
         self.image = pg.image.load(path).convert_alpha()
 
-    def update(self, tile_rects):
-        self.move(tile_rects)
+    def update(self, tile_rects, dt):
+        self.move(tile_rects, dt)
         self.actions()
 
 

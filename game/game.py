@@ -1,12 +1,12 @@
 import pygame as pg
-import sys
+import sys, time
 from .utils import draw_text
 from .engine import Entity
 from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Frame Rate Independence
+#   Rolling, attacking, jumping, hanging,
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player
 #   Move level creation over to other classes
@@ -23,6 +23,8 @@ class Game:
         self.SCALE_FACTOR = SCALE_FACTOR
         self.TILE_SIZE = 24
         self.width, self.height = self.screen.get_size()
+        self.last_time = time.time()  # For frame rate independence
+        self.dt = 0
 
         # Camera Scroll
         self.true_scroll = [0, 0]  # The scroll as a percise float
@@ -39,7 +41,7 @@ class Game:
         self.player.animation_frames['idle'] = self.player.load_animation('assets/animations/player/idle', [10, 10, 10, 10])
         self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [5, 5, 5, 5, 5, 5])
         self.player.animation_frames['run'] = self.player.load_animation('assets/animations/player/run', [5, 5, 5, 5, 5, 5])
-        self.player.animation_frames['role'] = self.player.load_animation('assets/animations/player/role', [5, 5, 5, 5, 5, 5])
+        self.player.animation_frames['roll'] = self.player.load_animation('assets/animations/player/roll', [5, 5, 5, 5, 5, 5])
         self.player.animation_frames['attack_1'] = self.player.load_animation('assets/animations/player/attack_1', [5, 5, 5, 5, 5, 5])
 
         # Temporary stuff to be moved elsewhere
@@ -71,6 +73,17 @@ class Game:
         self.playing = True
         while self.playing:
             self.clock.tick(60)
+
+            # Frame rate independence check
+            # Finds how many seconds have passed since the last frame
+            # If we are at 60 fps, dt will be 1/60th of a second
+            self.dt = time.time() - self.last_time
+            # Multiply it by 60 so if we are at 60 fps, dt is 1
+            # If we ran at 30 fps, dt would be 2/60th * 60 = 2
+            # So everything that moves get multiplied by 2
+            self.dt *= 60
+            self.last_time = time.time()
+
             self.events()
             self.update()
             self.draw()
@@ -95,10 +108,10 @@ class Game:
                     self.player.walk_right = True
                 if event.key == pg.K_a:
                     self.player.walk_left = True
-                if event.key == pg.K_w:
+                if event.key == pg.K_w and not self.player.roll:  # Cant jump while rolling
                     self.player.jump()
-                if event.key == pg.K_SPACE and not self.player.role:
-                    self.player.role = True
+                if event.key == pg.K_SPACE and not self.player.roll and self.player.collision_types['bottom']:  # Cant roll unless on the ground
+                    self.player.roll = True
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.walk_right = False
@@ -118,7 +131,7 @@ class Game:
         self.scroll[1] = int(scroll[1])
 
         # Update the player
-        self.player.update(self.tile_rects)
+        self.player.update(self.tile_rects, self.dt)
 
     def draw(self):
         # Fill the background
