@@ -6,7 +6,7 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Rolling, attacking, jumping, hanging,
+#   Attacking, jumping, hanging,
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player
 #   Move level creation over to other classes
@@ -110,8 +110,13 @@ class Game:
                     self.player.walk_left = True
                 if event.key == pg.K_w and not self.player.roll:  # Cant jump while rolling
                     self.player.jump()
-                if event.key == pg.K_SPACE and not self.player.roll and self.player.collision_types['bottom']:  # Cant roll unless on the ground
+                # Cant roll unless on the ground
+                if event.key == pg.K_SPACE and not self.player.roll and self.player.collision_types['bottom'] and not self.player.attacking:
                     self.player.roll = True
+                # Cant attack while rolling
+                if event.key == pg.K_c and not self.player.roll:
+                    self.player.attacking = True
+                    self.player.attack['1'] = True
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.walk_right = False

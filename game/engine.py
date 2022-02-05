@@ -36,7 +36,7 @@ class Entity(pg.sprite.Sprite):
         self.run = False  # Running only applies if the player is already walking in a direction
         self.roll = False
         self.attacking = False  # Applies to any attack at all
-        self.attack = {'1': False}  # Keeps track of which attack we are using, replace nums with attack names
+        self.attack = {}  # Keeps track of which attack we are using, replace nums with attack names
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
 
 
@@ -175,16 +175,13 @@ class Entity(pg.sprite.Sprite):
         """ Determine the current action and update the image accordingly """
         walk_threshold = 0.5
 
-        # Roll Check
-        if self.roll:
-            self.action, self.frame = self.change_actions(self.action, self.frame, 'roll')
-
-        else:
-        # Idle check
+        # Walking, running, and idle animations only get played if we arent attacking or rolling
+        if not self.roll and not self.attacking:
+            # Idle check
             if abs(self.vel.x) <= walk_threshold:
                 self.action, self.frame = self.change_actions(self.action, self.frame, 'idle')
 
-        # Walking / Running Check
+            # Walking / Running Check
             if self.vel.x > walk_threshold:
                 if not self.run:
                     self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
@@ -198,16 +195,33 @@ class Entity(pg.sprite.Sprite):
                     self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
                 self.flip = True
 
-        # Update the current image
+        else:
+            # Roll Check
+            if self.roll:
+                self.action, self.frame = self.change_actions(self.action, self.frame, 'roll')
+
+            # Attack Check
+            if self.attacking:
+                if self.attack['1']:
+                    self.action, self.frame = self.change_actions(self.action, self.frame, 'attack_1')
+
+    def set_image(self):
+        """ Update the current image """
         self.frame += 1
-        print(self.frame)
         if self.frame >= len(self.animation_frames[self.action]):
             self.frame = 0
-            if self.roll:
-                self.roll = False
+            # Any non-looping actions get reset here
+            self.roll = False
+            self.attacking = False
+            self.attack['1'] = False
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
+
+    def update(self, tile_rects, dt):
+        self.move(tile_rects, dt)
+        self.actions()
+        self.set_image()
 
     def jump(self):
         if self.air_timer < self.AIR_TIME:
@@ -219,12 +233,8 @@ class Entity(pg.sprite.Sprite):
     def set_static_image(self, path: str):
         self.image = pg.image.load(path).convert_alpha()
 
-    def update(self, tile_rects, dt):
-        self.move(tile_rects, dt)
-        self.actions()
 
-
-    def draw(self, display, scroll, hitbox=False):
+    def draw(self, display, scroll, hitbox=True):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)
