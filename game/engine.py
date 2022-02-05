@@ -231,7 +231,10 @@ class Entity(pg.sprite.Sprite):
         if self.attack['1']:
             self.attack_1_timer += 1
             if self.attack_1_timer > 25:  # 10 is to be adjusted as we go
-                self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
+                if not self.flip:
+                    self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
+                else:
+                    self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
             if self.attack_1_timer > 32:
                 self.attack_rect = None
 

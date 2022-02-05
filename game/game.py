@@ -6,13 +6,13 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Hit rect for our attack
+#   Move level creation over to other classes
 #   Add enemy entity
 #   Get combat collisions working
 #   Make an enemy controller
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player
-#   Move level creation over to other classes
+
 
 vec = pg.math.Vector2
 
