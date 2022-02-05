@@ -14,10 +14,11 @@ class Entity(pg.sprite.Sprite):
         self.acc = vec(0, 0)  # A function of our current velocity and friction
         self.rect = pg.Rect(x, y, width, height)
         self.rect.topleft = self.pos
+        self.attack_rect = None  # Used to create a hitbox rect for attack collision detection. Gets created as we attack
 
         # Timers
         self.air_timer = 0  # Keeps track of how many frames youve been in 'coyote time'
-        self.roll_timer = None
+        self.attack_1_timer = 0  # Keeps track of the attack_1 frames for hitbox creation
 
         # Constants
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
@@ -38,7 +39,6 @@ class Entity(pg.sprite.Sprite):
         self.attacking = False  # Applies to any attack at all
         self.attack = {}  # Keeps track of which attack we are using, replace nums with attack names
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
-
 
         # Animation / Rendering
         self.action = 'idle'
@@ -134,7 +134,6 @@ class Entity(pg.sprite.Sprite):
                 self.rect.left = tile.right
                 self.pos.x = self.rect.topleft[0]
 
-
         # Y axis
         self.acc.y = self.GRAV
         self.vel.y += self.acc.y
@@ -219,15 +218,29 @@ class Entity(pg.sprite.Sprite):
             self.roll = False
             self.attacking = False
             self.attack['1'] = False
+            self.attack_1_timer = 0
             self.jumping = False
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
 
+    def hitboxes(self):
+        if not self.attacking:
+            return
+
+        if self.attack['1']:
+            self.attack_1_timer += 1
+            if self.attack_1_timer > 25:  # 10 is to be adjusted as we go
+                self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
+            if self.attack_1_timer > 32:
+                self.attack_rect = None
+
+
     def update(self, tile_rects, dt):
-        self.move(tile_rects, dt)
-        self.actions()
-        self.set_image()
+        self.move(tile_rects, dt)  # Update players position
+        self.actions()  # Determine the player's action
+        self.set_image()  # Set the image based on the player's action
+        self.hitboxes()  # Update any hit boxes from player's attack
 
     def jump(self):
         if self.air_timer < self.AIR_TIME:
@@ -240,14 +253,22 @@ class Entity(pg.sprite.Sprite):
     def set_static_image(self, path: str):
         self.image = pg.image.load(path).convert_alpha()
 
-    def draw(self, display, scroll, hitbox=False):
+    def draw(self, display, scroll, hitbox=False, attack_box=True):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)
 
+
         # Flip the image if we need to, and then blit it
         player_image = pg.transform.flip(self.image, self.flip, False)
         display.blit(player_image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
+
+        if attack_box:
+            if self.attack_rect is not None:
+                attack_rect_scrolled = pg.Rect(self.attack_rect.x - scroll[0],
+                                                        self.attack_rect.y - scroll[1],
+                                                        self.attack_rect.width, self.attack_rect.height)
+                pg.draw.rect(display, (255, 0, 0), attack_rect_scrolled)
 
 
 

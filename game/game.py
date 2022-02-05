@@ -6,7 +6,10 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Jumping, hanging,
+#   Hit rect for our attack
+#   Add enemy entity
+#   Get combat collisions working
+#   Make an enemy controller
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player
 #   Move level creation over to other classes
