@@ -6,7 +6,7 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Attacking, jumping, hanging,
+#   Jumping, hanging,
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player
 #   Move level creation over to other classes
@@ -42,7 +42,8 @@ class Game:
         self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [5, 5, 5, 5, 5, 5])
         self.player.animation_frames['run'] = self.player.load_animation('assets/animations/player/run', [5, 5, 5, 5, 5, 5])
         self.player.animation_frames['roll'] = self.player.load_animation('assets/animations/player/roll', [5, 5, 5, 5, 5, 5])
-        self.player.animation_frames['attack_1'] = self.player.load_animation('assets/animations/player/attack_1', [5, 5, 5, 5, 5, 5])
+        self.player.animation_frames['attack_1'] = self.player.load_animation('assets/animations/player/attack_1', [10, 10, 6, 5, 5, 5])
+        self.player.animation_frames['jump'] = self.player.load_animation('assets/animations/player/jump', [5, 5, 7, 7, 7, 7])
 
         # Temporary stuff to be moved elsewhere
         self.background_images = []

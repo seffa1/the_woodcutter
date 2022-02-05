@@ -161,6 +161,7 @@ class Entity(pg.sprite.Sprite):
         # Updates from y-axis collisions
         if self.collision_types['bottom']:
             self.air_timer = 0
+            self.jumping = False
         else:
             self.air_timer += 1
 
@@ -175,8 +176,8 @@ class Entity(pg.sprite.Sprite):
         """ Determine the current action and update the image accordingly """
         walk_threshold = 0.5
 
-        # Walking, running, and idle animations only get played if we arent attacking or rolling
-        if not self.roll and not self.attacking:
+        # Walking, running, and idle animations only get played if we arent attacking, rolling, or jumping
+        if not self.roll and not self.attacking and not self.jumping:
             # Idle check
             if abs(self.vel.x) <= walk_threshold:
                 self.action, self.frame = self.change_actions(self.action, self.frame, 'idle')
@@ -205,6 +206,10 @@ class Entity(pg.sprite.Sprite):
                 if self.attack['1']:
                     self.action, self.frame = self.change_actions(self.action, self.frame, 'attack_1')
 
+            # Jumping Check
+            if self.jumping and not self.attacking:
+                self.action, self.frame = self.change_actions(self.action, self.frame, 'jump')
+
     def set_image(self):
         """ Update the current image """
         self.frame += 1
@@ -214,6 +219,7 @@ class Entity(pg.sprite.Sprite):
             self.roll = False
             self.attacking = False
             self.attack['1'] = False
+            self.jumping = False
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
@@ -225,6 +231,7 @@ class Entity(pg.sprite.Sprite):
 
     def jump(self):
         if self.air_timer < self.AIR_TIME:
+            self.jumping = True
             self.vel.y = self.JUMP_VEL
 
     def set_type(self, type: str):
@@ -233,8 +240,7 @@ class Entity(pg.sprite.Sprite):
     def set_static_image(self, path: str):
         self.image = pg.image.load(path).convert_alpha()
 
-
-    def draw(self, display, scroll, hitbox=True):
+    def draw(self, display, scroll, hitbox=False):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)
