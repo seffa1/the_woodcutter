@@ -7,7 +7,7 @@ from .player import Player
 
 # TODO
 #   Move level creation over to other classes
-#   Add enemy entity
+#   Add enemy entity, use inheritence of the entity class
 #   Get combat collisions working
 #   Make an enemy controller
 #   Batch Rendering of ground for less collisions checks
@@ -153,7 +153,7 @@ class Game:
         # Temp tile rendering
         self.tile_rects = []
         y = 0
-        for layer in self.load_map('game/maps/1.txt'):
+        for layer in self.load_map('game/levels/1/tiles.txt'):
             x = 0
             for tile in layer:
                 if tile == '1':

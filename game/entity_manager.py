@@ -1,17 +1,28 @@
 import pygame as pg
-import game.engine as e
+from engine import Entity
 
 
 # Instantiates, stores, and kills entities for each level
 class Entity_Manager:
-    def __init__(self):
+    def __init__(self, ID: str):
+        self.ID = ID
+        self.entity_data = []
         self.groups = {}
         # self.groups = {'player': pg.sprite.Group(),
         #                'enemy': pg.sprite.Group()}
 
-    def create_entity(self, x, y, width, height, type):
+
+    def load_entities(self):
+        path = 'game/levels/' + self.ID + 'entities.txt'
+        with open(path, 'r') as file:
+            # For line in file:
+                # entitiy_data_list = line.split(',')
+                # create_entity(entitiy_data_list[0], entitiy_data_list[1], entitiy_data_list[2], entitiy_data_list[3], entitiy_data_list[4], entitiy_data_list[5])
+
+
+    def create_entity(self, x, y, width, height, type, WALK_ACC, FRIC):
         """ Instantiates and entity and adds it to the appropriate group or creates a group for it """
-        entity = e.Entity(x, y, width, height, type)
+        entity = e.Entity(x, y, width, height, type, WALK_ACC, FRIC)
         # If theres not already a group for this type of entity
         if not self.groups[type]:
             # Create that group
