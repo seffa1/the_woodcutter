@@ -8,6 +8,7 @@ from .player import Player
 
 # TODO
 #   Fix framerate independence
+#   Framerate independent animations?
 #   Be able to walk between two different levels
 #   Add chunk rendering
 #   Add enemy entity, use inheritence of the entity class

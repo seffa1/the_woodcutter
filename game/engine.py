@@ -1,4 +1,5 @@
 import pygame as pg
+import math
 
 
 vec = pg.math.Vector2
@@ -135,7 +136,7 @@ class Entity(pg.sprite.Sprite):
                 self.pos.x = self.rect.topleft[0]
 
         # Y axis
-        self.acc.y = self.GRAV
+        self.acc.y = self.GRAV * dt
         self.vel.y += self.acc.y
         if self.vel.y > self.MAX_FALL_SPEED:
             self.vel.y = self.MAX_FALL_SPEED
@@ -209,9 +210,10 @@ class Entity(pg.sprite.Sprite):
             if self.jumping and not self.attacking:
                 self.action, self.frame = self.change_actions(self.action, self.frame, 'jump')
 
-    def set_image(self):
+    def set_image(self, dt):
         """ Update the current image """
         self.frame += 1
+        self.frame = math.ceil(self.frame)
         if self.frame >= len(self.animation_frames[self.action]):
             self.frame = 0
             # Any non-looping actions get reset here
@@ -242,7 +244,7 @@ class Entity(pg.sprite.Sprite):
     def update(self, tile_rects, dt):
         self.move(tile_rects, dt)  # Update players position
         self.actions()  # Determine the player's action
-        self.set_image()  # Set the image based on the player's action
+        self.set_image(dt)  # Set the image based on the player's action
         self.hitboxes()  # Update any hit boxes from player's attack
 
     def jump(self):
