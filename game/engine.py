@@ -176,6 +176,12 @@ class Entity(pg.sprite.Sprite):
         """ Determine the current action and update the image accordingly """
         walk_threshold = 0.5
 
+        # Flip check
+        if self.vel.x > 0:
+            self.flip = False
+        if self.vel.x < 0:
+            self.flip = True
+
         # Walking, running, and idle animations only get played if we arent attacking, rolling, or jumping
         if not self.roll and not self.attacking and not self.jumping:
             # Idle check
@@ -188,13 +194,11 @@ class Entity(pg.sprite.Sprite):
                     self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
                 else:
                     self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
-                self.flip = False
             if self.vel.x < -walk_threshold:
                 if not self.run:
                     self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
                 else:
                     self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
-                self.flip = True
 
         else:
             # Roll Check
