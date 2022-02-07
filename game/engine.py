@@ -24,7 +24,7 @@ class Entity(pg.sprite.Sprite):
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
         self.FRIC = FRIC  # How much friction, this causes a variable acceleration, so we reach a max speed with a curve
         self.GRAV = .4
-        self.JUMP_VEL = -5
+        self.JUMP_VEL = -7
         self.RUN_ACC = .2  # Gets added to the walking speed
         self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
         self.MAX_FALL_SPEED = 6
@@ -55,7 +55,7 @@ class Entity(pg.sprite.Sprite):
 
         animation_frame_data = []  # ['idle_1', 'idle_1', 'idle_1'....., 'idle_2', 'idle_2'...]
 
-        for index, frame in enumerate(frame_lengths):  # [(0, 10), (1, 10), (2, 10), (3, 10)]
+        for index, frame in enumerate(frame_lengths):  # [(0, 10), (0-1, 10), (2, 10), (3, 10)]
             image_id = name + '_' + str(index)  # 'idle_0'
             img_path = path + '/' + image_id + '.png'  # 'assets/animations/player/idle/idle_0.png'
             image = pg.image.load(img_path).convert_alpha()
@@ -202,7 +202,7 @@ class Entity(pg.sprite.Sprite):
 
             # Attack Check
             if self.attacking:
-                if self.attack['1']:
+                if self.attack['0-1']:
                     self.action, self.frame = self.change_actions(self.action, self.frame, 'attack_1')
 
             # Jumping Check
@@ -217,7 +217,7 @@ class Entity(pg.sprite.Sprite):
             # Any non-looping actions get reset here
             self.roll = False
             self.attacking = False
-            self.attack['1'] = False
+            self.attack['0-1'] = False
             self.attack_1_timer = 0
             self.jumping = False
         image_id = self.animation_frames[self.action][self.frame]
@@ -228,7 +228,7 @@ class Entity(pg.sprite.Sprite):
         if not self.attacking:
             return
 
-        if self.attack['1']:
+        if self.attack['0-1']:
             self.attack_1_timer += 1
             if self.attack_1_timer > 25:  # 10 is to be adjusted as we go
                 if not self.flip:

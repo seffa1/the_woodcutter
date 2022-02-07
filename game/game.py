@@ -1,12 +1,15 @@
 import pygame as pg
 import sys, time
+from .Level_Manager import Level_Manager
 from .utils import draw_text
 from .engine import Entity
 from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Move level creation over to other classes
+#   Fix framerate independence
+#   Be able to walk between two different levels
+#   Add chunk rendering
 #   Add enemy entity, use inheritence of the entity class
 #   Get combat collisions working
 #   Make an enemy controller
@@ -36,7 +39,9 @@ class Game:
         self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 2
 
         # Managers
-        self.entity_manager = Entity_Manager()
+        self.level_manager = Level_Manager()
+        self.level_manager.load_level('0-1', self.TILE_SIZE)
+        self.level_manager.set_level('0-1')
 
         # Player
         self.player = Player(100, 100, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
@@ -59,19 +64,6 @@ class Game:
             scaled_image = pg.transform.scale(image, (self.display.get_width()*1.5, self.display.get_height()*1.5))
             self.background_images.append([scaled_image, paralax])
             paralax += paralax_dif
-        self.grass_tile_top = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_02.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.dirt_tile = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha() ,(self.TILE_SIZE, self.TILE_SIZE))
-        self.tile_rects = []
-
-    # Also temporary to be moved elsewheere
-    def load_map(self, path: str):
-        with open (path, 'r') as file:
-            data = file.read()
-            data = data.split('\n')
-            game_map = []
-            for row in data:
-                game_map.append(list(row))
-            return game_map
 
     def run(self):
         self.playing = True
@@ -80,9 +72,9 @@ class Game:
 
             # Frame rate independence check
             # Finds how many seconds have passed since the last frame
-            # If we are at 60 fps, dt will be 1/60th of a second
+            # If we are at 60 fps, dt will be 0-1/60th of a second
             self.dt = time.time() - self.last_time
-            # Multiply it by 60 so if we are at 60 fps, dt is 1
+            # Multiply it by 60 so if we are at 60 fps, dt is 0-1
             # If we ran at 30 fps, dt would be 2/60th * 60 = 2
             # So everything that moves get multiplied by 2
             self.dt *= 60
@@ -120,12 +112,15 @@ class Game:
                 # Cant attack while rolling
                 if event.key == pg.K_c and not self.player.roll:
                     self.player.attacking = True
-                    self.player.attack['1'] = True
+                    self.player.attack['0-1'] = True
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.walk_right = False
                 if event.key == pg.K_a:
                     self.player.walk_left = False
+                if event.key == pg.K_w:
+                    if self.player.vel.y < -1:
+                        self.player.vel.y = -1
 
 
 
@@ -139,8 +134,11 @@ class Game:
         self.scroll[0] = int(scroll[0])
         self.scroll[1] = int(scroll[1])
 
+        # Update the level manager: Updates world tiles, and all entities except the player
+        self.level_manager.update()
+
         # Update the player
-        self.player.update(self.tile_rects, self.dt)
+        self.player.update(self.level_manager.tile_rects, self.dt)
 
     def draw(self):
         # Fill the background
@@ -150,19 +148,8 @@ class Game:
         for image in self.background_images:
             self.display.blit(image[0], (-image[1]*self.scroll[0], -image[1]*self.scroll[1] - image[0].get_height()/3))
 
-        # Temp tile rendering
-        self.tile_rects = []
-        y = 0
-        for layer in self.load_map('game/levels/1/tiles.txt'):
-            x = 0
-            for tile in layer:
-                if tile == '1':
-                    self.display.blit(self.dirt_tile, (x * self.TILE_SIZE - self.scroll[0], y * self.TILE_SIZE - self.scroll[1]))
-                if tile == '2':
-                    self.display.blit(self.grass_tile_top, (x * self.TILE_SIZE - self.scroll[0], y * self.TILE_SIZE - self.scroll[1]))
-                    self.tile_rects.append(pg.Rect(x * self.TILE_SIZE, y * self.TILE_SIZE, self.TILE_SIZE, self.TILE_SIZE))
-                x += 1
-            y += 1
+        # Draw the level and entities within
+        self.level_manager.draw(self.scroll, self.TILE_SIZE, self.display)
 
         # Draw player
         self.player.draw(self.display, self.scroll)
@@ -176,5 +163,7 @@ class Game:
         draw_text(self.screen, f'p_rect pos: {self.player.rect.topleft}', 25, (255, 0, 0), (3, 43))
         draw_text(self.screen, f'vel pos: {self.player.vel}', 25, (255, 0, 0), (3, 63))
         draw_text(self.screen, f'action: {self.player.action}', 25, (255, 0, 0), (3, 83))
+        draw_text(self.screen, f'Tile_Rects: {len(self.level_manager.tile_rects)}', 25, (255, 0, 0), (3, 103))
+        draw_text(self.screen, f'DT: {round(self.dt, 2)}', 25, (255, 0, 0), (3, 123))
 
         pg.display.flip()
