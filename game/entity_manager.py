@@ -1,5 +1,5 @@
 import pygame as pg
-from engine import Entity
+from .engine import Entity
 
 
 # Instantiates, stores, and kills entities for each level
@@ -14,10 +14,10 @@ class Entity_Manager:
 
     def load_entities(self):
         path = 'game/levels/' + self.ID + 'entities.txt'
-        with open(path, 'r') as file:
+        # with open(path, 'r') as file:
             # For line in file:
                 # entitiy_data_list = line.split(',')
-                # create_entity(entitiy_data_list[0], entitiy_data_list[1], entitiy_data_list[2], entitiy_data_list[3], entitiy_data_list[4], entitiy_data_list[5])
+                # create_entity(entitiy_data_list[0], entitiy_data_list[0-1], entitiy_data_list[2], entitiy_data_list[3], entitiy_data_list[4], entitiy_data_list[5])
 
 
     def create_entity(self, x, y, width, height, type, WALK_ACC, FRIC):
@@ -34,7 +34,7 @@ class Entity_Manager:
             self.groups[type].add(entity)
 
     # Currently these are not being used
-    def add_to_group(self, entity: e.Entity, group: str):
+    def add_to_group(self, entity: Entity, group: str):
         """ Adds an entity to a group """
         self.group[group].add(entity)
 
