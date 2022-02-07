@@ -213,7 +213,6 @@ class Entity(pg.sprite.Sprite):
                 if self.attack['1']:
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'attack_1')
 
-
             # Jumping Check
             if self.jumping and not self.attacking:
                 self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'jump')
@@ -245,9 +244,9 @@ class Entity(pg.sprite.Sprite):
             return
 
         if self.attack['1']:
-            # self.attack_1_timer_float += 1 * dt
-            # self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
-            self.attack_1_timer += 1
+            self.attack_1_timer_float += 1 * dt
+            self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
+            # self.attack_1_timer += 1
             # print(f'attac_1_timer = {self.attack_1_timer}')
             # print(f'float = {self.attack_1_timer_float}')
 
@@ -256,7 +255,7 @@ class Entity(pg.sprite.Sprite):
                     self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
                 else:
                     self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
-            if self.attack_1_timer > 35:
+            if self.attack_1_timer > 30:
                 self.attack_rect = None
 
 
