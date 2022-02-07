@@ -17,8 +17,8 @@ from .player import Player
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player
 
-
 vec = pg.math.Vector2
+
 
 class Game:
     def __init__(self, screen, clock, display, WINDOW_SIZE, SCALE_FACTOR):
@@ -113,7 +113,8 @@ class Game:
                 # Cant attack while rolling
                 if event.key == pg.K_c and not self.player.roll:
                     self.player.attacking = True
-                    self.player.attack['0-1'] = True
+                    self.player.attack['1'] = True
+                    print('attack')
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.walk_right = False

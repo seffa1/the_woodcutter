@@ -20,6 +20,7 @@ class Entity(pg.sprite.Sprite):
         # Timers
         self.air_timer = 0  # Keeps track of how many frames youve been in 'coyote time'
         self.attack_1_timer = 0  # Keeps track of the attack_1 frames for hitbox creation
+        self.attack_1_timer_float = 0  # Uses dt to track percise frame rate independent adjustments
 
         # Constants
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
@@ -48,6 +49,7 @@ class Entity(pg.sprite.Sprite):
         self.animation_images = {}  # 'idle_1': idle_1_img, 'idle_2': idle_2_image, ....
         self.image = None  # Current image, gets updated if there are animations with this entitiy
         self.frame = 0  # Keeps track of the current animation frame
+        self.frame_float = 0
 
     # path = assets/animations/player/idle
     # frame_lengths = [10, 10, 20, 10] for each frame
@@ -165,12 +167,13 @@ class Entity(pg.sprite.Sprite):
         else:
             self.air_timer += 1
 
-    def change_actions(self, current_action, current_frame, new_action):
+    def change_actions(self, current_action, current_frame, frame_float, new_action):
         """ Only reset animation frames if going from one animation to another """
         if current_action != new_action:
             current_action = new_action
             current_frame = 0
-        return current_action, current_frame
+            frame_float = 0
+        return current_action, current_frame, frame_float
 
     def actions(self):
         """ Determine the current action and update the image accordingly """
@@ -186,62 +189,74 @@ class Entity(pg.sprite.Sprite):
         if not self.roll and not self.attacking and not self.jumping:
             # Idle check
             if abs(self.vel.x) <= walk_threshold:
-                self.action, self.frame = self.change_actions(self.action, self.frame, 'idle')
+                self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'idle')
 
             # Walking / Running Check
             if self.vel.x > walk_threshold:
                 if not self.run:
-                    self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'walk')
                 else:
-                    self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
             if self.vel.x < -walk_threshold:
                 if not self.run:
-                    self.action, self.frame = self.change_actions(self.action, self.frame, 'walk')
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'walk')
                 else:
-                    self.action, self.frame = self.change_actions(self.action, self.frame, 'run')
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
 
         else:
             # Roll Check
             if self.roll:
-                self.action, self.frame = self.change_actions(self.action, self.frame, 'roll')
+                self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'roll')
 
             # Attack Check
             if self.attacking:
-                if self.attack['0-1']:
-                    self.action, self.frame = self.change_actions(self.action, self.frame, 'attack_1')
+                if self.attack['1']:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'attack_1')
+
 
             # Jumping Check
             if self.jumping and not self.attacking:
-                self.action, self.frame = self.change_actions(self.action, self.frame, 'jump')
+                self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'jump')
 
     def set_image(self, dt):
         """ Update the current image """
-        self.frame += 1
-        self.frame = math.ceil(self.frame)
+        self.frame_float += 1 * dt
+        self.frame = int(round(self.frame_float, 0))
+        print(f'frame_float = {self.frame_float}')
+        print(f'frame = {self.frame}')
+        # self.frame += 1
         if self.frame >= len(self.animation_frames[self.action]):
             self.frame = 0
+            self.frame_float = 0
             # Any non-looping actions get reset here
             self.roll = False
             self.attacking = False
-            self.attack['0-1'] = False
+            self.attack['1'] = False
             self.attack_1_timer = 0
+            self.attack_1_timer_float = 0
             self.jumping = False
+            self.attack_rect = None
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
 
-    def hitboxes(self):
+    def hitboxes(self, dt):
         if not self.attacking:
             return
 
-        if self.attack['0-1']:
+        if self.attack['1']:
+            # self.attack_1_timer_float += 1 * dt
+            # self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
             self.attack_1_timer += 1
-            if self.attack_1_timer > 25:  # 10 is to be adjusted as we go
+            # print(f'attac_1_timer = {self.attack_1_timer}')
+            # print(f'float = {self.attack_1_timer_float}')
+
+            if self.attack_1_timer > 24:  # 10 is to be adjusted as we go
                 if not self.flip:
                     self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
                 else:
                     self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
-            if self.attack_1_timer > 32:
+            if self.attack_1_timer > 35:
                 self.attack_rect = None
 
 
@@ -249,7 +264,7 @@ class Entity(pg.sprite.Sprite):
         self.move(tile_rects, dt)  # Update players position
         self.actions()  # Determine the player's action
         self.set_image(dt)  # Set the image based on the player's action
-        self.hitboxes()  # Update any hit boxes from player's attack
+        self.hitboxes(dt)  # Update any hit boxes from player's attack
 
     def jump(self):
         if self.air_timer < self.AIR_TIME:
