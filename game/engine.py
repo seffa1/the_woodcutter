@@ -221,8 +221,6 @@ class Entity(pg.sprite.Sprite):
         """ Update the current image """
         self.frame_float += 1 * dt
         self.frame = int(round(self.frame_float, 0))
-        print(f'frame_float = {self.frame_float}')
-        print(f'frame = {self.frame}')
         # self.frame += 1
         if self.frame >= len(self.animation_frames[self.action]):
             self.frame = 0
@@ -247,8 +245,6 @@ class Entity(pg.sprite.Sprite):
             self.attack_1_timer_float += 1 * dt
             self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
             # self.attack_1_timer += 1
-            # print(f'attac_1_timer = {self.attack_1_timer}')
-            # print(f'float = {self.attack_1_timer_float}')
 
             if self.attack_1_timer > 24:  # 10 is to be adjusted as we go
                 if not self.flip:
@@ -257,7 +253,6 @@ class Entity(pg.sprite.Sprite):
                     self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
             if self.attack_1_timer > 30:
                 self.attack_rect = None
-
 
     def update(self, tile_rects, dt):
         self.move(tile_rects, dt)  # Update players position
