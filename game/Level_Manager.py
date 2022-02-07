@@ -23,7 +23,12 @@ class Level_Manager:
     def get_level(self):
         return self.levels[self.current_level]
 
+    def check_change_level(self):
+        """ Check if the player has triggered a level change event """
+        pass
+
     def update(self):
+        self.check_change_level()
         self.tile_rects = self.get_level().tile_manager.tile_rects
         self.get_level().update()
 

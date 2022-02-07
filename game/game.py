@@ -7,11 +7,9 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Fix framerate independence
-#   Framerate independent animations?
 #   Be able to walk between two different levels
 #   Add chunk rendering
-#   Add enemy entity, use inheritence of the entity class
+#   Add enemy entity, use inheritance of the entity class
 #   Get combat collisions working
 #   Make an enemy controller
 #   Batch Rendering of ground for less collisions checks
