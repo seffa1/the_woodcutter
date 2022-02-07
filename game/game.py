@@ -7,7 +7,9 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Move level creation over to other classes
+#   Fix framerate independence
+#   Be able to walk between two different levels
+#   Add chunk rendering
 #   Add enemy entity, use inheritence of the entity class
 #   Get combat collisions working
 #   Make an enemy controller
@@ -162,5 +164,6 @@ class Game:
         draw_text(self.screen, f'vel pos: {self.player.vel}', 25, (255, 0, 0), (3, 63))
         draw_text(self.screen, f'action: {self.player.action}', 25, (255, 0, 0), (3, 83))
         draw_text(self.screen, f'Tile_Rects: {len(self.level_manager.tile_rects)}', 25, (255, 0, 0), (3, 103))
+        draw_text(self.screen, f'DT: {round(self.dt, 2)}', 25, (255, 0, 0), (3, 123))
 
         pg.display.flip()
