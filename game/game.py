@@ -63,7 +63,7 @@ class Game:
             self.background_images.append([scaled_image, paralax])
             paralax += paralax_dif
 
-        self.tile_rects = []
+
 
     # # Also temporary to be moved elsewheere
     # def load_map(self, path: str):
@@ -141,10 +141,12 @@ class Game:
         self.scroll[0] = int(scroll[0])
         self.scroll[1] = int(scroll[1])
 
+
+        # Update the level manager: Updates world tiles, and all entities except the player
+        self.level_manager.update()
+
         # Update the player
-        # TODO get this working
-        # tile_rects = self.level_manager.get_tile_rects()
-        # self.player.update(tile_rects, self.dt)
+        self.player.update(self.level_manager.tile_rects, self.dt)
 
     def draw(self):
         # Fill the background
@@ -154,6 +156,8 @@ class Game:
         for image in self.background_images:
             self.display.blit(image[0], (-image[1]*self.scroll[0], -image[1]*self.scroll[1] - image[0].get_height()/3))
 
+        # Draw the level and entities within
+        self.level_manager.draw()
 
         # Draw player
         self.player.draw(self.display, self.scroll)

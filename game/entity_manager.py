@@ -33,6 +33,12 @@ class Entity_Manager:
             # Add this entity to that group
             self.groups[type].add(entity)
 
+    def update(self):
+        pass
+
+    def draw(self):
+        pass
+
     # Currently these are not being used
     def add_to_group(self, entity: Entity, group: str):
         """ Adds an entity to a group """

@@ -12,7 +12,7 @@ class Level_Manager:
 
 
     def load_level(self, ID: str):
-        pass
+        self.levels[ID] = Level(ID)
 
     def get_level(self):
         return self.levels[self.current_level]
@@ -24,7 +24,9 @@ class Level_Manager:
 
     def update(self):
         self.get_tile_rects()
+        self.get_level().update()
         pass
 
     def draw(self):
+        self.get_level().draw()
         pass
