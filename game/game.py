@@ -116,6 +116,9 @@ class Game:
                     self.player.walk_right = False
                 if event.key == pg.K_a:
                     self.player.walk_left = False
+                if event.key == pg.K_w:
+                    if self.player.vel.y < -1:
+                        self.player.vel.y = -1
 
 
 
@@ -158,5 +161,6 @@ class Game:
         draw_text(self.screen, f'p_rect pos: {self.player.rect.topleft}', 25, (255, 0, 0), (3, 43))
         draw_text(self.screen, f'vel pos: {self.player.vel}', 25, (255, 0, 0), (3, 63))
         draw_text(self.screen, f'action: {self.player.action}', 25, (255, 0, 0), (3, 83))
+        draw_text(self.screen, f'Tile_Rects: {len(self.level_manager.tile_rects)}', 25, (255, 0, 0), (3, 103))
 
         pg.display.flip()
