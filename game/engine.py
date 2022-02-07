@@ -24,7 +24,7 @@ class Entity(pg.sprite.Sprite):
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
         self.FRIC = FRIC  # How much friction, this causes a variable acceleration, so we reach a max speed with a curve
         self.GRAV = .4
-        self.JUMP_VEL = -5
+        self.JUMP_VEL = -7
         self.RUN_ACC = .2  # Gets added to the walking speed
         self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
         self.MAX_FALL_SPEED = 6

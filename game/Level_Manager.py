@@ -1,5 +1,5 @@
 import pygame as pg
-from Level import Level
+from .Level import Level
 
 
 class Level_Manager:
@@ -11,22 +11,21 @@ class Level_Manager:
         self.tile_rects = []
 
 
-    def load_level(self, ID: str):
-        self.levels[ID] = Level(ID)
+    def load_level(self, ID: str, TILE_SIZE: int):
+        self.levels[ID] = Level(ID, TILE_SIZE)
+
+    def set_level(self, ID: str):
+        if ID in self.levels:
+            self.current_level = ID
+        else:
+            raise "You are trying to set to a level that does not exist"
 
     def get_level(self):
         return self.levels[self.current_level]
 
-    def get_tile_rects(self):
-        level = self.get_level()
-        self.tile_rects = level.return_tile_rects()
-        pass
-
     def update(self):
-        self.get_tile_rects()
+        self.tile_rects = self.get_level().tile_manager.tile_rects
         self.get_level().update()
-        pass
 
-    def draw(self):
-        self.get_level().draw()
-        pass
+    def draw(self, scroll, TILE_SIZE, display):
+        self.get_level().draw(scroll, TILE_SIZE, display)

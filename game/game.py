@@ -1,6 +1,6 @@
 import pygame as pg
 import sys, time
-from Level_Manager import Level_Manager
+from .Level_Manager import Level_Manager
 from .utils import draw_text
 from .engine import Entity
 from .entity_manager import Entity_Manager
@@ -38,8 +38,8 @@ class Game:
 
         # Managers
         self.level_manager = Level_Manager()
-        self.level_manager.load_level('0-1')
-
+        self.level_manager.load_level('0-1', self.TILE_SIZE)
+        self.level_manager.set_level('0-1')
 
         # Player
         self.player = Player(100, 100, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
@@ -62,18 +62,6 @@ class Game:
             scaled_image = pg.transform.scale(image, (self.display.get_width()*1.5, self.display.get_height()*1.5))
             self.background_images.append([scaled_image, paralax])
             paralax += paralax_dif
-
-
-
-    # # Also temporary to be moved elsewheere
-    # def load_map(self, path: str):
-    #     with open (path, 'r') as file:
-    #         data = file.read()
-    #         data = data.split('\n')
-    #         game_map = []
-    #         for row in data:
-    #             game_map.append(list(row))
-    #         return game_map
 
     def run(self):
         self.playing = True
@@ -141,7 +129,6 @@ class Game:
         self.scroll[0] = int(scroll[0])
         self.scroll[1] = int(scroll[1])
 
-
         # Update the level manager: Updates world tiles, and all entities except the player
         self.level_manager.update()
 
@@ -157,7 +144,7 @@ class Game:
             self.display.blit(image[0], (-image[1]*self.scroll[0], -image[1]*self.scroll[1] - image[0].get_height()/3))
 
         # Draw the level and entities within
-        self.level_manager.draw()
+        self.level_manager.draw(self.scroll, self.TILE_SIZE, self.display)
 
         # Draw player
         self.player.draw(self.display, self.scroll)
