@@ -7,7 +7,6 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Be able to walk between two different levels
 #   Add enemy entity, use inheritance of the entity class
 #   Get combat collisions working
 #   Make an enemy controller
@@ -38,11 +37,12 @@ class Game:
 
         # Managers
         self.level_manager = Level_Manager()
-        self.level_manager.load_level('0-1', self.TILE_SIZE)
+        self.level_manager.load_level('0-1', self.TILE_SIZE, display)
+        self.level_manager.load_level('0-2', self.TILE_SIZE, display)
         self.level_manager.set_level('0-1')
 
         # Player
-        self.player = Player(100, 100, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+        self.player = Player(150, 100, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
         self.player.set_static_image('assets/animations/player/idle/idle_0.png')
         self.player.animation_frames['idle'] = self.player.load_animation('assets/animations/player/idle', [10, 10, 10, 10])
         self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [5, 5, 5, 5, 5, 5])
@@ -51,17 +51,6 @@ class Game:
         self.player.animation_frames['attack_1'] = self.player.load_animation('assets/animations/player/attack_1', [10, 10, 6, 5, 5, 5])
         self.player.animation_frames['jump'] = self.player.load_animation('assets/animations/player/jump', [5, 5, 7, 7, 7, 7])
 
-        # Temporary stuff to be moved elsewhere
-        self.background_images = []
-        path = 'assets/images/backgrounds/rocks_1'
-        paralax_dif = .02
-        paralax = 0
-        for i in range(0, 7):
-            img_path = path + '/' + str(i + 1) + '.png'
-            image = pg.image.load(img_path).convert_alpha()
-            scaled_image = pg.transform.scale(image, (self.display.get_width()*1.5, self.display.get_height()*1.5))
-            self.background_images.append([scaled_image, paralax])
-            paralax += paralax_dif
 
     def run(self):
         self.playing = True
@@ -70,9 +59,9 @@ class Game:
 
             # Frame rate independence check. Finds how many seconds have passed since the last frame.
             # If we are at 60 fps, dt will be 0-1/60th of a second
-            self.dt = time.time() - self.last_time
             # Multiply it by 60 so if we are at 60 fps, dt is 1, If we ran at 30 fps, dt would be 2/60th * 60 = 2.
             # So everything that moves get multiplied by 2, animation frames get cycled at a factor of 2
+            self.dt = time.time() - self.last_time
             self.dt *= 60
             self.last_time = time.time()
 
@@ -108,6 +97,9 @@ class Game:
                 if event.key == pg.K_c and not self.player.roll:
                     self.player.attacking = True
                     self.player.attack['1'] = True
+                if event.key == pg.K_RETURN:
+                    self.level_manager.check_change_level()
+
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.walk_right = False
@@ -136,10 +128,6 @@ class Game:
     def draw(self):
         # Fill the background
         self.display.fill((0, 0, 0))
-
-        # Temp background
-        for image in self.background_images:
-            self.display.blit(image[0], (-image[1]*self.scroll[0], -image[1]*self.scroll[1] - image[0].get_height()/3))
 
         # Draw the level and entities within
         self.level_manager.draw(self.scroll, self.TILE_SIZE, self.display)
