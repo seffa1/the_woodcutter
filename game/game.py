@@ -135,7 +135,7 @@ class Game:
         self.scroll[1] = int(scroll[1])
 
         # Update the level manager: Updates world tiles, and all entities except the player
-        self.level_manager.update()
+        self.level_manager.update(self.player)
 
         # Update the player
         self.player.update(self.level_manager.tile_rects, self.dt)

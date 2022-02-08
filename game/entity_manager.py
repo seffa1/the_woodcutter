@@ -7,7 +7,9 @@ class Entity_Manager:
     def __init__(self, ID: str):
         self.ID = ID
         self.entity_data = []  # A 2-D array from our entities.txt file
-        self.groups = {}  # {'player': pg.sprite.Group(), 'enemy': pg.sprite.Group()}
+        self.groups = {'player': pg.sprite.Group(),
+                       'enemy': pg.sprite.Group()}
+
         # self.load_entities()
 
 
@@ -32,6 +34,8 @@ class Entity_Manager:
         else:
             # Add this entity to that group
             self.groups[type].add(entity)
+
+
 
     def update(self):
         pass
