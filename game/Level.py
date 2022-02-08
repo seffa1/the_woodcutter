@@ -20,16 +20,16 @@ class Level:
 
         self.collided_trigger = None
 
-    def update(self, player):
+    def update(self, player, tile_rects, dt):
         self.tile_manager.update()
-        self.entity_manager.update()
+        self.entity_manager.update(tile_rects, dt)
         self.check_triggers(player)
 
     def draw(self, scroll, TILE_SIZE, display):
         for image in self.background_images:
             display.blit(image[0], (-image[1]*scroll[0], -image[1]*scroll[1] - image[0].get_height()/3))
         self.tile_manager.draw(scroll, TILE_SIZE, display)
-        self.entity_manager.draw()
+        self.entity_manager.draw(display, scroll)
         for level_trigger in self.level_triggers.values():
             level_trigger.draw(display, scroll)
 

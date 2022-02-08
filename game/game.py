@@ -42,7 +42,7 @@ class Game:
         self.level_manager.set_level('0-1')
 
         # Player
-        self.player = Player(350, 0, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+        self.player = Player(350, -100, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
         self.player.set_static_image('assets/animations/player/idle/idle_0.png')
         self.player.animation_frames['idle'] = self.player.load_animation('assets/animations/player/idle', [10, 10, 10, 10])
         self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [5, 5, 5, 5, 5, 5])
@@ -120,7 +120,7 @@ class Game:
         self.scroll[1] = int(scroll[1])
 
         # Update the level manager: Updates world tiles, and all entities except the player
-        self.level_manager.update(self.player)
+        self.level_manager.update(self.player, self.dt)
 
         # Update the player
         self.player.update(self.level_manager.tile_rects, self.dt)

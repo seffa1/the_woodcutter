@@ -23,9 +23,9 @@ class Level_Manager:
     def get_level(self):
         return self.levels[self.current_level]
 
-    def update(self, player):
+    def update(self, player, dt):
         self.tile_rects = self.get_level().tile_manager.tile_rects
-        self.get_level().update(player)
+        self.get_level().update(player, self.tile_rects, dt)
 
     def draw(self, scroll, TILE_SIZE, display):
         self.get_level().draw(scroll, TILE_SIZE, display)
