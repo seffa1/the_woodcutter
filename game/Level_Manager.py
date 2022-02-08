@@ -10,7 +10,6 @@ class Level_Manager:
         # Calls down to the current level's tile manager, and gets updated collidable rects each framee
         self.tile_rects = []
 
-
     def load_level(self, ID: str, TILE_SIZE: int):
         self.levels[ID] = Level(ID, TILE_SIZE)
 

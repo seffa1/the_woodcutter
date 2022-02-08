@@ -13,7 +13,6 @@ class Level:
         self.level_triggers = {}  # '0-2': Level_trigger ---> Contains level_trigger objects with name of the level they go to
         self.load_triggers('game/levels/')
 
-
     def update(self, player):
         self.tile_manager.update()
         self.entity_manager.update()
@@ -26,16 +25,14 @@ class Level:
         for level_trigger in self.level_triggers.values():
             level_trigger.draw(display, scroll)
 
-
     def load_triggers(self, path):
         file_path = path + self.level_ID + '/level_triggers.txt'
         with open (file_path, 'r') as file:
             for line in file:
                 line = line.split(',')
-                trigger = Level_Trigger(int(line[0]), int(line[1]), int(line[2]), int(line[3]), line[4])
+                trigger = Level_Trigger(int(line[0]), int(line[1]), int(line[2]), int(line[3]), line[4], line[5])
                 self.level_triggers[line[4]] = trigger
                 # self.add_connection(trigger[4])
-
 
     def add_connection(self, ID: str, level):
         self.connecting_levels[ID] = level

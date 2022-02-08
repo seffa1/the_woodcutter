@@ -8,12 +8,11 @@ from .player import Player
 
 # TODO
 #   Be able to walk between two different levels
-#   Add chunk rendering
 #   Add enemy entity, use inheritance of the entity class
 #   Get combat collisions working
 #   Make an enemy controller
 #   Batch Rendering of ground for less collisions checks
-#   Only checking collisions on tiles close to player
+#   Only checking collisions on tiles close to player (Add chunk rendering)
 
 vec = pg.math.Vector2
 
@@ -69,13 +68,11 @@ class Game:
         while self.playing:
             self.clock.tick(60)
 
-            # Frame rate independence check
-            # Finds how many seconds have passed since the last frame
+            # Frame rate independence check. Finds how many seconds have passed since the last frame.
             # If we are at 60 fps, dt will be 0-1/60th of a second
             self.dt = time.time() - self.last_time
-            # Multiply it by 60 so if we are at 60 fps, dt is 0-1
-            # If we ran at 30 fps, dt would be 2/60th * 60 = 2
-            # So everything that moves get multiplied by 2
+            # Multiply it by 60 so if we are at 60 fps, dt is 1, If we ran at 30 fps, dt would be 2/60th * 60 = 2.
+            # So everything that moves get multiplied by 2, animation frames get cycled at a factor of 2
             self.dt *= 60
             self.last_time = time.time()
 
@@ -95,7 +92,6 @@ class Game:
             else:
                 self.player.run = False
 
-
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.playing = False
@@ -112,7 +108,6 @@ class Game:
                 if event.key == pg.K_c and not self.player.roll:
                     self.player.attacking = True
                     self.player.attack['1'] = True
-                    print('attack')
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
                     self.player.walk_right = False
@@ -121,8 +116,6 @@ class Game:
                 if event.key == pg.K_w:
                     if self.player.vel.y < -1:
                         self.player.vel.y = -1
-
-
 
     def update(self):
         # Scroll
@@ -157,7 +150,7 @@ class Game:
         # Draw the UI
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
-
+        # Move all this to a UI class
         draw_text(self.screen, f'fps: {round(self.clock.get_fps())}', 25, (255, 0, 0), (3, 3))
         draw_text(self.screen, f'player pos: {self.player.pos}', 25, (255, 0, 0), (3, 23))
         draw_text(self.screen, f'p_rect pos: {self.player.rect.topleft}', 25, (255, 0, 0), (3, 43))

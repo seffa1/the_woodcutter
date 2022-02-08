@@ -17,9 +17,6 @@ class Tile_Manager:
         self.load_map('game/levels/')  # Load the 2D map array
         self.add_tile_rects()  # Save collidible tiles to pass to other entity's movement collisions
 
-
-
-
     # TODO This will eventually be the chunk system that updates the tiles and collidibles each frame
     def update(self):
         pass
