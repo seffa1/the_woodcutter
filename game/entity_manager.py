@@ -32,23 +32,15 @@ class Entity_Manager:
             # Add this entity to that group
             self.groups[type].add(entity)
 
-    def update(self, tile_rects, dt):
+    def update(self, tile_rects, dt, player):
         for enemy in self.groups['enemy']:
-            enemy.update(tile_rects, dt)
+            enemy.update(tile_rects, dt, player)
 
     def draw(self, display, scroll):
         for enemy in self.groups['enemy']:
             enemy.draw(display, scroll)
 
-    # Currently these are not being used
-    def add_to_group(self, entity: Entity, group: str):
-        """ Adds an entity to a group """
-        self.group[group].add(entity)
 
-    def create_group(self, group_name: str):
-        """ Creates and stores a sprite group with a given name """
-        group = pg.sprite.Group()
-        self.groups[group_name] = group
 
 
 

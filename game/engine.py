@@ -254,7 +254,7 @@ class Entity(pg.sprite.Sprite):
             if self.attack_1_timer > 30:
                 self.attack_rect = None
 
-    def update(self, tile_rects, dt):
+    def update(self, tile_rects, dt, player=None):
         self.move(tile_rects, dt)  # Update players position
         self.actions()  # Determine the player's action
         self.set_image(dt)  # Set the image based on the player's action

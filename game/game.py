@@ -7,9 +7,10 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Add enemy entity, use inheritance of the entity class
+#   Make a boar enemy
+#   Generate the boar from text file instructions per each level
+#   Make an enemy controller for combat AI
 #   Get combat collisions working
-#   Make an enemy controller
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering)
 
