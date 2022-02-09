@@ -7,8 +7,8 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Make a boar enemy
-#   Generate the boar from text file instructions per each level
+#   Make a troll enemy
+#   Generate the troll from text file instructions per each level
 #   Make an enemy controller for combat AI
 #   Get combat collisions working
 #   Batch Rendering of ground for less collisions checks

@@ -236,6 +236,8 @@ class Entity(pg.sprite.Sprite):
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
+        self.rect.width = self.image.get_width()
+        self.rect.height = self.image.get_height()
 
     def hitboxes(self, dt):
         if not self.attacking:
@@ -271,7 +273,7 @@ class Entity(pg.sprite.Sprite):
     def set_static_image(self, path: str):
         self.image = pg.image.load(path).convert_alpha()
 
-    def draw(self, display, scroll, hitbox=False, attack_box=True):
+    def draw(self, display, scroll, hitbox=True, attack_box=True):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)
