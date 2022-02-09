@@ -7,10 +7,7 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Make a troll enemy
-#   Generate the troll from text file instructions per each level
-#   Make an enemy controller for combat AI
-#   Get combat collisions working
+#   Get DT affects AI cooldowns, Get combat collisions working, health, death, refine AI controller
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering)
 
@@ -43,7 +40,7 @@ class Game:
         self.level_manager.set_level('0-1')
 
         # Player
-        self.player = Player(350, -100, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+        self.player = Player(350, -300, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
         self.player.set_static_image('assets/animations/player/idle/idle_0.png')
         self.player.animation_frames['idle'] = self.player.load_animation('assets/animations/player/idle', [10, 10, 10, 10])
         self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [5, 5, 5, 5, 5, 5])

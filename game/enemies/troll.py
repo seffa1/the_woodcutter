@@ -15,14 +15,15 @@ class Troll(Entity):
         # AI Constants
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
-        self.ATTACK_RANGE = 40
-
+        self.ATTACK_RANGE = 50
+        self.ATTACK_COOLDOWN = 60
 
         # AI Controller use
         self.aggro = False
-        self.idle_timer = 0  # Used when we are not in aggro
+        self.attack_timer = 0  # Used when we are not in aggro
+        self.attack_timer_float = 0
 
-    def AI_controller(self, player):
+    def AI_controller(self, player, dt):
         if not self.aggro:
             self.walk_right = False
             self.walk_left = False
@@ -37,25 +38,37 @@ class Troll(Entity):
             if (self.pos.x - self.ATTACK_RANGE) < player.pos.x <= self.pos.x:
                 self.walk_right = False
                 self.walk_left = False
-                self.attacking = True
-                self.attack['1'] = True
                 self.flip = True
+                if self.attack_timer == 0:
+                    self.attacking = True
+                    self.attack['1'] = True
+                    self.attack_timer = self.ATTACK_COOLDOWN
+                    self.attack_timer_float = self.ATTACK_COOLDOWN
+                else:
+                    # self.attack_timer_float -= 1 * dt
+                    # self.attack_timer = round(self.attack_timer_float)
+                    self.attack_timer -= 1
 
             if self.pos.x < player.pos.x < (self.pos.x + self.rect.width + self.ATTACK_RANGE):
                 self.walk_right = False
                 self.walk_left = False
-                self.attacking = True
-                self.attack['1'] = True
                 self.flip = False
+                if self.attack_timer == 0:
+                    self.attacking = True
+                    self.attack['1'] = True
+                    self.attack_timer = self.ATTACK_COOLDOWN
+                    self.attack_timer_float = self.ATTACK_COOLDOWN
+                else:
+                    # self.attack_timer_float -= 1 * dt
+                    # self.attack_timer = round(self.attack_timer_float)
+                    self.attack_timer -= 1
 
     def check_aggro(self, player):
         """ Checks if the player is within certain aggro distances """
         if calc_distance(self.pos, player.pos) <= self.AGGRO_RANGE:
             self.aggro = True
-            print("Troll aggro")
         if calc_distance(self.pos, player.pos) >= self.DEAGGRO_RANGE:
             self.aggro = False
-            print("Troll de-aggro")
 
     def hitboxes(self, dt):
         if not self.attacking:
@@ -77,7 +90,7 @@ class Troll(Entity):
 
     def update(self, tile_rects, dt, player=None):
         self.check_aggro(player)  # update the aggro state of the entity
-        self.AI_controller(player)  # Updates the actions based on player's location
+        self.AI_controller(player, dt)  # Updates the actions based on player's location
         self.move(tile_rects, dt)  # Update entity position
         self.actions()  # Determine the entities's action
         self.set_image(dt)  # Set the image based on the action
