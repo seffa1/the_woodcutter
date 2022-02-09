@@ -53,7 +53,7 @@ class Entity(pg.sprite.Sprite):
 
     # path = assets/animations/player/idle
     # frame_lengths = [10, 10, 20, 10] for each frame
-    def load_animation(self, path: str, frame_lengths: list):
+    def load_animation(self, path: str, frame_lengths: list, flip=False):
         name = str(path.split('/')[-1])  # 'idle'
 
         animation_frame_data = []  # ['idle_1', 'idle_1', 'idle_1'....., 'idle_2', 'idle_2'...]
@@ -62,6 +62,8 @@ class Entity(pg.sprite.Sprite):
             image_id = name + '_' + str(index)  # 'idle_0'
             img_path = path + '/' + image_id + '.png'  # 'assets/animations/player/idle/idle_0.png'
             image = pg.image.load(img_path).convert_alpha()
+            if flip:
+                image = pg.transform.flip(image, True, False)
             self.animation_images[image_id] = image.copy()
             for i in range(frame):
                 animation_frame_data.append(image_id)
@@ -236,8 +238,8 @@ class Entity(pg.sprite.Sprite):
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
-        self.rect.width = self.image.get_width()
-        self.rect.height = self.image.get_height()
+        # self.rect.width = self.image.get_width()
+        # self.rect.height = self.image.get_height()
 
     def hitboxes(self, dt):
         if not self.attacking:

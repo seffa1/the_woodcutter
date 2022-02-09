@@ -7,10 +7,10 @@ from game.utils import calc_distance
 class Troll(Entity):
     def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0):
         super().__init__(x, y, width, height, type, WALK_ACC, FRIC)
-        self.animation_frames['idle'] = self.load_animation('assets/animations/troll/idle', [10, 10, 10, 10])
-        self.animation_frames['walk'] = self.load_animation('assets/animations/troll/walk', [10, 10, 10, 10, 10, 10])
-        self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [10, 10, 10, 10, 10, 10])
-        self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 10, 10, 10])
+        self.animation_frames['idle'] = self.load_animation('assets/animations/troll/idle', [10, 10, 10, 10], True)
+        self.animation_frames['walk'] = self.load_animation('assets/animations/troll/walk', [10, 10, 10, 10, 10, 10], True)
+        self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [10, 10, 10, 10, 10, 10], True)
+        self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 10, 10, 10], True)
 
         # AI Constants
         self.AGGRO_RANGE = 200
