@@ -5,9 +5,13 @@ from .utils import draw_text
 from .engine import Entity
 from .entity_manager import Entity_Manager
 from .player import Player
+from .UI import UI
 
 # TODO
-#   Death animations, refine AI controller (currently you can stand in the enemy hitbox and they wont attack you)
+#   Troll attack timer should decrease even if he is in the walking state, or non-aggro state
+#   Health and stamina bar UI
+#   Fix animation images to they are centered on the character
+#   Death animations
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering)
 
@@ -43,7 +47,8 @@ class Game:
         # Player
         self.player = Player(350, -300, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
-
+        # User Interface
+        self.UI = UI()
 
     def run(self):
         self.playing = True
@@ -137,19 +142,11 @@ class Game:
         # Draw the entities
         self.level_manager.draw_entities(self.scroll, self.display)
 
-
-
-        # Draw the UI
+        # Scale up the display to the screen size, then draw it
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
-        # Move all this to a UI class
-        draw_text(self.screen, f'fps: {round(self.clock.get_fps())}', 25, (255, 0, 0), (3, 3))
-        draw_text(self.screen, f'player pos: {self.player.pos}', 25, (255, 0, 0), (3, 23))
-        draw_text(self.screen, f'p_rect pos: {self.player.rect.topleft}', 25, (255, 0, 0), (3, 43))
-        draw_text(self.screen, f'vel pos: {self.player.vel}', 25, (255, 0, 0), (3, 63))
-        draw_text(self.screen, f'action: {self.player.action}', 25, (255, 0, 0), (3, 83))
-        draw_text(self.screen, f'Tile_Rects: {len(self.level_manager.tile_rects)}', 25, (255, 0, 0), (3, 103))
-        draw_text(self.screen, f'DT: {round(self.dt, 2)}', 25, (255, 0, 0), (3, 123))
-        draw_text(self.screen, f'Health: {self.player.health}', 25, (255, 0, 0), (3, 143))
+        # Draw the UI on top of the screen
+        self.UI.draw(self.screen, self.player, self.dt, self.clock, self.level_manager)
 
+        # Draw the entire diaplay at once
         pg.display.flip()

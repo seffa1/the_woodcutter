@@ -43,7 +43,8 @@ class Troll(Entity):
                 self.walk_left= False
                 self.walk_right = True
 
-            if (self.rect.center[0] - self.ATTACK_RANGE) < player.pos.x + player.rect.width <= self.rect.center[0]:
+            # Attack Left
+            if (self.rect.center[0] - self.ATTACK_RANGE) < player.rect.center[0] <= self.rect.center[0]:
                 self.walk_right = False
                 self.walk_left = False
                 self.flip = True
@@ -57,7 +58,8 @@ class Troll(Entity):
                         self.attack_timer_float -= 1 * dt
                         self.attack_timer = int(round(self.attack_timer_float, 0))
 
-            if self.rect.center[0] < player.pos.x < (self.rect.center[0] + self.ATTACK_RANGE):
+            # Attack Right
+            if self.rect.center[0] < player.rect.center[0] < (self.rect.center[0] + self.ATTACK_RANGE):
                 self.walk_right = False
                 self.walk_left = False
                 self.flip = False
