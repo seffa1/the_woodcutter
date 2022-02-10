@@ -125,6 +125,9 @@ class Game:
         # Draw the background
         self.level_manager.draw_background(self.scroll, self.display)
 
+        # Draw the triggers
+        self.level_manager.draw_triggers(self.scroll, self.display)
+
         # Draw the tiles
         self.level_manager.draw_tiles(self.scroll, self.TILE_SIZE, self.display)
 
@@ -133,6 +136,8 @@ class Game:
 
         # Draw the entities
         self.level_manager.draw_entities(self.scroll, self.display)
+
+
 
         # Draw the UI
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
