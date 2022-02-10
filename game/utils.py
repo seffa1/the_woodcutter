@@ -11,6 +11,6 @@ def draw_text(screen, text, size, colour, pos):
     screen.blit(text_surface, text_rect)
 
 
-def calc_distance(pos1, pos2):
+def calc_distance(x1, y1, x2, y2):
     """ Returns the distance between two positional vectors (pg.math.Vector2) """
-    return int(math.sqrt((pos2.x - pos1.x)**2 + (pos2.y - pos1.y)**2))
+    return int(math.sqrt((x2 - x1)**2 + (y2 - y1)**2))

@@ -9,13 +9,19 @@ class Troll(Entity):
         super().__init__(x, y, width, height, type, WALK_ACC, FRIC)
         self.animation_frames['idle'] = self.load_animation('assets/animations/troll/idle', [10, 10, 10, 10], True)
         self.animation_frames['walk'] = self.load_animation('assets/animations/troll/walk', [10, 10, 10, 10, 10, 10], True)
-        self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [10, 10, 10, 10, 10, 10], True)
+        self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [8, 8, 7, 7, 7, 7], True)
         self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 10, 10, 10], True)
+        self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 20], True)
+
+        # Troll Stats
+        self.health = 300
 
         # AI Constants
+        self.DAMAGES = {'attack_1': 5}
+        self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
-        self.ATTACK_RANGE = 50
+        self.ATTACK_RANGE = 30
         self.ATTACK_COOLDOWN = 60
 
         # AI Controller use
@@ -29,64 +35,78 @@ class Troll(Entity):
             self.walk_left = False
 
         else:
-            if player.pos.x < (self.pos.x - self.ATTACK_RANGE):
+            if player.rect.center[0] < (self.rect.center[0] - self.ATTACK_RANGE):
+                self.walk_right = False
                 self.walk_left = True
 
-            if player.pos.x > (self.pos.x + self.rect.width + self.ATTACK_RANGE):
+            if player.rect.center[0] > (self.rect.center[0] + self.rect.width + self.ATTACK_RANGE):
+                self.walk_left= False
                 self.walk_right = True
 
-            if (self.pos.x - self.ATTACK_RANGE) < player.pos.x <= self.pos.x:
+            if (self.rect.center[0] - self.ATTACK_RANGE) < player.pos.x + player.rect.width <= self.rect.center[0]:
                 self.walk_right = False
                 self.walk_left = False
                 self.flip = True
-                if self.attack_timer == 0:
+                if self.attack_timer <= 1 and not self.hurt:
                     self.attacking = True
                     self.attack['1'] = True
                     self.attack_timer = self.ATTACK_COOLDOWN
                     self.attack_timer_float = self.ATTACK_COOLDOWN
                 else:
-                    # self.attack_timer_float -= 1 * dt
-                    # self.attack_timer = round(self.attack_timer_float)
-                    self.attack_timer -= 1
+                    if not self.hurt:
+                        self.attack_timer_float -= 1 * dt
+                        self.attack_timer = int(round(self.attack_timer_float, 0))
 
-            if self.pos.x < player.pos.x < (self.pos.x + self.rect.width + self.ATTACK_RANGE):
+            if self.rect.center[0] < player.pos.x < (self.rect.center[0] + self.ATTACK_RANGE):
                 self.walk_right = False
                 self.walk_left = False
                 self.flip = False
-                if self.attack_timer == 0:
+                if self.attack_timer <= 1 and not self.hurt:
                     self.attacking = True
                     self.attack['1'] = True
                     self.attack_timer = self.ATTACK_COOLDOWN
                     self.attack_timer_float = self.ATTACK_COOLDOWN
                 else:
-                    # self.attack_timer_float -= 1 * dt
-                    # self.attack_timer = round(self.attack_timer_float)
-                    self.attack_timer -= 1
+                    if not self.hurt:
+                        self.attack_timer_float -= 1 * dt
+                        self.attack_timer = int(round(self.attack_timer_float, 0))
 
     def check_aggro(self, player):
         """ Checks if the player is within certain aggro distances """
-        if calc_distance(self.pos, player.pos) <= self.AGGRO_RANGE:
+        if calc_distance(self.rect.center[0], self.rect.center[1], player.rect.center[0], player.rect.center[1]) <= self.AGGRO_RANGE:
             self.aggro = True
-        if calc_distance(self.pos, player.pos) >= self.DEAGGRO_RANGE:
+        if calc_distance(self.rect.center[0], self.rect.center[1], player.rect.center[0], player.rect.center[1]) >= self.DEAGGRO_RANGE:
             self.aggro = False
 
     def hitboxes(self, dt):
         if not self.attacking:
+            self.damage = 0
             return
 
         if self.attack['1']:
+            self.damage = self.DAMAGES['attack_1']
             self.attack_1_timer_float += 1 * dt
             self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
             # self.attack_1_timer += 1
 
-            if self.attack_1_timer > 24:  # 10 is to be adjusted as we go
+            if self.attack_1_timer > 29:  # 10 is to be adjusted as we go
                 if not self.flip:
-                    self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
+                    self.attack_rect = pg.Rect(self.rect.right - 25, self.rect.centery - 8, 45, 30)
                 else:
-                    self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
-            if self.attack_1_timer > 30:
+                    self.attack_rect = pg.Rect(self.rect.left - 15, self.rect.centery - 8, 45, 30)
+            if self.attack_1_timer > 37:
                 self.attack_rect = None
 
+    def check_damages(self, player):
+        # Check if we have taken damage
+        if player.attack_rect:
+            if self.rect.colliderect(player.attack_rect):
+                self.lose_health(player.damage)
+
+        # Check if we have damaged the player
+        if self.attack_rect:
+            if self.attack_rect.colliderect(player.rect):
+                player.lose_health(self.damage)
 
     def update(self, tile_rects, dt, player=None):
         self.check_aggro(player)  # update the aggro state of the entity
@@ -95,6 +115,7 @@ class Troll(Entity):
         self.actions()  # Determine the entities's action
         self.set_image(dt)  # Set the image based on the action
         self.hitboxes(dt)  # Update any hit boxes from attack
+        self.check_damages(player)
 
     def draw(self, display, scroll, hitbox=True, attack_box=True):
         if hitbox:

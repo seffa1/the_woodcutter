@@ -7,7 +7,7 @@ from .entity_manager import Entity_Manager
 from .player import Player
 
 # TODO
-#   Get DT affects AI cooldowns, Get combat collisions working, health, death, refine AI controller
+#   Death animations, refine AI controller (currently you can stand in the enemy hitbox and they wont attack you)
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering)
 
@@ -20,6 +20,7 @@ class Game:
         self.screen = screen
         self.clock = clock
         self.display = display
+        self.FPS = 60
         self.WINDOW_SIZE = WINDOW_SIZE
         self.SCALE_FACTOR = SCALE_FACTOR
         self.TILE_SIZE = 24
@@ -41,19 +42,13 @@ class Game:
 
         # Player
         self.player = Player(350, -300, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
-        self.player.set_static_image('assets/animations/player/idle/idle_0.png')
-        self.player.animation_frames['idle'] = self.player.load_animation('assets/animations/player/idle', [10, 10, 10, 10])
-        self.player.animation_frames['walk'] = self.player.load_animation('assets/animations/player/walk', [5, 5, 5, 5, 5, 5])
-        self.player.animation_frames['run'] = self.player.load_animation('assets/animations/player/run', [5, 5, 5, 5, 5, 5])
-        self.player.animation_frames['roll'] = self.player.load_animation('assets/animations/player/roll', [5, 5, 5, 5, 5, 5])
-        self.player.animation_frames['attack_1'] = self.player.load_animation('assets/animations/player/attack_1', [10, 10, 6, 5, 5, 5])
-        self.player.animation_frames['jump'] = self.player.load_animation('assets/animations/player/jump', [5, 5, 7, 7, 7, 7])
+
 
 
     def run(self):
         self.playing = True
         while self.playing:
-            self.clock.tick(60)
+            self.clock.tick(self.FPS)
 
             # Frame rate independence check. Finds how many seconds have passed since the last frame.
             # If we are at 60 fps, dt will be 0-1/60th of a second
@@ -127,11 +122,17 @@ class Game:
         # Fill the background
         self.display.fill((0, 0, 0))
 
-        # Draw the level and entities within
-        self.level_manager.draw(self.scroll, self.TILE_SIZE, self.display)
+        # Draw the background
+        self.level_manager.draw_background(self.scroll, self.display)
+
+        # Draw the tiles
+        self.level_manager.draw_tiles(self.scroll, self.TILE_SIZE, self.display)
 
         # Draw player
         self.player.draw(self.display, self.scroll)
+
+        # Draw the entities
+        self.level_manager.draw_entities(self.scroll, self.display)
 
         # Draw the UI
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
@@ -144,5 +145,6 @@ class Game:
         draw_text(self.screen, f'action: {self.player.action}', 25, (255, 0, 0), (3, 83))
         draw_text(self.screen, f'Tile_Rects: {len(self.level_manager.tile_rects)}', 25, (255, 0, 0), (3, 103))
         draw_text(self.screen, f'DT: {round(self.dt, 2)}', 25, (255, 0, 0), (3, 123))
+        draw_text(self.screen, f'Health: {self.player.health}', 25, (255, 0, 0), (3, 143))
 
         pg.display.flip()

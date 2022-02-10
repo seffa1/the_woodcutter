@@ -27,8 +27,18 @@ class Level_Manager:
         self.tile_rects = self.get_level().tile_manager.tile_rects
         self.get_level().update(player, self.tile_rects, dt)
 
-    def draw(self, scroll, TILE_SIZE, display):
-        self.get_level().draw(scroll, TILE_SIZE, display)
+    def draw_background(self, scroll, display):
+        self.get_level().draw_background(scroll, display)
+
+    def draw_tiles(self, scroll, TILE_SIZE, display):
+        self.get_level().draw_tiles(scroll, TILE_SIZE, display)
+
+    def draw_entities(self, scroll, display):
+        self.get_level().draw_entities(scroll, display)
+
+    def draw_triggers(self, scroll, display):
+        self.get_level().draw_triggers(scroll, display)
+
 
     def check_change_level(self):
         """ Only gets called when the player presses enter """

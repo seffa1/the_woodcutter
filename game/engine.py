@@ -31,6 +31,7 @@ class Entity(pg.sprite.Sprite):
         self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
         self.MAX_FALL_SPEED = 6
         self.ROLL_VEL = 3
+        self.DAMAGES = {'attack_1': 25}
 
         # Actions
         self.jumping = False
@@ -39,7 +40,9 @@ class Entity(pg.sprite.Sprite):
         self.run = False  # Running only applies if the player is already walking in a direction
         self.roll = False
         self.attacking = False  # Applies to any attack at all
+        self.hurt = False  # When you get hit this animation triggers, and you cant take damage during it
         self.attack = {}  # Keeps track of which attack we are using, replace nums with attack names
+        self.damage = 0  # Kepps track of how much damage our currect attack is doing
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
 
         # Animation / Rendering
@@ -81,6 +84,21 @@ class Entity(pg.sprite.Sprite):
             if rect.colliderect(tile):
                 hit_list.append(tile)
         return hit_list
+
+    def lose_health(self, amount: int):
+        if not self.hurt:
+            self.hurt = True
+            self.health -= amount
+            print(f"lost {amount} health. Now have {self.health}")
+            if self.health < 0:
+                self.health = 0
+            self.check_dead()
+
+    def check_dead(self):
+        if self.health <= 0:
+            print("You have died")
+            # Trigger death animation
+            # Respawn, etc.
 
     def move(self, tile_rects, dt):
         # Reset collisions
@@ -187,8 +205,13 @@ class Entity(pg.sprite.Sprite):
         if self.vel.x < 0:
             self.flip = True
 
-        # Walking, running, and idle animations only get played if we arent attacking, rolling, or jumping
-        if not self.roll and not self.attacking and not self.jumping:
+        # Damage check
+        if self.hurt:
+            self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'hurt')
+            return
+
+        # Walking, running, and idle animations only get played if we arent attacking, rolling, jumping, or getting hurt
+        if not self.roll and not self.attacking and not self.jumping and not self.hurt:
             # Idle check
             if abs(self.vel.x) <= walk_threshold:
                 self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'idle')
@@ -228,6 +251,7 @@ class Entity(pg.sprite.Sprite):
             self.frame = 0
             self.frame_float = 0
             # Any non-looping actions get reset here
+            self.hurt = False
             self.roll = False
             self.attacking = False
             self.attack['1'] = False
@@ -243,9 +267,11 @@ class Entity(pg.sprite.Sprite):
 
     def hitboxes(self, dt):
         if not self.attacking:
+            self.damage = 0
             return
 
         if self.attack['1']:
+            self.damage = self.DAMAGES['attack_1']
             self.attack_1_timer_float += 1 * dt
             self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
             # self.attack_1_timer += 1
