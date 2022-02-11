@@ -16,7 +16,7 @@ class Player(Entity):
         self.animation_frames['hurt'] = self.load_animation('assets/animations/player/hurt',[5, 10, 5])
 
         # Player Health
-        self.health = 100
+        self.health = 500
 
         # Player Stamina
         self.stamina = 100
@@ -30,16 +30,24 @@ class Player(Entity):
         self.DAMAGES = {'attack_1': 25}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
 
-    def use_stamina(self, amount, dt):
+    def use_stamina(self, amount):
+        """ For fixed stamina use like attacks, rolling, and jumping"""
+        self.stamina_float -= amount
+        self.stamina = int(round(self.stamina_float, 0))
+        if self.stamina_float <= 0:
+            self.stamina_float = 0
+
+    def drain_stamina(self, amount, dt):
+        """ For stamina use that has to consider dt, like running """
         self.stamina_float -= amount * dt
         self.stamina = int(round(self.stamina_float, 0))
         if self.stamina_float <= 0:
             self.stamina_float = 0
 
     def gain_stamina(self, dt):
+        """ For stamina recovery """
         if self.run or self.attacking or self.roll:
             return
-
         self.stamina_float += self.STAMINA_REGEN_RATE * dt
         self.stamina = int(round(self.stamina_float, 0))
         if self.stamina_float >= self.MAX_STAMINA:
@@ -57,12 +65,12 @@ class Player(Entity):
                 self.acc.x = -self.WALK_ACC
                 if self.run:
                     self.acc.x -= self.RUN_ACC
-                    self.use_stamina(self.STAMINA_RUN_DRAIN, dt)
+                    self.drain_stamina(self.STAMINA_RUN_DRAIN, dt)
             if self.walk_right:
                 self.acc.x = self.WALK_ACC
                 if self.run:
                     self.acc.x += self.RUN_ACC
-                    self.use_stamina(self.STAMINA_RUN_DRAIN, dt)
+                    self.drain_stamina(self.STAMINA_RUN_DRAIN, dt)
             # If we are holding both right and left controls, you dont move
             if self.walk_left and self.walk_right:
                 self.acc.x = 0

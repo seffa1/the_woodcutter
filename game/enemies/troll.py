@@ -1,6 +1,6 @@
 from game.engine import Entity
 import pygame as pg
-from game.utils import calc_distance
+from game.utils import calc_distance, Color
 
 
 
@@ -14,7 +14,8 @@ class Troll(Entity):
         self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 20], True)
 
         # Troll Stats
-        self.health = 300
+        self.health = 100
+        self.MAX_HEALTH = 100
 
         # AI Constants
         self.DAMAGES = {'attack_1': 15}
@@ -151,6 +152,11 @@ class Troll(Entity):
         # Flip the image if we need to, and then blit it
         player_image = pg.transform.flip(self.image, self.flip, False)
         display.blit(player_image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
+
+        # Draw the health bar
+        health_bar = pg.Rect(self.rect.center[0] - scroll[0] - (self.MAX_HEALTH/4), self.pos.y - scroll[1] - 10, self.health / 2, 5)
+        pg.draw.rect(display, Color.HEALTH.value, health_bar)
+
 
         if attack_box:
             if self.attack_rect is not None:

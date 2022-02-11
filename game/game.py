@@ -8,8 +8,8 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Health bars above enemies head
 #   Player death animation and respawn
+#   Death of player or enemies when the fall off the map
 #   Fix animation images to they are centered on the character
 #   Particle explosions when the trolls die?
 #   Batch Rendering of ground for less collisions checks
@@ -89,7 +89,7 @@ class Game:
                 if event.key == pg.K_w and not self.player.roll:  # Cant jump while rolling
                     if self.player.stamina >= self.player.STAMINA_USE['jump']:
                         if not self.player.jumping:
-                            self.player.use_stamina(self.player.STAMINA_USE['jump'], self.dt)
+                            self.player.use_stamina(self.player.STAMINA_USE['jump'])
                         self.player.jump()
 
                 # Cant roll unless on the ground
@@ -99,13 +99,13 @@ class Game:
                         self.player.invincible = True
                         self.player.invincible_timer = self.player.INVINCIBLE_FRAMES
                         self.player.invincible_timer_float = self.player.INVINCIBLE_FRAMES
-                        self.player.use_stamina(self.player.STAMINA_USE['roll'], self.dt)
+                        self.player.use_stamina(self.player.STAMINA_USE['roll'])
                 # Cant attack while rolling
                 if event.key == pg.K_c and not self.player.roll:
                     if self.player.stamina >= self.player.STAMINA_USE['attack_1']:
                         self.player.attacking = True
                         self.player.attack['1'] = True
-                        self.player.use_stamina(self.player.STAMINA_USE['attack_1'], self.dt)
+                        self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
                 if event.key == pg.K_RETURN:
                     self.level_manager.check_change_level()
 
