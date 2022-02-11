@@ -9,20 +9,20 @@ class Troll(Entity):
         super().__init__(x, y, width, height, type, WALK_ACC, FRIC)
         self.animation_frames['idle'] = self.load_animation('assets/animations/troll/idle', [10, 10, 10, 10], True)
         self.animation_frames['walk'] = self.load_animation('assets/animations/troll/walk', [10, 10, 10, 10, 10, 10], True)
-        self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [8, 8, 7, 7, 7, 7], True)
-        self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 10, 10, 10], True)
+        self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [3, 4, 7, 7, 4, 4], True)
+        self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 20, 60, 120], True)
         self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 20], True)
 
         # Troll Stats
         self.health = 300
 
         # AI Constants
-        self.DAMAGES = {'attack_1': 5}
+        self.DAMAGES = {'attack_1': 15}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
         self.ATTACK_RANGE = 30
-        self.ATTACK_COOLDOWN = 60
+        self.ATTACK_COOLDOWN = 90
 
         # AI Controller use
         self.aggro = False
@@ -30,18 +30,35 @@ class Troll(Entity):
         self.attack_timer_float = 0
 
     def AI_controller(self, player, dt):
+        if self.death:
+            return
+
         if not self.aggro:
             self.walk_right = False
             self.walk_left = False
+            self.attack_timer = 0
+            self.attack_timer_float = 0
 
         else:
             if player.rect.center[0] < (self.rect.center[0] - self.ATTACK_RANGE):
                 self.walk_right = False
                 self.walk_left = True
+                self.attack_timer_float -= 1 * dt
+                self.attack_timer = int(round(self.attack_timer_float, 0))
+                if self.attack_timer_float < 0:
+                    self.attack_timer_float = 0
+                if self.attack_timer < 0:
+                    self.attack_timer = 0
 
             if player.rect.center[0] > (self.rect.center[0] + self.rect.width + self.ATTACK_RANGE):
                 self.walk_left= False
                 self.walk_right = True
+                self.attack_timer_float -= 1 * dt
+                self.attack_timer = int(round(self.attack_timer_float, 0))
+                if self.attack_timer_float < 0:
+                    self.attack_timer_float = 0
+                if self.attack_timer < 0:
+                    self.attack_timer = 0
 
             # Attack Left
             if (self.rect.center[0] - self.ATTACK_RANGE) < player.rect.center[0] <= self.rect.center[0]:
@@ -54,9 +71,12 @@ class Troll(Entity):
                     self.attack_timer = self.ATTACK_COOLDOWN
                     self.attack_timer_float = self.ATTACK_COOLDOWN
                 else:
-                    if not self.hurt:
-                        self.attack_timer_float -= 1 * dt
-                        self.attack_timer = int(round(self.attack_timer_float, 0))
+                    self.attack_timer_float -= 1 * dt
+                    self.attack_timer = int(round(self.attack_timer_float, 0))
+                    if self.attack_timer_float < 0:
+                        self.attack_timer_float = 0
+                    if self.attack_timer < 0:
+                        self.attack_timer = 0
 
             # Attack Right
             if self.rect.center[0] < player.rect.center[0] < (self.rect.center[0] + self.ATTACK_RANGE):
@@ -69,9 +89,12 @@ class Troll(Entity):
                     self.attack_timer = self.ATTACK_COOLDOWN
                     self.attack_timer_float = self.ATTACK_COOLDOWN
                 else:
-                    if not self.hurt:
-                        self.attack_timer_float -= 1 * dt
-                        self.attack_timer = int(round(self.attack_timer_float, 0))
+                    self.attack_timer_float -= 1 * dt
+                    self.attack_timer = int(round(self.attack_timer_float, 0))
+                    if self.attack_timer_float < 0:
+                        self.attack_timer_float = 0
+                    if self.attack_timer < 0:
+                        self.attack_timer = 0
 
     def check_aggro(self, player):
         """ Checks if the player is within certain aggro distances """
@@ -91,12 +114,12 @@ class Troll(Entity):
             self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
             # self.attack_1_timer += 1
 
-            if self.attack_1_timer > 29:  # 10 is to be adjusted as we go
+            if self.attack_1_timer > 15:  # 10 is to be adjusted as we go
                 if not self.flip:
                     self.attack_rect = pg.Rect(self.rect.right - 25, self.rect.centery - 8, 45, 30)
                 else:
                     self.attack_rect = pg.Rect(self.rect.left - 15, self.rect.centery - 8, 45, 30)
-            if self.attack_1_timer > 37:
+            if self.attack_1_timer > 20:
                 self.attack_rect = None
 
     def check_damages(self, player):
@@ -114,12 +137,12 @@ class Troll(Entity):
         self.check_aggro(player)  # update the aggro state of the entity
         self.AI_controller(player, dt)  # Updates the actions based on player's location
         self.move(tile_rects, dt)  # Update entity position
-        self.actions()  # Determine the entities's action
+        self.actions(dt)  # Determine the entities's action
         self.set_image(dt)  # Set the image based on the action
         self.hitboxes(dt)  # Update any hit boxes from attack
         self.check_damages(player)
 
-    def draw(self, display, scroll, hitbox=True, attack_box=True):
+    def draw(self, display, scroll, hitbox=False, attack_box=False):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)

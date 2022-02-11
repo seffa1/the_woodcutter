@@ -21,6 +21,8 @@ class Entity(pg.sprite.Sprite):
         self.air_timer = 0  # Keeps track of how many frames youve been in 'coyote time'
         self.attack_1_timer = 0  # Keeps track of the attack_1 frames for hitbox creation
         self.attack_1_timer_float = 0  # Uses dt to track percise frame rate independent adjustments
+        self.invincible_timer = 0
+        self.invincible_timer_float = 0
 
         # Constants
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
@@ -32,6 +34,7 @@ class Entity(pg.sprite.Sprite):
         self.MAX_FALL_SPEED = 6
         self.ROLL_VEL = 3
         self.DAMAGES = {'attack_1': 25}
+        self.INVINCIBLE_FRAMES = 20
 
         # Actions
         self.jumping = False
@@ -39,8 +42,10 @@ class Entity(pg.sprite.Sprite):
         self.walk_left = False  # A function of user keyboard inputs
         self.run = False  # Running only applies if the player is already walking in a direction
         self.roll = False
+        self.invincible = False  # For the rolling i-frame
         self.attacking = False  # Applies to any attack at all
         self.hurt = False  # When you get hit this animation triggers, and you cant take damage during it
+        self.death = False  # Triggers the death animation, which once ended, kills the entity
         self.attack = {}  # Keeps track of which attack we are using, replace nums with attack names
         self.damage = 0  # Kepps track of how much damage our currect attack is doing
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
@@ -86,7 +91,7 @@ class Entity(pg.sprite.Sprite):
         return hit_list
 
     def lose_health(self, amount: int):
-        if not self.hurt:
+        if not self.hurt and not self.invincible:
             self.hurt = True
             self.health -= amount
             print(f"lost {amount} health. Now have {self.health}")
@@ -96,9 +101,7 @@ class Entity(pg.sprite.Sprite):
 
     def check_dead(self):
         if self.health <= 0:
-            print("You have died")
-            # Trigger death animation
-            # Respawn, etc.
+            self.death = True
 
     def move(self, tile_rects, dt):
         # Reset collisions
@@ -195,7 +198,7 @@ class Entity(pg.sprite.Sprite):
             frame_float = 0
         return current_action, current_frame, frame_float
 
-    def actions(self):
+    def actions(self, dt):
         """ Determine the current action and update the image accordingly """
         walk_threshold = 0.5
 
@@ -204,6 +207,13 @@ class Entity(pg.sprite.Sprite):
             self.flip = False
         if self.vel.x < 0:
             self.flip = True
+
+        # Death check
+        if self.death:
+            self.walk_right = False
+            self.walk_left = False
+            self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'death')
+            return
 
         # Damage check
         if self.hurt:
@@ -232,6 +242,11 @@ class Entity(pg.sprite.Sprite):
             # Roll Check
             if self.roll:
                 self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'roll')
+                self.invincible_timer_float -= 1 * dt
+                self.invincible_timer = int(round(self.invincible_timer_float, 0))
+                if self.invincible_timer_float <= 0:
+                    self.invincible_timer_float = 0
+                    self.invincible = False
 
             # Attack Check
             if self.attacking:
@@ -248,6 +263,8 @@ class Entity(pg.sprite.Sprite):
         self.frame = int(round(self.frame_float, 0))
         # self.frame += 1
         if self.frame >= len(self.animation_frames[self.action]):
+            if self.action == 'death':
+                self.kill()
             self.frame = 0
             self.frame_float = 0
             # Any non-looping actions get reset here
@@ -259,6 +276,7 @@ class Entity(pg.sprite.Sprite):
             self.attack_1_timer_float = 0
             self.jumping = False
             self.attack_rect = None
+            self.invincible = False
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
@@ -286,7 +304,7 @@ class Entity(pg.sprite.Sprite):
 
     def update(self, tile_rects, dt, player=None):
         self.move(tile_rects, dt)  # Update players position
-        self.actions()  # Determine the player's action
+        self.actions(dt)  # Determine the player's action
         self.set_image(dt)  # Set the image based on the player's action
         self.hitboxes(dt)  # Update any hit boxes from player's attack
 
@@ -301,7 +319,7 @@ class Entity(pg.sprite.Sprite):
     def set_static_image(self, path: str):
         self.image = pg.image.load(path).convert_alpha()
 
-    def draw(self, display, scroll, hitbox=True, attack_box=True):
+    def draw(self, display, scroll, hitbox=False, attack_box=False):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)

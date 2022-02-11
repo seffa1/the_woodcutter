@@ -8,10 +8,10 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Troll attack timer should decrease even if he is in the walking state, or non-aggro state
-#   Health and stamina bar UI
+#   Health bars above enemies head
+#   Player death animation and respawn
 #   Fix animation images to they are centered on the character
-#   Death animations
+#   Particle explosions when the trolls die?
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering)
 
@@ -74,7 +74,7 @@ class Game:
                 sys.exit()
 
             mods = pg.key.get_mods()
-            if mods & pg.KMOD_SHIFT:
+            if mods & pg.KMOD_SHIFT and self.player.stamina > self.player.STAMINA_RUN_DRAIN:
                 self.player.run = True
             else:
                 self.player.run = False
@@ -87,14 +87,25 @@ class Game:
                 if event.key == pg.K_a:
                     self.player.walk_left = True
                 if event.key == pg.K_w and not self.player.roll:  # Cant jump while rolling
-                    self.player.jump()
+                    if self.player.stamina >= self.player.STAMINA_USE['jump']:
+                        if not self.player.jumping:
+                            self.player.use_stamina(self.player.STAMINA_USE['jump'], self.dt)
+                        self.player.jump()
+
                 # Cant roll unless on the ground
                 if event.key == pg.K_SPACE and not self.player.roll and self.player.collision_types['bottom'] and not self.player.attacking:
-                    self.player.roll = True
+                    if self.player.stamina >= self.player.STAMINA_USE['roll']:
+                        self.player.roll = True
+                        self.player.invincible = True
+                        self.player.invincible_timer = self.player.INVINCIBLE_FRAMES
+                        self.player.invincible_timer_float = self.player.INVINCIBLE_FRAMES
+                        self.player.use_stamina(self.player.STAMINA_USE['roll'], self.dt)
                 # Cant attack while rolling
                 if event.key == pg.K_c and not self.player.roll:
-                    self.player.attacking = True
-                    self.player.attack['1'] = True
+                    if self.player.stamina >= self.player.STAMINA_USE['attack_1']:
+                        self.player.attacking = True
+                        self.player.attack['1'] = True
+                        self.player.use_stamina(self.player.STAMINA_USE['attack_1'], self.dt)
                 if event.key == pg.K_RETURN:
                     self.level_manager.check_change_level()
 
@@ -122,6 +133,9 @@ class Game:
 
         # Update the player
         self.player.update(self.level_manager.tile_rects, self.dt)
+
+        # Update the UI
+        self.UI.update(self.player)
 
     def draw(self):
         # Fill the background
