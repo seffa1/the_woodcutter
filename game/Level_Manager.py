@@ -11,6 +11,8 @@ class Level_Manager:
         self.tile_rects = []
         self.collided_trigger = None
 
+
+
     def load_level(self, ID: str, TILE_SIZE: int, display):
         self.levels[ID] = Level(ID, TILE_SIZE, display)
 
