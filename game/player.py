@@ -16,14 +16,14 @@ class Player(Entity):
         self.animation_frames['hurt'] = self.load_animation('assets/animations/player/hurt',[5, 10, 5])
 
         # Player Health
-        self.health = 500
+        self.health = 250
 
         # Player Stamina
-        self.stamina = 100
-        self.stamina_float = 100
+        self.stamina = 250
+        self.stamina_float = 250
         self.STAMINA_RUN_DRAIN = .5
         self.STAMINA_REGEN_RATE = .25
-        self.MAX_STAMINA = 100
+        self.MAX_STAMINA = 250
         self.STAMINA_USE = {'attack_1': 25, 'roll': 30, 'jump': 10}
 
         # Player Attacking
@@ -143,6 +143,7 @@ class Player(Entity):
             self.air_timer += 1
 
     def update(self, tile_rects, dt, player=None):
+        self.check_dead()
         self.move(tile_rects, dt)  # Update players position
         self.actions(dt)  # Determine the player's action
         self.gain_stamina(dt)  # Regain stamina

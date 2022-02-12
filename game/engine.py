@@ -35,6 +35,7 @@ class Entity(pg.sprite.Sprite):
         self.ROLL_VEL = 3
         self.DAMAGES = {'attack_1': 25}
         self.INVINCIBLE_FRAMES = 20
+        self.KILL_LIMIT_Y = 2000  # The y value an entitiy gets killed at
 
         # Actions
         self.jumping = False
@@ -100,7 +101,8 @@ class Entity(pg.sprite.Sprite):
             self.check_dead()
 
     def check_dead(self):
-        if self.health <= 0:
+        if self.health <= 0 or self.pos.y >= self.KILL_LIMIT_Y:
+            print("'you ded")
             self.death = True
 
     def move(self, tile_rects, dt):
@@ -303,6 +305,7 @@ class Entity(pg.sprite.Sprite):
                 self.attack_rect = None
 
     def update(self, tile_rects, dt, player=None):
+        self.check_dead()
         self.move(tile_rects, dt)  # Update players position
         self.actions(dt)  # Determine the player's action
         self.set_image(dt)  # Set the image based on the player's action
