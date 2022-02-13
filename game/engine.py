@@ -10,6 +10,7 @@ class Entity(pg.sprite.Sprite):
     def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0):
         super().__init__()
         # Physics
+        self.type = type
         self.pos = vec(x, y)  # A funtion of out velocity and any collisions
         self.vel = vec(0, 0)  # A function of our current acceleration
         self.acc = vec(0, 0)  # A function of our current velocity and friction
@@ -78,6 +79,10 @@ class Entity(pg.sprite.Sprite):
                 animation_frame_data.append(image_id)
 
         return animation_frame_data  # ['idle_1', 'idle_1', 'idle_1'....., 'idle_2', 'idle_2'...]
+
+    def respawn(self):
+        respawn_event = pg.event.Event(pg.USEREVENT + 1)
+        pg.event.post(respawn_event)
 
     def set_position(self, x, y):
         self.pos.x = x
@@ -266,7 +271,11 @@ class Entity(pg.sprite.Sprite):
         # self.frame += 1
         if self.frame >= len(self.animation_frames[self.action]):
             if self.action == 'death':
-                self.kill()
+                if self.type != 'player':
+                    self.kill()
+                else:
+                    self.respawn()
+
             self.frame = 0
             self.frame_float = 0
             # Any non-looping actions get reset here

@@ -14,9 +14,11 @@ class Player(Entity):
         self.animation_frames['attack_1'] = self.load_animation('assets/animations/player/attack_1',[10, 10, 6, 5, 5, 5])
         self.animation_frames['jump'] = self.load_animation('assets/animations/player/jump',[5, 5, 7, 7, 7, 7])
         self.animation_frames['hurt'] = self.load_animation('assets/animations/player/hurt',[5, 10, 5])
+        self.animation_frames['death'] = self.load_animation('assets/animations/player/death',[5, 5, 10, 10, 20, 30])
+        self.set_type('player')
 
         # Player Health
-        self.health = 250
+        self.health = 100
 
         # Player Stamina
         self.stamina = 250

@@ -7,17 +7,23 @@ from .Level_Trigger import Level_Trigger
 class Level:
     def __init__(self, level_ID: str, TILE_SIZE: int, display):
         self.level_ID = level_ID
+        self.TILE_SIZE = TILE_SIZE
         self.display = display
         self.background_images = []
         self.connecting_levels = {}
         self.entity_manager = Entity_Manager(level_ID)
         self.tile_manager = Tile_Manager(level_ID, TILE_SIZE)
         self.level_triggers = {}  # '0-2': Level_trigger ---> Contains level_trigger objects with name of the level they go to
+        self.respawn_point = [0, 0]
 
         self.load_triggers('game/levels/')
         self.load_background('game/levels/')
+        self.load_respawn_point('game/levels/')
 
         self.collided_trigger = None
+
+    def respawn_level(self):
+        self.entity_manager = Entity_Manager(self.level_ID)
 
     def update(self, player, tile_rects, dt):
         self.tile_manager.update()
@@ -40,12 +46,19 @@ class Level:
 
     def load_triggers(self, path):
         file_path = path + self.level_ID + '/level_triggers.txt'
-        with open (file_path, 'r') as file:
+        with open(file_path, 'r') as file:
             for line in file:
                 line = line.split(',')
                 trigger = Level_Trigger(int(line[0]), int(line[1]), int(line[2]), int(line[3]), line[4], line[5])
                 self.level_triggers[line[4]] = trigger
                 # self.add_connection(trigger[4])
+
+    def load_respawn_point(self, path):
+        file_path = path + self.level_ID + '/respawn.txt'
+        with open(file_path, 'r') as file:
+            for line in file:
+                line = line.split(',')
+                self.respawn_point = [int(line[0]), int(line[1])]
 
     def check_triggers(self, player):
         self.collided_trigger = None
@@ -56,7 +69,7 @@ class Level:
 
     def load_background(self, path):
         file_path = path + self.level_ID + '/backgrounds.txt'
-        with open (file_path, 'r') as file:
+        with open(file_path, 'r') as file:
             for line in file:
                 line = line.split(',')
                 paralax_dif = line[1]

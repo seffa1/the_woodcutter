@@ -18,7 +18,7 @@ class Troll(Entity):
         self.MAX_HEALTH = 100
 
         # AI Constants
-        self.DAMAGES = {'attack_1': 15}
+        self.DAMAGES = {'attack_1': 150}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400

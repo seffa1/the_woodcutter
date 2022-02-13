@@ -73,12 +73,23 @@ class Game:
                 pg.quit()
                 sys.exit()
 
+            # Check respawn
+            if event.type == pg.USEREVENT + 1:
+                self.player.health = 100
+                self.player.action = 'idle'
+                self.player.death = False
+                self.level_manager.get_level().respawn_level()
+                self.player.set_position(self.level_manager.get_level().respawn_point[0],
+                                         self.level_manager.get_level().respawn_point[1])
+
+            # Check special keys
             mods = pg.key.get_mods()
             if mods & pg.KMOD_SHIFT and self.player.stamina > self.player.STAMINA_RUN_DRAIN:
                 self.player.run = True
             else:
                 self.player.run = False
 
+            # Check the rest of the keys
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.playing = False
