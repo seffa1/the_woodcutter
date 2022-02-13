@@ -14,11 +14,11 @@ class Troll(Entity):
         self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 20], True)
 
         # Troll Stats
-        self.health = 100
-        self.MAX_HEALTH = 100
+        self.health = 200
+        self.MAX_HEALTH = 200
 
         # AI Constants
-        self.DAMAGES = {'attack_1': 150}
+        self.DAMAGES = {'attack_1': 25}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400

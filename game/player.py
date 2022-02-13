@@ -19,14 +19,16 @@ class Player(Entity):
 
         # Player Health
         self.health = 100
+        self.max_health = 100
 
         # Player Stamina
-        self.stamina = 250
-        self.stamina_float = 250
-        self.STAMINA_RUN_DRAIN = .5
+        self.stamina = 200
+        self.stamina_float = 200
+        self.max_stamina = 200
+
+        self.STAMINA_RUN_DRAIN = .3
         self.STAMINA_REGEN_RATE = .25
-        self.MAX_STAMINA = 250
-        self.STAMINA_USE = {'attack_1': 25, 'roll': 30, 'jump': 10}
+        self.STAMINA_USE = {'attack_1': 15, 'roll': 20, 'jump': 10}
 
         # Player Attacking
         self.DAMAGES = {'attack_1': 25}
@@ -52,8 +54,8 @@ class Player(Entity):
             return
         self.stamina_float += self.STAMINA_REGEN_RATE * dt
         self.stamina = int(round(self.stamina_float, 0))
-        if self.stamina_float >= self.MAX_STAMINA:
-            self.stamina_float = self.MAX_STAMINA
+        if self.stamina_float >= self.max_stamina:
+            self.stamina_float = self.max_stamina
 
     def move(self, tile_rects, dt):
         # Reset collisions

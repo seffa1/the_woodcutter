@@ -42,6 +42,7 @@ class Game:
         self.level_manager = Level_Manager()
         self.level_manager.load_level('0-1', self.TILE_SIZE, display)
         self.level_manager.load_level('0-2', self.TILE_SIZE, display)
+        self.level_manager.load_level('0-3', self.TILE_SIZE, display)
         self.level_manager.set_level('0-1')
 
         # Player
@@ -75,10 +76,12 @@ class Game:
 
             # Check respawn
             if event.type == pg.USEREVENT + 1:
-                self.player.health = 100
+                self.player.health = self.player.max_health
                 self.player.action = 'idle'
                 self.player.death = False
                 self.level_manager.get_level().respawn_level()
+
+                self.level_manager.set_level('0-1')
                 self.player.set_position(self.level_manager.get_level().respawn_point[0],
                                          self.level_manager.get_level().respawn_point[1])
 
