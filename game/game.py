@@ -1,15 +1,14 @@
 import pygame as pg
 import sys, time
 from .Level_Manager import Level_Manager
-from .utils import draw_text
-from .engine import Entity
-from .entity_manager import Entity_Manager
 from .player import Player
 from .UI import UI
 
 # TODO
-#   Player death animation and respawn
-#   Death of player or enemies when the fall off the map
+#   Add some traps
+#   Player rolling should shrink hit box? - or a special tile you can roll through?
+#   Add double jump capabilities
+#   Add obsticles (spikes to start)
 #   Fix animation images to they are centered on the character
 #   Particle explosions when the trolls die?
 #   Batch Rendering of ground for less collisions checks
@@ -135,8 +134,8 @@ class Game:
     def update(self):
         # Scroll
         # Sets the "cameras" position. The divisor adds the lagging behind, smoothing effect
-        self.true_scroll[0] += (self.player.rect.x - self.true_scroll[0] - self.OFFSET_X) / 20
-        self.true_scroll[1] += (self.player.rect.y - self.true_scroll[1] - self.OFFSET_Y) / 20
+        self.true_scroll[0] += (self.player.rect.x - self.true_scroll[0] - self.OFFSET_X) / 10
+        self.true_scroll[1] += (self.player.rect.y - self.true_scroll[1] - self.OFFSET_Y) / 10
         scroll = self.true_scroll.copy()
         # Rounds the float to an int for the drawings not to get choppy
         self.scroll[0] = int(scroll[0])

@@ -24,6 +24,9 @@ class UI:
             draw_text(screen, f'Tile_Rects: {len(level_manager.tile_rects)}', 25, (255, 0, 0), (1400, 103))
             draw_text(screen, f'DT: {round(dt, 2)}', 25, (255, 0, 0), (1400, 123))
             draw_text(screen, f'Health: {player.health}', 25, (255, 0, 0), (1400, 143))
+            draw_text(screen, f'Air Timer: {player.air_timer}', 25, (255, 0, 0), (1400, 163))
+            draw_text(screen, f'Collisions: {player.collision_types}', 25, (255, 0, 0), (900, 183))
+
             # draw_text(screen, f'Invincibility: {player.invincible}', 25, (255, 0, 0), (1400, 163))
 
         # Health Bar

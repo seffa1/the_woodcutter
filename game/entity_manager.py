@@ -1,6 +1,7 @@
 import pygame as pg
 from .engine import Entity
 from .enemies.troll import Troll
+from .traps.spikes import Spikes
 
 
 # Instantiates, stores, and kills entities for each level
@@ -25,12 +26,20 @@ class Entity_Manager:
         """ Instantiates and entity and adds it to the appropriate group or creates a group for it """
         if type == 'troll':
             entity = Troll(x, y, width, height, type, WALK_ACC, FRIC)
+        elif type == 'spikes':
+            entity = Spikes(x, y, width, height, type, WALK_ACC, FRIC)
         else:
             entity = Entity(x, y, width, height, type, WALK_ACC, FRIC)
 
 
         # Add this entity to that group
-        self.groups[type].add(entity)
+        try:
+            self.groups[type].add(entity)
+        except KeyError:
+            self.groups[type] = pg.sprite.Group()
+        finally:
+            self.groups[type].add(entity)
+
         print(f'{type} type entity created.')
         print(f'entity groups: {self.groups}')
 

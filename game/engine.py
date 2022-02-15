@@ -11,6 +11,7 @@ class Entity(pg.sprite.Sprite):
         super().__init__()
         # Physics
         self.type = type
+        self.height = height
         self.pos = vec(x, y)  # A funtion of out velocity and any collisions
         self.vel = vec(0, 0)  # A function of our current acceleration
         self.acc = vec(0, 0)  # A function of our current velocity and friction
@@ -24,19 +25,21 @@ class Entity(pg.sprite.Sprite):
         self.attack_1_timer_float = 0  # Uses dt to track percise frame rate independent adjustments
         self.invincible_timer = 0
         self.invincible_timer_float = 0
+        self.wall_jump_timer = 0
 
         # Constants
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
         self.FRIC = FRIC  # How much friction, this causes a variable acceleration, so we reach a max speed with a curve
-        self.GRAV = .4
+        self.GRAV = .3
         self.JUMP_VEL = -7
         self.RUN_ACC = .2  # Gets added to the walking speed
         self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
         self.MAX_FALL_SPEED = 6
-        self.ROLL_VEL = 3
+        self.ROLL_VEL = 4
         self.DAMAGES = {'attack_1': 25}
         self.INVINCIBLE_FRAMES = 20
-        self.KILL_LIMIT_Y = 2000  # The y value an entitiy gets killed at
+        self.KILL_LIMIT_Y = 2000  # The y value an entity gets killed at
+        self.ROLL_HEIGHT = 25  # The height of the entities hitbox when they are rolling
 
         # Actions
         self.jumping = False
@@ -49,7 +52,8 @@ class Entity(pg.sprite.Sprite):
         self.hurt = False  # When you get hit this animation triggers, and you cant take damage during it
         self.death = False  # Triggers the death animation, which once ended, kills the entity
         self.attack = {}  # Keeps track of which attack we are using, replace nums with attack names
-        self.damage = 0  # Kepps track of how much damage our currect attack is doing
+        self.damage = 0  # Keeps track of how much damage our current attack is doing
+        self.wall_jump = False
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
 
         # Animation / Rendering
@@ -179,7 +183,7 @@ class Entity(pg.sprite.Sprite):
         hit_list = self.collision_test(self.rect, tile_rects) # TODO The hit list is growing over time, causing the program to crash
         for tile in hit_list:
             # If you are falling
-            if self.vel.y > 1:
+            if self.vel.y > 0:
                 self.collision_types['bottom'] = True
                 self.rect.bottom = tile.top  # Change the rect's position because of convientient methods
                 self.pos.y = self.rect.topleft[1]
@@ -191,8 +195,9 @@ class Entity(pg.sprite.Sprite):
                 self.vel.y = 0
 
         # Updates from y-axis collisions
-        if self.collision_types['bottom']:
+        if self.collision_types['bottom'] or self.collision_types['right'] or self.collision_types['left']:
             self.air_timer = 0
+            self.wall_jump_timer = 0
             self.jumping = False
         else:
             self.air_timer += 1
@@ -254,6 +259,8 @@ class Entity(pg.sprite.Sprite):
                 if self.invincible_timer_float <= 0:
                     self.invincible_timer_float = 0
                     self.invincible = False
+                # Change the hitbox height for rolling
+                self.rect.height = self.ROLL_HEIGHT
 
             # Attack Check
             if self.attacking:
@@ -288,6 +295,7 @@ class Entity(pg.sprite.Sprite):
             self.jumping = False
             self.attack_rect = None
             self.invincible = False
+            self.rect.height = self.height
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image

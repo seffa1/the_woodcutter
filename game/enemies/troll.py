@@ -14,8 +14,8 @@ class Troll(Entity):
         self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 20], True)
 
         # Troll Stats
-        self.health = 200
-        self.MAX_HEALTH = 200
+        self.health = 100
+        self.MAX_HEALTH = 100
 
         # AI Constants
         self.DAMAGES = {'attack_1': 25}
