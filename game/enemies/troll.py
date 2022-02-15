@@ -5,8 +5,8 @@ from game.utils import calc_distance, Color
 
 
 class Troll(Entity):
-    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0):
-        super().__init__(x, y, width, height, type, WALK_ACC, FRIC)
+    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0, rotate=None):
+        super().__init__(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         self.animation_frames['idle'] = self.load_animation('assets/animations/troll/idle', [10, 10, 10, 10], True)
         self.animation_frames['walk'] = self.load_animation('assets/animations/troll/walk', [10, 10, 10, 10, 10, 10], True)
         self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [3, 4, 7, 7, 4, 4], True)

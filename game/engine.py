@@ -7,9 +7,10 @@ vec = pg.math.Vector2
 
 # Any object in the game i think?
 class Entity(pg.sprite.Sprite):
-    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0):
+    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0, rotate=None):
         super().__init__()
         # Physics
+        self.rotate = rotate
         self.type = type
         self.height = height
         self.pos = vec(x, y)  # A funtion of out velocity and any collisions
@@ -39,7 +40,7 @@ class Entity(pg.sprite.Sprite):
         self.DAMAGES = {'attack_1': 25}
         self.INVINCIBLE_FRAMES = 20
         self.KILL_LIMIT_Y = 2000  # The y value an entity gets killed at
-        self.ROLL_HEIGHT = 25  # The height of the entities hitbox when they are rolling
+        self.ROLL_HEIGHT = 35  # The height of the entities hitbox when they are rolling
 
         # Actions
         self.jumping = False
@@ -275,7 +276,7 @@ class Entity(pg.sprite.Sprite):
         """ Update the current image """
         self.frame_float += 1 * dt
         self.frame = int(round(self.frame_float, 0))
-        # self.frame += 1
+
         if self.frame >= len(self.animation_frames[self.action]):
             if self.action == 'death':
                 if self.type != 'player':

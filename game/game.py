@@ -45,7 +45,7 @@ class Game:
         self.level_manager.set_level('0-1')
 
         # Player
-        self.player = Player(350, -300, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+        self.player = Player(250, -300, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
         # User Interface
         self.UI = UI()
