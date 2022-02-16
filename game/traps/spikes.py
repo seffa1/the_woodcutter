@@ -10,7 +10,6 @@ class Spikes(Entity):
         self.image = pg.transform.scale(pg.image.load('assets/images/traps/spikes/spikes_0.png').convert_alpha(),
                                         (width, height))
         if self.rotate:
-            print("Rotating")
             self.image = pg.transform.rotate(self.image, self.rotate)
 
         self.DAMAGE = 25

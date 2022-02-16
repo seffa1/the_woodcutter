@@ -39,7 +39,7 @@ class Entity(pg.sprite.Sprite):
         self.ROLL_VEL = 4
         self.DAMAGES = {'attack_1': 25}
         self.INVINCIBLE_FRAMES = 20
-        self.KILL_LIMIT_Y = 2000  # The y value an entity gets killed at
+        self.KILL_LIMIT_Y = 800  # The y value an entity gets killed at
         self.ROLL_HEIGHT = 35  # The height of the entities hitbox when they are rolling
 
         # Actions
@@ -79,6 +79,8 @@ class Entity(pg.sprite.Sprite):
             image = pg.image.load(img_path).convert_alpha()
             if flip:
                 image = pg.transform.flip(image, True, False)
+            if self.rotate != 0 and self.rotate is not None:
+                image = pg.transform.rotate(image, self.rotate)
             self.animation_images[image_id] = image.copy()
             for i in range(frame):
                 animation_frame_data.append(image_id)

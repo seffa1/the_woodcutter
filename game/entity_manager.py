@@ -2,6 +2,7 @@ import pygame as pg
 from .engine import Entity
 from .enemies.troll import Troll
 from .traps.spikes import Spikes
+from.traps.electric_trap import Electric_Trap
 
 
 # Instantiates, stores, and kills entities for each level
@@ -10,7 +11,8 @@ class Entity_Manager:
         self.ID = ID
         self.entity_data = []  # A 2-D array from our entities.txt file
         self.groups = {'troll': pg.sprite.Group(),
-                       'spikes': pg.sprite.Group()}
+                       'spikes': pg.sprite.Group(),
+                       'entity_manager': pg.sprite.Group()}
         self.load_entities()
 
     def load_entities(self):
@@ -30,8 +32,10 @@ class Entity_Manager:
             entity = Troll(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'spikes':
             entity = Spikes(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+        elif type == 'electric_trap':
+            entity = Electric_Trap(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         else:
-            entity = Entity(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+            raise 'Entity Type was not defined'
 
 
         # Add this entity to that group
