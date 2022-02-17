@@ -1,6 +1,8 @@
 from game.engine import Entity
 import pygame as pg
 from game.utils import calc_distance, Color
+from game.objects.coin import Coin
+
 
 
 
@@ -103,6 +105,11 @@ class Troll(Entity):
             self.aggro = True
         if calc_distance(self.rect.center[0], self.rect.center[1], player.rect.center[0], player.rect.center[1]) >= self.DEAGGRO_RANGE:
             self.aggro = False
+
+    def drop_loot(self):
+        """ This function must be defined the the children classes """
+        # Instantiate a coin which has velocity and collision to the ground?
+        pass
 
     def hitboxes(self, dt):
         if not self.attacking:

@@ -28,18 +28,20 @@ class Entity(pg.sprite.Sprite):
         self.invincible_timer_float = 0
         self.wall_jump_timer = 0
 
+        # 'Constants' that can be leveled up
+        self.run_acc = .2  # Gets added to the walking speed
+        self.DAMAGES = {'attack_1': 25}
+
         # Constants
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
         self.FRIC = FRIC  # How much friction, this causes a variable acceleration, so we reach a max speed with a curve
         self.GRAV = .3
         self.JUMP_VEL = -7
-        self.RUN_ACC = .2  # Gets added to the walking speed
         self.AIR_TIME = 6  # How many frames of 'coyote time' you get before falling
         self.MAX_FALL_SPEED = 6
         self.ROLL_VEL = 4
-        self.DAMAGES = {'attack_1': 25}
         self.INVINCIBLE_FRAMES = 20
-        self.KILL_LIMIT_Y = 800  # The y value an entity gets killed at
+        self.KILL_LIMIT_Y = 600  # The y value an entity gets killed at
         self.ROLL_HEIGHT = 35  # The height of the entities hitbox when they are rolling
 
         # Actions
@@ -107,14 +109,12 @@ class Entity(pg.sprite.Sprite):
         if not self.hurt and not self.invincible:
             self.hurt = True
             self.health -= amount
-            print(f"lost {amount} health. Now have {self.health}")
             if self.health < 0:
                 self.health = 0
             self.check_dead()
 
     def check_dead(self):
         if self.health <= 0 or self.pos.y >= self.KILL_LIMIT_Y:
-            print("'you ded")
             self.death = True
 
     def move(self, tile_rects, dt):
@@ -128,11 +128,11 @@ class Entity(pg.sprite.Sprite):
             if self.walk_left:
                 self.acc.x = -self.WALK_ACC
                 if self.run:
-                    self.acc.x -= self.RUN_ACC
+                    self.acc.x -= self.run_acc
             if self.walk_right:
                 self.acc.x = self.WALK_ACC
                 if self.run:
-                    self.acc.x += self.RUN_ACC
+                    self.acc.x += self.run_acc
             # If we are holding both right and left controls, you dont move
             if self.walk_left and self.walk_right:
                 self.acc.x = 0
@@ -274,6 +274,11 @@ class Entity(pg.sprite.Sprite):
             if self.jumping and not self.attacking:
                 self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'jump')
 
+    def drop_loot(self, loot_pool=None):
+        """ This function must be defined the the children classes """
+        if not loot_pool:
+            return
+
     def set_image(self, dt):
         """ Update the current image """
         self.frame_float += 1 * dt
@@ -283,6 +288,7 @@ class Entity(pg.sprite.Sprite):
             if self.action == 'death':
                 if self.type != 'player':
                     self.kill()
+                    self.drop_loot()
                 else:
                     self.respawn()
 

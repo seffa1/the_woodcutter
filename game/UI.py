@@ -7,11 +7,16 @@ class UI:
     def __init__(self):
         self.player_health = 0
         self.player_stamina = 0
+        self.player_exp = 0
+        self.next_exp_threshold = 0
         self.dev_tools = True
 
     def update(self, player):
         self.player_health = player.health
         self.player_stamina = player.stamina
+        self.player_exp = player.exp
+        self.next_exp_threshold = player.exp_thresholds[0]
+
 
     def draw(self, screen, player, dt, clock, level_manager):
         # Dev tools
@@ -34,5 +39,11 @@ class UI:
         pg.draw.rect(screen, Color.HEALTH.value, health_rect)
 
         # Stamina Bar
-        stamina_rect= pg.Rect(15, 35, self.player_stamina * 2.5, 20)
+        stamina_rect = pg.Rect(15, 35, self.player_stamina * 2.5, 20)
         pg.draw.rect(screen, Color.STAMINA.value, stamina_rect)
+
+        # Exp Threshold
+        exp_rect = pg.Rect(15, 55, (self.player_exp/self.next_exp_threshold) * 100, 20)
+        pg.draw.rect(screen, Color.EXP.value, exp_rect)
+        draw_text(screen, f'Level: {player.level}', 25, (255, 0, 0), (15, 78))
+        draw_text(screen, f'EXP: {player.exp} / {player.exp_thresholds[0]}', 25, (255, 0, 0), (100, 78))

@@ -5,7 +5,6 @@ from .utils import *
 
 
 class StartMenu:
-
     def __init__(self, screen, clock):
         self.screen = screen
         self.clock = clock
@@ -20,7 +19,6 @@ class StartMenu:
         return True
 
     def update(self):
-
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -33,9 +31,7 @@ class StartMenu:
                     sys.exit()
 
     def draw(self):
-
         self.screen.fill((0, 0, 0))
-
         draw_text(self.screen,
                   'Game Title Here',
                   100,
@@ -48,7 +44,6 @@ class StartMenu:
                   (255, 255, 255),
                   (0, self.screen_size[1]*0.5)
                   )
-
         pg.display.flip()
 
 
@@ -81,21 +76,8 @@ class GameMenu:
                     self.menu_running = False
 
     def draw(self):
-
         self.screen.fill((0, 0, 0))
-
-        draw_text(self.screen,
-                  'PAUSE',
-                  100,
-                  (255, 255, 255),
-                  (0, self.screen_size[1]*0.3)
-                  )
-        draw_text(self.screen,
-                  'ESC to quit, ENTER to play',
-                  60,
-                  (255, 255, 255),
-                  (0, self.screen_size[1]*0.5)
-                  )
-
+        draw_text(self.screen, 'PAUSE', 100, (255, 255, 255), (0, self.screen_size[1]*0.3))
+        draw_text(self.screen, 'ESC to quit, ENTER to play', 60, (255, 255, 255), (0, self.screen_size[1]*0.5))
         pg.display.flip()
 

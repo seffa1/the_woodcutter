@@ -5,11 +5,12 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Add some traps
+#   EXP, levels, leveling up, Add loot drops
+#   Add more attacks, bow?
 #   Player rolling should shrink hit box? - or a special tile you can roll through?
 #   Add double jump capabilities
-#   Add obsticles (spikes to start)
 #   Fix animation images to they are centered on the character
+#   Fix menu sizes, polish them, adding controls to both menus
 #   Particle explosions when the trolls die?
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering)

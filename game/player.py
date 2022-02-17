@@ -1,4 +1,5 @@
 import pygame as pg
+from collections import deque
 from .engine import Entity
 
 
@@ -17,6 +18,16 @@ class Player(Entity):
         self.animation_frames['death'] = self.load_animation('assets/animations/player/death',[5, 5, 10, 10, 20, 30])
         self.set_type('player')
 
+        # Player stats
+        self.level = 1
+        self.exp = 9
+        self.exp_thresholds = deque([10, 15, 20, 25, 30, 35, 40, 45, 50])
+        self.STAMINA_PER_LEVEL = 10  # How much leveling up stamina increases max stamina
+        self.HEALTH_PER_LEVEL = 10
+        self.SPEED_PER_LEVEL = .01  # Increases your running speed
+
+        self.run_acc = .2  # Gets added to the walking speed
+
         # Player Health
         self.health = 100
         self.max_health = 100
@@ -25,7 +36,6 @@ class Player(Entity):
         self.stamina = 200
         self.stamina_float = 200
         self.max_stamina = 200
-
         self.STAMINA_RUN_DRAIN = .3
         self.STAMINA_REGEN_RATE = .25
         self.STAMINA_USE = {'attack_1': 15, 'roll': 20, 'jump': 10}
@@ -33,6 +43,23 @@ class Player(Entity):
         # Player Attacking
         self.DAMAGES = {'attack_1': 25}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
+
+    def add_exp(self, amount):
+        """ Adds exp, then checks if you leveled up """
+        self.exp += int(amount)
+        while self.exp >= self.exp_thresholds[0]:
+            self.level_up(self.exp_thresholds.popleft())
+
+    def level_up(self, amount):
+        """ A separate game loop to level up player stats"""
+        # Run
+        # Events
+        # Update
+        # Draw
+        # Level up
+        # Reset EXP
+        pass
+
 
     def use_stamina(self, amount):
         """ For fixed stamina use like attacks, rolling, and jumping"""
@@ -68,12 +95,12 @@ class Player(Entity):
             if self.walk_left:
                 self.acc.x = -self.WALK_ACC
                 if self.run:
-                    self.acc.x -= self.RUN_ACC
+                    self.acc.x -= self.run_acc
                     self.drain_stamina(self.STAMINA_RUN_DRAIN, dt)
             if self.walk_right:
                 self.acc.x = self.WALK_ACC
                 if self.run:
-                    self.acc.x += self.RUN_ACC
+                    self.acc.x += self.run_acc
                     self.drain_stamina(self.STAMINA_RUN_DRAIN, dt)
             # If we are holding both right and left controls, you dont move
             if self.walk_left and self.walk_right:
