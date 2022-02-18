@@ -8,7 +8,8 @@ class Coin(Entity):
         self.animation_frames['coin'] = self.load_animation('assets/animations/coin', [10, 10, 10, 10], True)
         self.action = 'coin'
         self.EXP_AMOUNT = 1
-        self.bounce = False
+        self.bounce = False  # Tracks the current bounce, prevent the top collision check from triggering
+        self.can_bounce = True  # If a coins vel gets too low, it is no longer supposed to bounce, or else it will bounce infinetley
 
     def move(self, tile_rects, dt):
         self.bounce = False
@@ -84,14 +85,19 @@ class Coin(Entity):
                 self.collision_types['bottom'] = True
                 self.rect.bottom = tile.top  # Change the rect's position because of convientient methods
                 self.pos.y = self.rect.topleft[1]
-                if self.vel.y > .1:
-                    self.vel.y = -self.vel.y * .8
+                if self.vel.y > .9 and self.can_bounce:
                     self.bounce = True
+                    self.vel.y = -self.vel.y * .8
+                else:
+                    self.vel.y = 1
+                    self.can_bounce = False
+
             if self.vel.y < 1 and not self.bounce:
                 self.collision_types['top'] = True
                 self.rect.top = tile.bottom
                 self.pos.y = self.rect.topleft[1]
                 self.vel.y = 0
+        # print(f'coin vel: {self.vel.y}')
 
         # Updates from y-axis collisions
         if self.collision_types['bottom'] or self.collision_types['right'] or self.collision_types['left']:
