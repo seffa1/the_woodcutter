@@ -1,9 +1,7 @@
 from game.engine import Entity
 import pygame as pg
 from game.utils import calc_distance, Color
-from game.objects.coin import Coin
-
-
+from game.loot_generator import Loot_Generator
 
 
 class Troll(Entity):
@@ -21,7 +19,7 @@ class Troll(Entity):
 
         # AI Constants
         self.DAMAGES = {'attack_1': 25}
-        self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
+        self.DAMAGE_COOLDOWN = 25  # How many frames you are invincible for after taking damage
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
         self.ATTACK_RANGE = 30
@@ -109,7 +107,8 @@ class Troll(Entity):
     def drop_loot(self):
         """ This function must be defined the the children classes """
         # Instantiate a coin which has velocity and collision to the ground?
-        pass
+        # self.loot_generator.spawn_coins(10, [self.pos.x, self.pos.y])
+        # I AM NOT SURE HOW TO CALL UP TO THE GAMES' LOOT GENERATOR FROM HERE!?!?!?
 
     def hitboxes(self, dt):
         if not self.attacking:

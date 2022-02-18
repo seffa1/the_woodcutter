@@ -3,9 +3,11 @@ import sys, time
 from .Level_Manager import Level_Manager
 from .player import Player
 from .UI import UI
+from .loot_generator import Loot_Generator
 
 # TODO
-#   EXP, levels, leveling up, Add loot drops
+#   Coin drops and chests full of coins (which give EXP?)
+#   EXP, levels, leveling up
 #   Add more attacks, bow?
 #   Player rolling should shrink hit box? - or a special tile you can roll through?
 #   Add double jump capabilities
@@ -44,9 +46,13 @@ class Game:
         self.level_manager.load_level('0-2', self.TILE_SIZE, display)
         self.level_manager.load_level('0-3', self.TILE_SIZE, display)
         self.level_manager.set_level('0-1')
+        self.loot_generator = Loot_Generator(self.level_manager)
+
+
+
 
         # Player
-        self.player = Player(250, -300, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+        self.player = Player(250, 200, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
         # User Interface
         self.UI = UI()

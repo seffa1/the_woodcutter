@@ -2,7 +2,9 @@ import pygame as pg
 from .engine import Entity
 from .enemies.troll import Troll
 from .traps.spikes import Spikes
-from.traps.electric_trap import Electric_Trap
+from .traps.electric_trap import Electric_Trap
+from .objects.coin import Coin
+
 
 
 # Instantiates, stores, and kills entities for each level
@@ -10,9 +12,7 @@ class Entity_Manager:
     def __init__(self, ID: str):
         self.ID = ID
         self.entity_data = []  # A 2-D array from our entities.txt file
-        self.groups = {'troll': pg.sprite.Group(),
-                       'spikes': pg.sprite.Group(),
-                       'entity_manager': pg.sprite.Group()}
+        self.groups = {}
         self.load_entities()
 
     def load_entities(self):
@@ -34,17 +34,25 @@ class Entity_Manager:
             entity = Spikes(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'electric_trap':
             entity = Electric_Trap(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+        elif type == 'coin':
+            entity = Coin(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         else:
             raise 'Entity Type was not defined'
 
-
         # Add this entity to that group
+        self.add_entity(entity, type)
+
+    def add_entity(self, entity, type):
+        """ Entities which are instantiated on level creation, like loot drops, can use this.
+        They will have a creator such as a chest once opened, or enemy when killed """
+
         try:
             self.groups[type].add(entity)
         except KeyError:
             self.groups[type] = pg.sprite.Group()
         finally:
             self.groups[type].add(entity)
+
 
     def update(self, tile_rects, dt, player):
         for group in self.groups.values():
