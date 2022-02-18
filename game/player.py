@@ -37,7 +37,7 @@ class Player(Entity):
         self.stamina_float = 200
         self.max_stamina = 200
         self.STAMINA_RUN_DRAIN = .3
-        self.STAMINA_REGEN_RATE = .25
+        self.STAMINA_REGEN_RATE = 5.25
         self.STAMINA_USE = {'attack_1': 15, 'roll': 20, 'jump': 10}
 
         # Player Attacking

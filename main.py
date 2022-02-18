@@ -28,7 +28,7 @@ def main():
     while running:
 
         # start menu goes here
-        playing = start_menu.run()
+        # playing = start_menu.run()
         playing = True
 
         while playing:

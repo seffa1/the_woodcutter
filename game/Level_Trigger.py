@@ -33,5 +33,5 @@ class Level_Trigger:
             scrolled_rect = pg.Rect(self.x - scroll[0], self.y - scroll[1], self.rect.width, self.rect.height)
         pg.draw.rect(display, self.color, scrolled_rect)
         if self.collided:
-            draw_text(display, 'Travel to  0-2 (Enter)', 15, (0, 0, 0), (self.x - scroll[0] + self.rect.width + 5, self.y - scroll[1] - 5))
+            draw_text(display, f'Travel to {self.level_to_go_to}', 15, (0, 0, 0), (self.x - scroll[0] + self.rect.width + 5, self.y - scroll[1] - 5))
 

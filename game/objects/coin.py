@@ -5,7 +5,6 @@ import pygame as pg
 class Coin(Entity):
     def __init__(self, x: int, y: int, width: int, height: int, type: str = None, WALK_ACC=0, FRIC=0, rotate=None):
         super().__init__(x, y, width, height, type, WALK_ACC, FRIC, rotate)
-        print("Creating image")
         self.animation_frames['coin'] = self.load_animation('assets/animations/coin', [10, 10, 10, 10], True)
         self.action = 'coin'
         self.EXP_AMOUNT = 1
