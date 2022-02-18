@@ -86,6 +86,10 @@ class Game:
                 self.level_manager.set_level('0-1')
                 self.player.set_position(self.level_manager.get_level().respawn_point[0],
                                          self.level_manager.get_level().respawn_point[1])
+                self.player.health = self.player.max_health
+                self.player.stamina = self.player.max_stamina
+                self.player.stamina_float = self.player.max_stamina
+
 
             # Check special keys
             mods = pg.key.get_mods()

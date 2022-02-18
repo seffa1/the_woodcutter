@@ -25,8 +25,8 @@ class Player(Entity):
         self.STAMINA_PER_LEVEL = 10  # How much leveling up stamina increases max stamina
         self.HEALTH_PER_LEVEL = 10
         self.SPEED_PER_LEVEL = .01  # Increases your running speed
-
         self.run_acc = .2  # Gets added to the walking speed
+        self.WALL_JUMP_VEL = 15
 
         # Player Health
         self.health = 100
@@ -190,9 +190,9 @@ class Player(Entity):
         if self.air_timer < self.AIR_TIME:
             self.jumping = True
             if self.collision_types['right'] and not self.collision_types['bottom']:
-                self.vel.x = -8
+                self.vel.x = -self.WALL_JUMP_VEL
             if self.collision_types['left'] and not self.collision_types['bottom']:
-                self.vel.x = 8
+                self.vel.x = self.WALL_JUMP_VEL
             self.vel.y = self.JUMP_VEL
 
     def update(self, tile_rects, dt, player=None):
