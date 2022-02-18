@@ -5,6 +5,7 @@ import pygame as pg
 class Coin(Entity):
     def __init__(self, x: int, y: int, width: int, height: int, type: str = None, WALK_ACC=0, FRIC=0, rotate=None):
         super().__init__(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+        print("Creating image")
         self.animation_frames['coin'] = self.load_animation('assets/animations/coin', [10, 10, 10, 10], True)
         self.action = 'coin'
         self.EXP_AMOUNT = 1
@@ -97,7 +98,6 @@ class Coin(Entity):
                 self.rect.top = tile.bottom
                 self.pos.y = self.rect.topleft[1]
                 self.vel.y = 0
-        # print(f'coin vel: {self.vel.y}')
 
         # Updates from y-axis collisions
         if self.collision_types['bottom'] or self.collision_types['right'] or self.collision_types['left']:

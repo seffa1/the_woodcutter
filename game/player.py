@@ -52,6 +52,8 @@ class Player(Entity):
 
     def level_up(self, amount):
         """ A separate game loop to level up player stats"""
+        self.level += 1
+        self.exp = 0
         # Run
         # Events
         # Update

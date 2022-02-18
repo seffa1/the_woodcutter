@@ -3,7 +3,7 @@ import sys, time
 from .Level_Manager import Level_Manager
 from .player import Player
 from .UI import UI
-from .loot_generator import Loot_Generator
+
 
 # TODO
 #   Coin drops and chests full of coins (which give EXP?)
@@ -46,7 +46,7 @@ class Game:
         self.level_manager.load_level('0-2', self.TILE_SIZE, display)
         self.level_manager.load_level('0-3', self.TILE_SIZE, display)
         self.level_manager.set_level('0-1')
-        self.loot_generator = Loot_Generator(self.level_manager)
+
 
 
 

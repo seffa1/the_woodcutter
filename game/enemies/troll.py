@@ -1,21 +1,23 @@
 from game.engine import Entity
 import pygame as pg
 from game.utils import calc_distance, Color
-from game.loot_generator import Loot_Generator
+from game.objects.coin import Coin
+import random
 
 
 class Troll(Entity):
-    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0, rotate=None):
+    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0, rotate=None, entity_manager=None):
         super().__init__(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         self.animation_frames['idle'] = self.load_animation('assets/animations/troll/idle', [10, 10, 10, 10], True)
         self.animation_frames['walk'] = self.load_animation('assets/animations/troll/walk', [10, 10, 10, 10, 10, 10], True)
         self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [3, 4, 7, 7, 4, 4], True)
         self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 20, 60, 120], True)
         self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 20], True)
+        self.entity_manager = entity_manager
 
         # Troll Stats
-        self.health = 100
-        self.MAX_HEALTH = 100
+        self.health = 25
+        self.MAX_HEALTH = 25
 
         # AI Constants
         self.DAMAGES = {'attack_1': 25}
@@ -106,9 +108,15 @@ class Troll(Entity):
 
     def drop_loot(self):
         """ This function must be defined the the children classes """
-        # Instantiate a coin which has velocity and collision to the ground?
-        # self.loot_generator.spawn_coins(10, [self.pos.x, self.pos.y])
-        # I AM NOT SURE HOW TO CALL UP TO THE GAMES' LOOT GENERATOR FROM HERE!?!?!?
+        amount = random.randint(5, 10)
+        for i in range(0, amount):
+            coin = Coin(self.pos.x, self.pos.y, 9, 9, 'coin', 0, 0, 0)
+            x_vel = random.randint(-4, 4)
+            y_vel = random.randint(-5, -0)
+            coin.vel.y = y_vel
+            coin.vel.x = x_vel
+            self.entity_manager.add_entity(coin, coin.type)
+
 
     def hitboxes(self, dt):
         if not self.attacking:

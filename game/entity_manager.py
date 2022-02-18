@@ -11,7 +11,6 @@ from .objects.coin import Coin
 class Entity_Manager:
     def __init__(self, ID: str):
         self.ID = ID
-        self.entity_data = []  # A 2-D array from our entities.txt file
         self.groups = {}
         self.load_entities()
 
@@ -20,7 +19,6 @@ class Entity_Manager:
         with open(path, 'r') as entity_file:
             for line in entity_file:
                 entity_data_list = line.split(',')
-                self.entity_data.append(entity_data_list)
                 self.create_entity(int(entity_data_list[0]), int(entity_data_list[1]), int(entity_data_list[2]),
                                    int(entity_data_list[3]), entity_data_list[4], float(entity_data_list[5]),
                                    float(entity_data_list[6]), float(entity_data_list[7]))
@@ -29,7 +27,7 @@ class Entity_Manager:
     def create_entity(self, x, y, width, height, type, WALK_ACC, FRIC, rotate):
         """ Instantiates and entity and adds it to the appropriate group or creates a group for it """
         if type == 'troll':
-            entity = Troll(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+            entity = Troll(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
         elif type == 'spikes':
             entity = Spikes(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'electric_trap':
@@ -55,14 +53,15 @@ class Entity_Manager:
 
 
     def update(self, tile_rects, dt, player):
-        for group in self.groups.values():
+        for group in list(self.groups.values()):
             for entity in group:
                 entity.update(tile_rects, dt, player)
 
     def draw(self, display, scroll):
-        for group in self.groups.values():
+        for group in list(self.groups.values()):
             for entity in group:
-                entity.draw(display, scroll)
+                if entity.image is not None:
+                    entity.draw(display, scroll)
 
 
 
