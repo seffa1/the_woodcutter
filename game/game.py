@@ -31,7 +31,6 @@ class Game:
         self.SCALE_FACTOR = SCALE_FACTOR
         self.TILE_SIZE = 24
         self.width, self.height = self.screen.get_size()
-        self.last_time = time.time()  # For frame rate independence
         self.dt = 0
 
         # Camera Scroll
@@ -47,10 +46,6 @@ class Game:
         self.level_manager.load_level('0-3', self.TILE_SIZE, display)
         self.level_manager.set_level('0-1')
 
-
-
-
-
         # Player
         self.player = Player(250, 200, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
@@ -59,8 +54,8 @@ class Game:
 
     def run(self):
         self.playing = True
+        self.last_time = time.time()  # For frame rate independence
         while self.playing:
-            self.clock.tick(self.FPS)
 
             # Frame rate independence check. Finds how many seconds have passed since the last frame.
             # If we are at 60 fps, dt will be 0-1/60th of a second
@@ -73,6 +68,7 @@ class Game:
             self.events()
             self.update()
             self.draw()
+            self.clock.tick(self.FPS)
 
     def events(self):
         for event in pg.event.get():
