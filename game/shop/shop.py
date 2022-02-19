@@ -9,7 +9,7 @@ class Shop:
     def __init__(self, player, x, y):
         self.shop_menu = Shop_Menu()
         self.player = player
-        self.image = pg.image.load('assets/animations/chest/chest_3').convert_alpha()
+        self.image = pg.image.load('assets/images/shop/House.png').convert_alpha()
         self.pos = vec(x, y)
         self.rect = self.image.get_rect()
         self.rect.topleft = self.pos
