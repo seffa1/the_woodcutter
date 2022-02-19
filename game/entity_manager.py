@@ -4,6 +4,7 @@ from .enemies.troll import Troll
 from .traps.spikes import Spikes
 from .traps.electric_trap import Electric_Trap
 from .objects.coin import Coin
+from .objects.chest import Chest
 
 
 
@@ -28,6 +29,8 @@ class Entity_Manager:
         """ Instantiates and entity and adds it to the appropriate group or creates a group for it """
         if type == 'troll':
             entity = Troll(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
+        elif type == 'chest':
+            entity = Chest(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
         elif type == 'spikes':
             entity = Spikes(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'electric_trap':
