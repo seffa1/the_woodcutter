@@ -11,6 +11,7 @@ class Chest(Entity):
 
         # Image is default to closed
         self.image = pg.image.load('assets/animations/chest/chest_0.png').convert_alpha()
+        self.flip = False
 
         self.entity_manager = entity_manager
 
@@ -35,6 +36,8 @@ class Chest(Entity):
 
     def set_image(self, dt):
         """ Update the current image """
+        if self.action == None:
+            return
         self.frame_float += 1 * dt
         self.frame = int(round(self.frame_float, 0))
 
@@ -42,13 +45,15 @@ class Chest(Entity):
         if self.frame >= len(self.animation_frames[self.action]):
             self.frame = 0
             self.frame_float = 0
-            self.action = None  # The action can only happen once
+
             self.drop_loot()
             # Image gets set to the open image permanently
             self.image = pg.image.load('assets/animations/chest/chest_3.png').convert_alpha()
+            self.action = None  # The action can only happen once
+            self.opened = True
 
         # Only update the image if its in the opening action
-        if self.action is not None:
+        if self.action:
             image_id = self.animation_frames[self.action][self.frame]
             image = self.animation_images[image_id]
             self.image = image
@@ -64,7 +69,7 @@ class Chest(Entity):
     def actions(self, dt):
         """ Determine the current action and update the image accordingly """
         # If the chest is being opened
-        if self.chest:
+        if self.chest and not self.opened:
             self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'chest')
 
     def check_pickup(self, player):
@@ -74,6 +79,10 @@ class Chest(Entity):
             self.chest = True
 
     def update(self, tile_rects, dt, player):
-        self.check_pickup(player)
         self.actions(dt)
         self.set_image(dt)
+        self.check_pickup(player)
+
+    def draw(self, display, scroll, hitbox=False, attack_box=False):
+        display.blit(self.image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
+
