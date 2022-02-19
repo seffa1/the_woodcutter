@@ -6,16 +6,15 @@ from .UI import UI
 
 
 # TODO
-#   Coin drops and chests full of coins (which give EXP?)
-#   EXP, levels, leveling up
+#   Chests full of coins
+#   Level up menu to spend coins
 #   Add more attacks, bow?
 #   Player rolling should shrink hit box? - or a special tile you can roll through?
 #   Add double jump capabilities
 #   Fix animation images to they are centered on the character
 #   Fix menu sizes, polish them, adding controls to both menus
-#   Particle explosions when the trolls die?
 #   Batch Rendering of ground for less collisions checks
-#   Only checking collisions on tiles close to player (Add chunk rendering)
+#   Only checking collisions on tiles close to player (Add chunk rendering?)
 
 vec = pg.math.Vector2
 
