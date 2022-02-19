@@ -6,10 +6,7 @@ from .UI import UI
 
 
 # TODO
-#   Chests full of coins
 #   Level up menu to spend coins
-#   Add more attacks, bow?
-#   Player rolling should shrink hit box? - or a special tile you can roll through?
 #   Add double jump capabilities
 #   Fix animation images to they are centered on the character
 #   Fix menu sizes, polish them, adding controls to both menus
@@ -153,8 +150,6 @@ class Game:
         # Update the player
         self.player.update(self.level_manager.tile_rects, self.dt)
 
-        # Update the UI
-        self.UI.update(self.player)
 
     def draw(self):
         # Fill the background

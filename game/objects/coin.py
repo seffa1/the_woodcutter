@@ -122,7 +122,7 @@ class Coin(Entity):
     def check_pickup(self, player):
         """ If the player collides with our rect, kill ourselves """
         if self.rect.colliderect(player.rect):
-            player.add_exp(1)
+            player.add_coin(1)
             self.kill()
 
     def update(self, tile_rects, dt, player):

@@ -19,9 +19,7 @@ class Player(Entity):
         self.set_type('player')
 
         # Player stats
-        self.level = 1
-        self.exp = 9
-        self.exp_thresholds = deque([10, 15, 20, 25, 30, 35, 40, 45, 50, 9999999999])
+        self.coins = 0
         self.STAMINA_PER_LEVEL = 10  # How much leveling up stamina increases max stamina
         self.HEALTH_PER_LEVEL = 10
         self.SPEED_PER_LEVEL = .01  # Increases your running speed
@@ -44,24 +42,9 @@ class Player(Entity):
         self.DAMAGES = {'attack_1': 25}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
 
-    def add_exp(self, amount):
-        """ Adds exp, then checks if you leveled up """
-        self.exp += int(amount)
-        while self.exp >= self.exp_thresholds[0]:
-            self.level_up(self.exp_thresholds.popleft())
-
-    def level_up(self, amount):
-        """ A separate game loop to level up player stats"""
-        self.level += 1
-        self.exp = 0
-        # Run
-        # Events
-        # Update
-        # Draw
-        # Level up
-        # Reset EXP
-        pass
-
+    def add_coin(self, amount):
+        """ Adds coins """
+        self.coins += int(amount)
 
     def use_stamina(self, amount):
         """ For fixed stamina use like attacks, rolling, and jumping"""

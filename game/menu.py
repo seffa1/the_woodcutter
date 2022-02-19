@@ -32,20 +32,9 @@ class StartMenu:
 
     def draw(self):
         self.screen.fill((0, 0, 0))
-        draw_text(self.screen,
-                  'Game Title Here',
-                  100,
-                  (255, 255, 255),
-                  (0, self.screen_size[1]*0.3)
-                  )
-        draw_text(self.screen,
-                  'ENTER to play',
-                  60,
-                  (255, 255, 255),
-                  (0, self.screen_size[1]*0.5)
-                  )
+        draw_text(self.screen, 'Game Title Here', 100, (255, 255, 255), (0, self.screen_size[1]*0.3))
+        draw_text(self.screen, 'ENTER to play', 60, (255, 255, 255), (0, self.screen_size[1]*0.5))
         pg.display.flip()
-
 
 
 class GameMenu:
