@@ -19,7 +19,7 @@ class Player(Entity):
         self.set_type('player')
 
         # Player stats
-        self.coins = 0
+        self.coins = 100
         self.STAMINA_PER_LEVEL = 10  # How much leveling up stamina increases max stamina
         self.HEALTH_PER_LEVEL = 10
         self.SPEED_PER_LEVEL = .01  # Increases your running speed

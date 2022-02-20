@@ -6,7 +6,6 @@ from .UI import UI
 
 
 # TODO
-#   Level up menu to spend coins
 #   Add double jump capabilities
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
 #   Fix animation images to they are centered on the character

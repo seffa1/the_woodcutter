@@ -15,18 +15,22 @@ class Button:
         self.rect.topleft = self.pos
         self.name = name
 
+        self.mouse_rect = None
+
         # Button States
         self.clicked = False
-        self.mouse_rect = None
+        self.pressed = None
 
     def update(self, mouse_rect, mouse_action):
         self.mouse_rect = mouse_rect
         self.image = self.images['default']
+        self.pressed = False
         # If the mouse is over the button
         if mouse_rect.colliderect(self.rect):
             # If we are left clicking
             if mouse_action[0]:
                 self.image = self.images['pressed']
+                self.pressed = True
 
     def draw(self, display, scroll, hitbox=True, attack_box=False):
         if self.image is not None:

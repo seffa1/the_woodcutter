@@ -1,6 +1,7 @@
 import pygame as pg
 from game.game import Game
 from game.menu import StartMenu, GameMenu
+from game.settings import WINDOW_SIZE_SETTING, SCALE_FACTOR_SETTING
 
 
 def main():
@@ -10,9 +11,9 @@ def main():
 
     # Configure game settings
     # WINDOW_SIZE = (1280, 1024)  # non-laptop
-    WINDOW_SIZE = (1600, 900)  # laptop
+    WINDOW_SIZE = WINDOW_SIZE_SETTING  # laptop
     screen = pg.display.set_mode(WINDOW_SIZE, 0, 32)
-    SCALE_FACTOR = 1
+    SCALE_FACTOR = SCALE_FACTOR_SETTING
     display = pg.Surface((WINDOW_SIZE[0]/SCALE_FACTOR, WINDOW_SIZE[1]/SCALE_FACTOR))
     clock = pg.time.Clock()
 
