@@ -16,6 +16,8 @@ class Shop_Menu:
         self.buttons = []
         self.load_buttons()
 
+
+
         # Max amount of stat upgrades ap layer can get
         self.MAX_UPGRADES = 3
         # Tracks amount of upgrades done for each stat
@@ -23,6 +25,7 @@ class Shop_Menu:
             'health': 2,
             'stamina': 3,
             'damage': 1 }
+        self.scroll = None
 
         # Costs for level 1, 2, and 3 stat upgrades
         COSTS = [25, 50, 100]
@@ -46,19 +49,22 @@ class Shop_Menu:
         self.buttons.append(button_2)
         self.buttons.append(button_3)
 
-    def check_mouse(self):
-        """ If menu is showing, respond to the mouse inputs """
-        mouse_pos = pg.mouse.get_pos()
-        mouse_pressed = pg.mouse.get_pressed()
-        return mouse_pos, mouse_pressed
-
     def update(self, tile_rects, dt, player):
-        """ Update the buttons, passing the the mouse pos and pressed """
+        """ Update the buttons, passing in a mouse rect and mouse actions"""
+        if not self.scroll:
+            return
+        mouse_pos = pg.mouse.get_pos()  # (x, y)
+        mouse_action = pg.mouse.get_pressed()  # action[2] = right click, action[0] = left click
+        mouse_rect = pg.Rect(mouse_pos[0] + self.scroll[0], mouse_pos[1] + self.scroll[1], 10, 10)
+
+
         for button in self.buttons:
-            button.update(self.check_mouse())
+            button.update(mouse_rect, mouse_action)
 
     def draw(self, display, scroll, hitbox=False, attack_box=False):
         """ Draw the menu background, then draw each button """
+
+        self.scroll = scroll
         # Draw the menu
         display.blit(self.image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
 
