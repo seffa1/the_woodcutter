@@ -35,15 +35,18 @@ class Game:
         self.OFFSET_X = WINDOW_SIZE[0] / SCALE_FACTOR / 2
         self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 2
 
+        # Player
+        self.player = Player(703, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+
         # Managers
         self.level_manager = Level_Manager()
         self.level_manager.load_level('0-1', self.TILE_SIZE, display)
         self.level_manager.load_level('0-2', self.TILE_SIZE, display)
-        self.level_manager.load_level('0-3', self.TILE_SIZE, display)
-        self.level_manager.set_level('0-1')
+        self.level_manager.load_level('3-1', self.TILE_SIZE, display)
+        self.level_manager.set_level('0-1', self.player)
 
         # Player
-        self.player = Player(150, 200, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+        self.player = Player(703, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
         # User Interface
         self.UI = UI()
@@ -77,9 +80,9 @@ class Game:
                 self.player.health = self.player.max_health
                 self.player.action = 'idle'
                 self.player.death = False
-                self.level_manager.get_level().respawn_level()
+                # self.level_manager.get_level().respawn_level()
 
-                self.level_manager.set_level('0-1')
+                self.level_manager.set_level(self.level_manager.current_level, self.player)
                 self.player.set_position(self.level_manager.get_level().respawn_point[0],
                                          self.level_manager.get_level().respawn_point[1])
                 self.player.health = self.player.max_health
@@ -123,7 +126,7 @@ class Game:
                         self.player.attack['1'] = True
                         self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
                 if event.key == pg.K_RETURN:
-                    self.level_manager.check_change_level()
+                    self.level_manager.check_change_level(self.player)
 
             if event.type == pg.KEYUP:
                 if event.key == pg.K_d:
@@ -161,14 +164,17 @@ class Game:
         # Draw the triggers
         self.level_manager.draw_triggers(self.scroll, self.display)
 
+
+
+
+        # Draw the entities
+        self.level_manager.draw_entities(self.scroll, self.display)
+
         # Draw the tiles
         self.level_manager.draw_tiles(self.scroll, self.TILE_SIZE, self.display)
 
         # Draw player
         self.player.draw(self.display, self.scroll)
-
-        # Draw the entities
-        self.level_manager.draw_entities(self.scroll, self.display)
 
         # Scale up the display to the screen size, then draw it
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))

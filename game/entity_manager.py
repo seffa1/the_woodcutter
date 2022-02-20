@@ -5,6 +5,7 @@ from .traps.spikes import Spikes
 from .traps.electric_trap import Electric_Trap
 from .objects.coin import Coin
 from .objects.chest import Chest
+from.shop.shop import Shop
 
 
 
@@ -37,6 +38,8 @@ class Entity_Manager:
             entity = Electric_Trap(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'coin':
             entity = Coin(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+        elif type == 'shop':
+            entity = Shop(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         else:
             raise 'Entity Type was not defined'
 

@@ -2,13 +2,15 @@ import pygame as pg
 from collections import deque
 from .shop_menu import Shop_Menu
 vec = pg.math.Vector2
+from game.engine import Entity
 
 
 
-class Shop:
-    def __init__(self, player, x, y):
+
+class Shop(Entity):
+    def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0, rotate=None):
+        super().__init__(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         self.shop_menu = Shop_Menu()
-        self.player = player
         self.image = pg.image.load('assets/images/shop/House.png').convert_alpha()
         self.pos = vec(x, y)
         self.rect = self.image.get_rect()
@@ -42,11 +44,11 @@ class Shop:
             self.show_menu = False
 
     def update(self, tile_rects, dt, player):
-        self.check_collision(player)
+        # self.check_collision(player)
 
         # Update the menu
         if self.show_menu:
-            self.shop_menu.update()
+            self.shop_menu.update(self, tile_rects, dt, player)
 
     def draw(self, display, scroll, hitbox=False, attack_box=False):
         # Draw the shop
@@ -54,5 +56,5 @@ class Shop:
 
         # Draw the menu
         if self.show_menu:
-            self.shop_menu.draw()
+            self.shop_menu.draw(self, display, scroll, hitbox=False, attack_box=False)
 

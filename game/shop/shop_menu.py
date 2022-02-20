@@ -4,7 +4,7 @@ vec = pg.math.Vector2
 
 class Shop_Menu:
     def __init__(self):
-        self.image = pg.image.load('assets/animations/coin/coin_0').convert_alpha()
+        self.image = pg.image.load('assets/images/shop/upgrades_menu.png').convert_alpha()
         self.load_buttons()
         self.buttons = []
 
@@ -50,8 +50,6 @@ class Button:
         # Button States
         self.hovered = False
         self.clicked = False
-
-
 
     def update(self, mouse_pos, mouse_pressed):
         # Check if mouse not within button, if so, return

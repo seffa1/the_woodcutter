@@ -7,22 +7,25 @@ class Level_Manager:
         self.levels = {}
         self.current_level = None
 
+
         # Calls down to the current level's tile manager, and gets updated collidable rects each framee
         self.tile_rects = []
         self.collided_trigger = None
 
-
-
     def load_level(self, ID: str, TILE_SIZE: int, display):
         self.levels[ID] = Level(ID, TILE_SIZE, display)
 
-    def set_level(self, ID: str):
+    def set_level(self, ID: str, player):
+        """ Changes the current level getting updated, then moves the player to that levels respawn point """
         if ID in self.levels:
             self.current_level = ID
+            level = self.get_level()
+            player.set_position(level.respawn_point[0], level.respawn_point[1])
         else:
             raise "You are trying to set to a level that does not exist"
 
     def get_level(self):
+        """ Returns the current level object """
         return self.levels[self.current_level]
 
     def update(self, player, dt):
@@ -42,10 +45,11 @@ class Level_Manager:
         self.get_level().draw_triggers(scroll, display)
 
 
-    def check_change_level(self):
-        """ Only gets called when the player presses enter """
+    def check_change_level(self, player):
+        """ Only gets called when the player presses enter from the game event loop,
+        then checks if a player is colliding with a level trigger. """
         if not self.get_level().collided_trigger:
             return
 
         trigger = self.get_level().collided_trigger
-        self.set_level(trigger.level_to_go_to)
+        self.set_level(trigger.level_to_go_to, player)
