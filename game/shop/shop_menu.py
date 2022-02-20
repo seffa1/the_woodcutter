@@ -1,6 +1,6 @@
 import pygame as pg
 from .button import Button
-from game.utils import draw_text
+from game.utils import draw_text, Color
 from collections import deque
 
 vec = pg.math.Vector2
@@ -20,9 +20,9 @@ class Shop_Menu:
         self.MAX_UPGRADES = 3
         # Tracks amount of upgrades done for each stat
         self.stat_upgrades = {
-            'stamina': 0,
-            'health': 0,
-            'damage': 0 }
+            'health': 2,
+            'stamina': 3,
+            'damage': 1 }
 
         # Costs for level 1, 2, and 3 stat upgrades
         COSTS = [25, 50, 100]
@@ -76,9 +76,33 @@ class Shop_Menu:
         draw_text(display, f'{self.stat_upgrade_costs["damage"][0]}', 15, (255, 0, 0),
                   (self.buttons[2].pos.x - scroll[0] + OFFSET_X, self.buttons[2].pos.y - scroll[1]+ OFFSET_Y))
 
-        # Draw the ability levels
-        ABILITY_OFFSET_X = 40
-        ABILITY_OFFSET_y = 50
+        # Draw the upgrade levels symbols
+        WIDTH = 12
+        HEIGHT = 9
+        ABILITY_OFFSET_X = -70
+        ABILITY_OFFSET_y = 2
+        SPACING_X = 18
+        SPACING_Y = 25
+
+        # Draw the health levels
+        if self.stat_upgrades['health'] > 0:
+            for i in range(0, self.stat_upgrades['health']):
+                health_rect = pg.Rect(self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0], self.buttons[0].pos.y + ABILITY_OFFSET_y - scroll[1], WIDTH, HEIGHT)
+                pg.draw.rect(display, Color.HEALTH.value, health_rect)
+
+        # Draw the stamina levels
+        if self.stat_upgrades['stamina'] > 0:
+            for i in range(0, self.stat_upgrades['stamina']):
+                stamina_rect = pg.Rect(self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0], self.buttons[0].pos.y + ABILITY_OFFSET_y + SPACING_Y - scroll[1], WIDTH, HEIGHT)
+                pg.draw.rect(display, Color.STAMINA.value, stamina_rect)
+
+        # Draw the damagee levels
+        if self.stat_upgrades['damage'] > 0:
+            for i in range(0, self.stat_upgrades['damage']):
+                damage_rect = pg.Rect(self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0], self.buttons[0].pos.y + ABILITY_OFFSET_y + SPACING_Y * 2- scroll[1], WIDTH, HEIGHT)
+                pg.draw.rect(display, Color.DAMAGE.value, damage_rect)
+
+
 
 
 

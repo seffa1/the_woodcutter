@@ -22,4 +22,5 @@ class Color(Enum):
     GREEN = (0, 0, 255)
     HEALTH = (186, 23, 25)
     STAMINA = (10, 143, 17)
+    DAMAGE = (155, 240, 253)
     EXP = (22, 126, 158)
