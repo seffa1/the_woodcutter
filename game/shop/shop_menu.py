@@ -67,13 +67,14 @@ class Shop_Menu:
             button.draw(display, scroll)
 
         # Draw the costs
-        OFFSET_X = 10
-        OFFSET_Y = 1
-        draw_text(display, f'{self.stat_upgrade_costs["health"][0]}', 15, (255, 0, 0),
+        OFFSET_X = 8
+        OFFSET_Y = 0
+        SIZE = 12
+        draw_text(display, f'{self.stat_upgrade_costs["health"][0]}', SIZE, Color.HEALTH.value,
                   (self.buttons[0].pos.x - scroll[0] + OFFSET_X, self.buttons[0].pos.y - scroll[1] + OFFSET_Y))
-        draw_text(display, f'{self.stat_upgrade_costs["stamina"][0]}', 15, (255, 0, 0),
+        draw_text(display, f'{self.stat_upgrade_costs["stamina"][0]}', SIZE, Color.HEALTH.value,
                   (self.buttons[1].pos.x - scroll[0] + OFFSET_X, self.buttons[1].pos.y - scroll[1]+ OFFSET_Y))
-        draw_text(display, f'{self.stat_upgrade_costs["damage"][0]}', 15, (255, 0, 0),
+        draw_text(display, f'{self.stat_upgrade_costs["damage"][0]}', SIZE, Color.HEALTH.value,
                   (self.buttons[2].pos.x - scroll[0] + OFFSET_X, self.buttons[2].pos.y - scroll[1]+ OFFSET_Y))
 
         # Draw the upgrade levels symbols

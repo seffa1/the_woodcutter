@@ -10,18 +10,20 @@ class UI:
     def draw(self, screen, player, dt, clock, level_manager):
         # Dev tools
         if self.dev_tools:
-            draw_text(screen, f'fps: {round(clock.get_fps())}', 25, (255, 0, 0), (1400, 3))
-            draw_text(screen, f'player pos: {player.pos}', 25, (255, 0, 0), (1400, 23))
-            draw_text(screen, f'p_rect pos: {player.rect.topleft}', 25, (255, 0, 0), (1400, 43))
-            draw_text(screen, f'vel pos: {player.vel}', 25, (255, 0, 0), (1400, 63))
-            draw_text(screen, f'action: {player.action}', 25, (255, 0, 0), (1400, 83))
-            draw_text(screen, f'Tile_Rects: {len(level_manager.tile_rects)}', 25, (255, 0, 0), (1400, 103))
-            draw_text(screen, f'DT: {round(dt, 2)}', 25, (255, 0, 0), (1400, 123))
-            draw_text(screen, f'Health: {player.health}', 25, (255, 0, 0), (1400, 143))
-            draw_text(screen, f'Air Timer: {player.air_timer}', 25, (255, 0, 0), (1400, 163))
-            # draw_text(screen, f'Collisions: {player.collision_types}', 25, (255, 0, 0), (900, 183))
+            SIZE = 20
+            X = 1300
+            draw_text(screen, f'fps: {round(clock.get_fps())}', SIZE, (255, 0, 0), (X, 3))
+            draw_text(screen, f'player pos: {player.pos}', SIZE, (255, 0, 0), (X, 23))
+            draw_text(screen, f'p_rect pos: {player.rect.topleft}', SIZE, (255, 0, 0), (X, 43))
+            draw_text(screen, f'vel pos: {player.vel}', SIZE, (255, 0, 0), (X, 63))
+            draw_text(screen, f'action: {player.action}', SIZE, (255, 0, 0), (X, 83))
+            draw_text(screen, f'Tile_Rects: {len(level_manager.tile_rects)}', SIZE, (255, 0, 0), (X, 103))
+            draw_text(screen, f'DT: {round(dt, 2)}', SIZE, (255, 0, 0), (X, 123))
+            draw_text(screen, f'Health: {player.health}', SIZE, (255, 0, 0), (X, 143))
+            draw_text(screen, f'Air Timer: {player.air_timer}', SIZE, (255, 0, 0), (X, 163))
+            # draw_text(screen, f'Collisions: {player.collision_types}', SIZE, (255, 0, 0), (900, 183))
 
-            # draw_text(screen, f'Invincibility: {player.invincible}', 25, (255, 0, 0), (1400, 163))
+            # draw_text(screen, f'Invincibility: {player.invincible}', SIZE, (255, 0, 0), (X, 163))
 
         # Health Bar
         health_rect = pg.Rect(15, 15, player.health * 2.5, 20)

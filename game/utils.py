@@ -5,7 +5,7 @@ from enum import Enum
 
 def draw_text(screen, text, size, colour, pos):
 
-    font = pg.font.SysFont(None, size)
+    font = pg.font.Font('assets/fonts/PixeloidMono-1G8ae.ttf', size)
     text_surface = font.render(text, True, colour)
     text_rect = text_surface.get_rect(topleft=pos)
 
