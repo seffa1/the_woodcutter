@@ -10,29 +10,13 @@ from game.engine import Entity
 class Shop(Entity):
     def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0, rotate=None):
         super().__init__(x, y, width, height, type, WALK_ACC, FRIC, rotate)
-        self.shop_menu = Shop_Menu()
+        self.shop_menu = Shop_Menu(x, y, 180, 110)
         self.image = pg.image.load('assets/images/shop/House.png').convert_alpha()
         self.pos = vec(x, y)
-        self.rect = self.image.get_rect()
+        self.rect = pg.Rect(x - 100, y - 50, self.image.get_width() + 100, self.image.get_height() + 50)
         self.rect.topleft = self.pos
 
-        # Max amount of stat upgrades ap layer can get
-        self.MAX_UPGRADES = 3
-        # Tracks amount of upgrades done for each stat
-        self.stat_upgrades = {
-            'stamina': 0,
-            'health': 0,
-            'damage': 0
-        }
 
-        # Costs for level 1, 2, and 3 stat upgrades
-        COSTS = [25, 50, 100]
-        # Tracks the current cost of a stat upgrade
-        self.stat_upgrade_costs = {
-            'stamina': deque([COSTS[0], COSTS[1], COSTS[2], None]),
-            'health': deque([COSTS[0], COSTS[1], COSTS[2], None]),
-            'damage': deque([COSTS[0], COSTS[1], COSTS[2], None]),
-        }
 
         self.show_menu = False
 
@@ -44,11 +28,11 @@ class Shop(Entity):
             self.show_menu = False
 
     def update(self, tile_rects, dt, player):
-        # self.check_collision(player)
+        self.check_collision(player)
 
         # Update the menu
         if self.show_menu:
-            self.shop_menu.update(self, tile_rects, dt, player)
+            self.shop_menu.update(tile_rects, dt, player)
 
     def draw(self, display, scroll, hitbox=False, attack_box=False):
         # Draw the shop
@@ -56,5 +40,5 @@ class Shop(Entity):
 
         # Draw the menu
         if self.show_menu:
-            self.shop_menu.draw(self, display, scroll, hitbox=False, attack_box=False)
+            self.shop_menu.draw(display, scroll, hitbox=False, attack_box=False)
 
