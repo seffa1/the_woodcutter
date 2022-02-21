@@ -13,10 +13,8 @@ class Shop(Entity):
         self.shop_menu = Shop_Menu(x, y, 180, 110)
         self.image = pg.image.load('assets/images/shop/House.png').convert_alpha()
         self.pos = vec(x, y)
-        self.rect = pg.Rect(x - 100, y - 50, self.image.get_width() + 100, self.image.get_height() + 50)
+        self.rect = pg.Rect(x - 100, y - 50, self.image.get_width(), self.image.get_height())
         self.rect.topleft = self.pos
-
-
 
         self.show_menu = False
 

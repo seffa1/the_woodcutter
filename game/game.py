@@ -41,8 +41,15 @@ class Game:
         # Managers
         self.level_manager = Level_Manager()
         self.level_manager.load_level('0-1', self.TILE_SIZE, display)
-        self.level_manager.load_level('0-2', self.TILE_SIZE, display)
+        self.level_manager.load_level('1-1', self.TILE_SIZE, display)
+        self.level_manager.load_level('1-2', self.TILE_SIZE, display)
+        self.level_manager.load_level('1-3', self.TILE_SIZE, display)
+        self.level_manager.load_level('2-1', self.TILE_SIZE, display)
+        self.level_manager.load_level('2-2', self.TILE_SIZE, display)
+        self.level_manager.load_level('2-3', self.TILE_SIZE, display)
         self.level_manager.load_level('3-1', self.TILE_SIZE, display)
+        self.level_manager.load_level('3-2', self.TILE_SIZE, display)
+        self.level_manager.load_level('3-3', self.TILE_SIZE, display)
         self.level_manager.set_level('0-1', self.player)
 
         # Player

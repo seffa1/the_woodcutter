@@ -13,7 +13,7 @@ class Level:
         self.connecting_levels = {}
         self.entity_manager = Entity_Manager(level_ID)
         self.tile_manager = Tile_Manager(level_ID, TILE_SIZE)
-        self.level_triggers = {}  # '0-2': Level_trigger ---> Contains level_trigger objects with name of the level they go to
+        self.level_triggers = {}  # 'forest_2': Level_trigger ---> Contains level_trigger objects with name of the level they go to
         self.respawn_point = [0, 0]
 
         self.load_triggers('game/levels/')
@@ -32,7 +32,7 @@ class Level:
 
     def draw_background(self, scroll, display):
         for image in self.background_images:
-            display.blit(image[0], (-image[1]*scroll[0], -image[1]*scroll[1] - image[0].get_height()/3))
+            display.blit(image[0], (-image[1]*scroll[0], -image[1]*scroll[1] - image[0].get_height()/10))
 
     def draw_tiles(self, scroll, TILE_SIZE, display):
         self.tile_manager.draw(scroll, TILE_SIZE, display)

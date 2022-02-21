@@ -12,6 +12,8 @@ class Shop_Menu:
 
         self.OFFSET_X = -15  # Offsets the menu from the shop's image
         self.OFFSET_Y = -110
+        # self.OFFSET_X = -170  # Offsets the menu from the shop's image
+        # self.OFFSET_Y = 10
         self.pos = vec(x + self.OFFSET_X, y + self.OFFSET_Y)
         self.buttons = []
         self.load_buttons()
