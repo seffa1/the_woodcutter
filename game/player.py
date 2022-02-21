@@ -19,7 +19,7 @@ class Player(Entity):
         self.set_type('player')
 
         # Player stats
-        self.coins = 100
+        self.coins = 300
         self.STAMINA_PER_LEVEL = 10  # How much leveling up stamina increases max stamina
         self.HEALTH_PER_LEVEL = 10
         self.SPEED_PER_LEVEL = .01  # Increases your running speed
@@ -31,9 +31,9 @@ class Player(Entity):
         self.max_health = 100
 
         # Player Stamina
-        self.stamina = 200
-        self.stamina_float = 200
-        self.max_stamina = 200
+        self.stamina = 100
+        self.stamina_float = 100
+        self.max_stamina = 100
         self.STAMINA_RUN_DRAIN = .3
         self.STAMINA_REGEN_RATE = 5.25
         self.STAMINA_USE = {'attack_1': 15, 'roll': 20, 'jump': 10}

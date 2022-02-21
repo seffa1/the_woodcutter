@@ -22,9 +22,9 @@ class Shop_Menu:
         COSTS = [25, 50, 100]  # Costs for level 1, 2, and 3 stat upgrades
         # Tracks the current cost of a stat upgrade
         self.stat_upgrade_costs = {
-            'health': deque([COSTS[0], COSTS[1], COSTS[2], None]),
-            'stamina': deque([COSTS[0], COSTS[1], COSTS[2], None]),
-            'damage': deque([COSTS[0], COSTS[1], COSTS[2], None]) }
+            'health': deque([COSTS[0], COSTS[1], COSTS[2], 'Max']),
+            'stamina': deque([COSTS[0], COSTS[1], COSTS[2], 'Max']),
+            'damage': deque([COSTS[0], COSTS[1], COSTS[2], 'Max']) }
         # Tracks amount of upgrades done for each stat
         self.stat_upgrades = {
             'health': 0,
@@ -64,7 +64,7 @@ class Shop_Menu:
         # Check which button was pressed
         if button.name == 'health':
             # Check if there are any more upgrades to get
-            if self.stat_upgrade_costs['health'][0] is None:
+            if self.stat_upgrade_costs['health'][0] == 'Max':
                 return
             # Check if player has enough coins
             if player.coins < self.stat_upgrade_costs['health'][0]:
@@ -78,7 +78,7 @@ class Shop_Menu:
 
         # STAMINA #
         elif button.name == 'stamina':
-            if self.stat_upgrade_costs['stamina'][0] is None:
+            if self.stat_upgrade_costs['stamina'][0] == 'Max':
                 return
             if player.coins < self.stat_upgrade_costs['stamina'][0]:
                 return
@@ -90,7 +90,7 @@ class Shop_Menu:
 
         # DAMAGE #
         elif button.name == 'damage':
-            if self.stat_upgrade_costs['damage'][0] is None:
+            if self.stat_upgrade_costs['damage'][0] == 'Max':
                 return
             if player.coins < self.stat_upgrade_costs['damage'][0]:
                 return

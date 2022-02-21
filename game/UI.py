@@ -24,7 +24,6 @@ class UI:
             mouse_pos = pg.mouse.get_pos()
             draw_text(screen, f'Mouse Pos: {mouse_pos}', SIZE, (255, 0, 0), (X, 183))
             # draw_text(screen, f'Collisions: {player.collision_types}', SIZE, (255, 0, 0), (900, 183))
-
             # draw_text(screen, f'Invincibility: {player.invincible}', SIZE, (255, 0, 0), (X, 163))
 
         # Health Bar
