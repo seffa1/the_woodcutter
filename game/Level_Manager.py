@@ -50,8 +50,9 @@ class Level_Manager:
 
     def draw_best_times(self, scroll, display):
         """ Draws the best timers by the level entrances in the base world """
-        if self.current_level == '0-0':
-            self.time_manager.draw(scroll, display, screen)
+        if self.current_level == '0-1':
+            triggers = self.levels['0-1'].level_triggers
+            self.time_manager.draw_best_times(scroll, display, triggers)
 
     def draw_timer(self, screen):
         self.time_manager.draw_timer(screen)
