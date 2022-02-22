@@ -10,10 +10,9 @@ class Level:
         self.TILE_SIZE = TILE_SIZE
         self.display = display
         self.background_images = []
-        self.connecting_levels = {}
         self.entity_manager = Entity_Manager(level_ID)
         self.tile_manager = Tile_Manager(level_ID, TILE_SIZE)
-        self.level_triggers = {}  # 'forest_2': Level_trigger ---> Contains level_trigger objects with name of the level they go to
+        self.level_triggers = {}  # '0-1': Level_trigger ---> Contains level_trigger objects with name of the level they go to
         self.respawn_point = [0, 0]
 
         self.load_triggers('game/levels/')
@@ -51,7 +50,6 @@ class Level:
                 line = line.split(',')
                 trigger = Level_Trigger(int(line[0]), int(line[1]), int(line[2]), int(line[3]), line[4], line[5])
                 self.level_triggers[line[4]] = trigger
-                # self.add_connection(trigger[4])
 
     def load_respawn_point(self, path):
         file_path = path + self.level_ID + '/respawn.txt'
@@ -81,6 +79,3 @@ class Level:
                     scaled_img = pg.transform.scale(image, (self.display.get_width()*float(line[3]), self.display.get_height()*float(line[3])))
                     self.background_images.append([scaled_img, paralax])
                     paralax += float(paralax_dif)
-
-    def add_connection(self, ID: str, level):
-        self.connecting_levels[ID] = level

@@ -1,5 +1,6 @@
 import pygame as pg
 from .Level import Level
+from .Time_Manager import Time_Manager
 
 
 class Level_Manager:
@@ -7,10 +8,12 @@ class Level_Manager:
         self.levels = {}
         self.current_level = None
 
-
         # Calls down to the current level's tile manager, and gets updated collidable rects each framee
         self.tile_rects = []
         self.collided_trigger = None
+
+        # Create time manager to keep track of each levels best timers
+        self.time_manager = Time_Manager()
 
     def load_level(self, ID: str, TILE_SIZE: int, display):
         self.levels[ID] = Level(ID, TILE_SIZE, display)
@@ -31,6 +34,7 @@ class Level_Manager:
     def update(self, player, dt):
         self.tile_rects = self.get_level().tile_manager.tile_rects
         self.get_level().update(player, self.tile_rects, dt)
+        self.time_manager.update()
 
     def draw_background(self, scroll, display):
         self.get_level().draw_background(scroll, display)
@@ -44,6 +48,13 @@ class Level_Manager:
     def draw_triggers(self, scroll, display):
         self.get_level().draw_triggers(scroll, display)
 
+    def draw_best_times(self, scroll, display):
+        """ Draws the best timers by the level entrances in the base world """
+        if self.current_level == '0-0':
+            self.time_manager.draw(scroll, display, screen)
+
+    def draw_timer(self, screen):
+        self.time_manager.draw_timer(screen)
 
     def check_change_level(self, player):
         """ Only gets called when the player presses enter from the game event loop,
@@ -53,3 +64,12 @@ class Level_Manager:
 
         trigger = self.get_level().collided_trigger
         self.set_level(trigger.level_to_go_to, player)
+
+        # If its the starting level in a world, start the timer
+        if trigger.level_to_go_to in ['1-1', '2-1', '3-1']:
+            self.time_manager.start_timer(trigger.level_to_go_to)
+
+        # If we are going back to the main world, stop the timer
+        if trigger.level_to_go_to == '0-1':
+            self.time_manager.stop_timer()
+

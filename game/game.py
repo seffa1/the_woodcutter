@@ -4,7 +4,6 @@ from .Level_Manager import Level_Manager
 from .player import Player
 from .UI import UI
 
-
 # TODO
 #   Add double jump capabilities
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
@@ -14,7 +13,6 @@ from .UI import UI
 #   Only checking collisions on tiles close to player (Add chunk rendering?)
 
 vec = pg.math.Vector2
-
 
 class Game:
     def __init__(self, screen, clock, display, WINDOW_SIZE, SCALE_FACTOR):
@@ -53,7 +51,7 @@ class Game:
         self.level_manager.set_level('0-1', self.player)
 
         # Player
-        self.player = Player(703, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+        self.player = Player(154, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
         # User Interface
         self.UI = UI()
@@ -95,7 +93,6 @@ class Game:
                 self.player.health = self.player.max_health
                 self.player.stamina = self.player.max_stamina
                 self.player.stamina_float = self.player.max_stamina
-
 
             # Check special keys
             mods = pg.key.get_mods()
@@ -171,23 +168,26 @@ class Game:
         # Draw the triggers
         self.level_manager.draw_triggers(self.scroll, self.display)
 
-
-
-
         # Draw the entities
         self.level_manager.draw_entities(self.scroll, self.display)
 
         # Draw the tiles
         self.level_manager.draw_tiles(self.scroll, self.TILE_SIZE, self.display)
 
+        # Draw the best times
+        self.level_manager.draw_best_times(self.scroll, self.display)
+
         # Draw player
         self.player.draw(self.display, self.scroll)
 
-        # Scale up the display to the screen size, then draw it
+        # Scale up the display to the screen size, then draw it onto the screen
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
         # Draw the UI on top of the screen
         self.UI.draw(self.screen, self.player, self.dt, self.clock, self.level_manager)
+
+        # Draw the timer on top of the screen
+        self.level_manager.draw_timer(self.screen)
 
         # Draw the entire diaplay at once
         pg.display.flip()
