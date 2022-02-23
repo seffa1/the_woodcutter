@@ -16,10 +16,17 @@ class StartMenu:
         self.background_images = []  # List of background images (since they are setup for paralax)
         self.load_background('forest_4', 7)
 
+        # Rects
         self.mouse_rect = None
-
         self.button_rects = []
         self.load_buttons()
+
+        # Colors
+        self.DEFAULT_COLOR = (255, 255, 255)
+        self.HOVER_COLOR = (0, 200, 15)
+        self.play_color = self.DEFAULT_COLOR
+        self.load_color = self.DEFAULT_COLOR
+        self.boards_color = self.DEFAULT_COLOR
 
     def load_background(self, name: str, qty: int):
         path = 'assets/images/backgrounds/' + name + '/'
@@ -64,6 +71,34 @@ class StartMenu:
         mouse_actions = pg.mouse.get_pressed()  # 0 = left click
         self.mouse_rect = pg.Rect(mouse_pos[0], mouse_pos[1], 1, 1)
 
+        # If you left click
+        if mouse_actions[0]:
+            # Play button
+            if self.mouse_rect.colliderect(self.button_rects[0]):
+                self.menu_running = False
+            # Load button
+            elif self.mouse_rect.colliderect(self.button_rects[1]):
+                print("Loading game...")
+            # Boards button
+            elif self.mouse_rect.colliderect(self.button_rects[2]):
+                print("Loading Leaderboards...")
+
+        # Update text colors if you hover over them
+        if self.mouse_rect.colliderect(self.button_rects[0]):
+            self.play_color = self.HOVER_COLOR
+        else:
+            self.play_color = self.DEFAULT_COLOR
+        if self.mouse_rect.colliderect(self.button_rects[1]):
+            self.load_color = self.HOVER_COLOR
+        else:
+            self.load_color = self.DEFAULT_COLOR
+        if self.mouse_rect.colliderect(self.button_rects[2]):
+            self.boards_color = self.HOVER_COLOR
+        else:
+            self.boards_color = self.DEFAULT_COLOR
+
+
+
     def draw(self, screen):
         screen.fill((0, 0, 0))
         # draw_text(self.screen, 'Game Title Here', 100, (255, 255, 255), (0, self.screen_size[1]*0.3))
@@ -85,13 +120,13 @@ class StartMenu:
 
         # Draw the buttons
         # Debug rects
-        for rect in self.button_rects:
-            pg.draw.rect(self.screen, (0, 0, 255), rect)
+        # for rect in self.button_rects:
+        #     pg.draw.rect(self.screen, (0, 0, 255), rect)
 
         # Draw the button text
-        draw_text(self.screen, 'Play', 60, (255, 255, 255), (X+368, Y + 232))
-        draw_text(self.screen, 'Load', 36, (255, 255, 255), (X+68, Y + 250))
-        draw_text(self.screen, 'Boards', 25, (255, 255, 255), (X+738, Y + 256))
+        draw_text(self.screen, 'Play', 60, self.play_color, (X+368, Y + 232))
+        draw_text(self.screen, 'Load', 36, self.load_color, (X+68, Y + 250))
+        draw_text(self.screen, 'Boards', 25, self.boards_color, (X+738, Y + 256))
 
         pg.display.flip()
 
