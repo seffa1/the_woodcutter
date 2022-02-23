@@ -124,6 +124,7 @@ class Shop_Menu:
         # Draw the menu
         screen.blit(self.image, ((self.pos.x - scroll[0])*SCALE_FACTOR_SETTING, (self.pos.y - scroll[1])*SCALE_FACTOR_SETTING))
 
+
         # Draw the buttons
         for button in self.buttons:
             button.draw(display, scroll, screen)

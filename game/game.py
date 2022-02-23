@@ -7,7 +7,6 @@ from .UI import UI
 # TODO
 #   Add double jump capabilities
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
-#   Fix animation images to they are centered on the character
 #   Fix menu sizes, polish them, adding controls to both menus
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering?)
