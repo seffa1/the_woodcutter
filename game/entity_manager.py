@@ -8,13 +8,14 @@ from .objects.chest import Chest
 from.shop.shop import Shop
 
 
-
 # Instantiates, stores, and kills entities for each level
 class Entity_Manager:
     def __init__(self, ID: str):
         self.ID = ID
         self.groups = {}
+        self.shop_object = []  # Stores the shop here for easy access by the game to update it independently
         self.load_entities()
+
 
     def load_entities(self):
         path = 'game/levels/' + self.ID + '/entities.txt'
@@ -40,6 +41,7 @@ class Entity_Manager:
             entity = Coin(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'shop':
             entity = Shop(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+            self.shop_object.append(entity)
         else:
             raise 'Entity Type was not defined'
 
@@ -63,11 +65,15 @@ class Entity_Manager:
             for entity in group:
                 entity.update(tile_rects, dt, player)
 
-    def draw(self, display, scroll):
+    def draw(self, display, scroll, screen):
         for group in list(self.groups.values()):
             for entity in group:
-                if entity.image is not None:
+                if entity.image is not None and entity.type != 'shop':  # Shop gets drawn separately, in a different way
                     entity.draw(display, scroll)
+                elif entity.image is not None and entity.type == 'shop':
+                    entity.draw(display, scroll, screen)
+
+
 
 
 

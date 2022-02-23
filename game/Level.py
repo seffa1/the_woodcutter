@@ -36,8 +36,8 @@ class Level:
     def draw_tiles(self, scroll, TILE_SIZE, display):
         self.tile_manager.draw(scroll, TILE_SIZE, display)
 
-    def draw_entities(self, scroll, display):
-        self.entity_manager.draw(display, scroll)
+    def draw_entities(self, scroll, display, screen):
+        self.entity_manager.draw(display, scroll, screen)
 
     def draw_triggers(self, scroll, display):
         for level_trigger in self.level_triggers.values():

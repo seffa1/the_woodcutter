@@ -37,8 +37,8 @@ class Shop_Menu:
 
     def load_buttons(self):
         """ Instantiates and adds buttons to self.buttons """
-        BUTTON_WIDTH = 30
-        BUTTON_HEIGHT = 15
+        BUTTON_WIDTH = 90
+        BUTTON_HEIGHT = 45
         OFFSET_X = 142
         OFFSET_Y = 35
         SPACING_Y = 26
@@ -107,7 +107,7 @@ class Shop_Menu:
         # If you are not holding down left click, resets the buy switch
         if not mouse_action[0]:
             self.buy_switch = True
-        mouse_rect = pg.Rect(mouse_pos[0] / SCALE_FACTOR_SETTING + self.scroll[0] , mouse_pos[1] / SCALE_FACTOR_SETTING + self.scroll[1] , 10, 10)
+        mouse_rect = pg.Rect(mouse_pos[0] / SCALE_FACTOR_SETTING + self.scroll[0] , mouse_pos[1] / SCALE_FACTOR_SETTING + self.scroll[1] , 1, 1)
 
 
         for button in self.buttons:
@@ -117,31 +117,32 @@ class Shop_Menu:
                     self.buy_upgrade(button, player)
                     self.buy_switch = False
 
-    def draw(self, display, scroll, hitbox=False, attack_box=False):
+    def draw(self, display, scroll, screen, hitbox=False, attack_box=False):
         """ Draw the menu background, then draw each button """
 
         self.scroll = scroll
         # Draw the menu
-        display.blit(self.image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
+        screen.blit(self.image, ((self.pos.x - scroll[0])*SCALE_FACTOR_SETTING, (self.pos.y - scroll[1])*SCALE_FACTOR_SETTING))
 
         # Draw the buttons
         for button in self.buttons:
-            button.draw(display, scroll)
+            button.draw(display, scroll, screen)
 
         # Draw the costs
-        OFFSET_X = 8
+        OFFSET_X = 5
         OFFSET_Y = 0
-        SIZE = 12
-        draw_text(display, f'{self.stat_upgrade_costs["health"][0]}', SIZE, Color.HEALTH.value,
-                  (self.buttons[0].pos.x - scroll[0] + OFFSET_X, self.buttons[0].pos.y - scroll[1] + OFFSET_Y))
-        draw_text(display, f'{self.stat_upgrade_costs["stamina"][0]}', SIZE, Color.HEALTH.value,
-                  (self.buttons[1].pos.x - scroll[0] + OFFSET_X, self.buttons[1].pos.y - scroll[1]+ OFFSET_Y))
-        draw_text(display, f'{self.stat_upgrade_costs["damage"][0]}', SIZE, Color.HEALTH.value,
-                  (self.buttons[2].pos.x - scroll[0] + OFFSET_X, self.buttons[2].pos.y - scroll[1]+ OFFSET_Y))
+        SIZE = 36
+
+        draw_text(screen, f'{self.stat_upgrade_costs["health"][0]}', SIZE, Color.HEALTH.value,
+                  ((self.buttons[0].pos.x - scroll[0] + OFFSET_X)*SCALE_FACTOR_SETTING, (self.buttons[0].pos.y - scroll[1] + OFFSET_Y)*SCALE_FACTOR_SETTING))
+        draw_text(screen, f'{self.stat_upgrade_costs["stamina"][0]}', SIZE, Color.HEALTH.value,
+                  ((self.buttons[1].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING, (self.buttons[1].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
+        draw_text(screen, f'{self.stat_upgrade_costs["damage"][0]}', SIZE, Color.HEALTH.value,
+                  ((self.buttons[2].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING, (self.buttons[2].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
 
         # Draw the upgrade levels symbols
-        WIDTH = 12
-        HEIGHT = 9
+        WIDTH = 36
+        HEIGHT = 27
         ABILITY_OFFSET_X = -70
         ABILITY_OFFSET_y = 2
         SPACING_X = 18
@@ -150,20 +151,20 @@ class Shop_Menu:
         # Draw the health levels
         if self.stat_upgrades['health'] > 0:
             for i in range(0, self.stat_upgrades['health']):
-                health_rect = pg.Rect(self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0], self.buttons[0].pos.y + ABILITY_OFFSET_y - scroll[1], WIDTH, HEIGHT)
-                pg.draw.rect(display, Color.HEALTH.value, health_rect)
+                health_rect = pg.Rect((self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0])*SCALE_FACTOR_SETTING, (self.buttons[0].pos.y + ABILITY_OFFSET_y - scroll[1])*SCALE_FACTOR_SETTING, WIDTH, HEIGHT)
+                pg.draw.rect(screen, Color.HEALTH.value, health_rect)
 
         # Draw the stamina levels
         if self.stat_upgrades['stamina'] > 0:
             for i in range(0, self.stat_upgrades['stamina']):
-                stamina_rect = pg.Rect(self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0], self.buttons[0].pos.y + ABILITY_OFFSET_y + SPACING_Y - scroll[1], WIDTH, HEIGHT)
-                pg.draw.rect(display, Color.STAMINA.value, stamina_rect)
+                stamina_rect = pg.Rect((self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0])*SCALE_FACTOR_SETTING, (self.buttons[0].pos.y + ABILITY_OFFSET_y + SPACING_Y - scroll[1])*SCALE_FACTOR_SETTING, WIDTH, HEIGHT)
+                pg.draw.rect(screen, Color.STAMINA.value, stamina_rect)
 
         # Draw the damagee levels
         if self.stat_upgrades['damage'] > 0:
             for i in range(0, self.stat_upgrades['damage']):
-                damage_rect = pg.Rect(self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0], self.buttons[0].pos.y + ABILITY_OFFSET_y + SPACING_Y * 2- scroll[1], WIDTH, HEIGHT)
-                pg.draw.rect(display, Color.DAMAGE.value, damage_rect)
+                damage_rect = pg.Rect((self.buttons[0].pos.x + ABILITY_OFFSET_X + SPACING_X * i - scroll[0])*SCALE_FACTOR_SETTING, (self.buttons[0].pos.y + ABILITY_OFFSET_y + SPACING_Y * 2- scroll[1])*SCALE_FACTOR_SETTING, WIDTH, HEIGHT)
+                pg.draw.rect(screen, Color.DAMAGE.value, damage_rect)
 
 
 
