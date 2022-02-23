@@ -175,7 +175,7 @@ class Game:
         self.level_manager.draw_tiles(self.scroll, self.TILE_SIZE, self.display)
 
         # Draw the best times
-        self.level_manager.draw_best_times(self.scroll, self.display)
+        # self.level_manager.draw_best_times(self.scroll, self.display, self.screen)
 
         # Draw player
         self.player.draw(self.display, self.scroll)
@@ -188,6 +188,8 @@ class Game:
 
         # Draw the timer on top of the screen
         self.level_manager.draw_timer(self.screen)
+
+        self.level_manager.draw_best_times(self.scroll, self.screen)
 
         # Draw the entire diaplay at once
         pg.display.flip()

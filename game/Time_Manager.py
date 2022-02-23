@@ -1,7 +1,7 @@
 import pygame as pg
 import time, math
 from .utils import draw_text
-from .settings import WINDOW_SIZE_SETTING
+from .settings import WINDOW_SIZE_SETTING, SCALE_FACTOR_SETTING
 
 
 class Time_Manager:
@@ -47,15 +47,17 @@ class Time_Manager:
         timer = round(time.time()  - self.level_start_time, 2)
         draw_text(screen, f'Current Time: {timer}', 25, (255, 0, 0), (WINDOW_SIZE_SETTING[0] / 2 - 140, 10))
 
-    def draw_best_times(self, scroll, display, triggers):
+    def draw_best_times(self, scroll, triggers, screen):
         #  Configs
-        SIZE = 15
+        SIZE = 35
         X_OFFSET = -30
         Y_OFFSEET = -30
 
-        # The best times for each level are drawn to the display
-        draw_text(display, f'Best Time: {self.best_times["1-1"]}', SIZE, (255, 0, 0), (triggers['1-1'].x - scroll[0] + X_OFFSET, triggers['1-1'].y + Y_OFFSEET - scroll[1]))
-        draw_text(display, f'Best Time: {self.best_times["2-1"]}', SIZE, (255, 0, 0), (triggers['2-1'].x - scroll[0] + X_OFFSET, triggers['2-1'].y + Y_OFFSEET - scroll[1]))
-        draw_text(display, f'Best Time: {self.best_times["3-1"]}', SIZE, (255, 0, 0), (triggers['3-1'].x - scroll[0] + X_OFFSET, triggers['3-1'].y + Y_OFFSEET - scroll[1]))
+        # The best times for each level are drawn to the screen
+        # Drawn at the triggers location, with an offset, with the scroll. The scale factor lets you draw to the screen like you would the display
+        draw_text(screen, f'Best Time: {self.best_times["1-1"]}', SIZE, (255, 0, 0), ((triggers['1-1'].x + X_OFFSET - scroll[0]) * SCALE_FACTOR_SETTING, (triggers['1-1'].y + Y_OFFSEET - scroll[1]) * SCALE_FACTOR_SETTING))
+        draw_text(screen, f'Best Time: {self.best_times["2-1"]}', SIZE, (255, 0, 0), ((triggers['2-1'].x + X_OFFSET - scroll[0]) * SCALE_FACTOR_SETTING, (triggers['2-1'].y + Y_OFFSEET - scroll[1]) * SCALE_FACTOR_SETTING))
+        draw_text(screen, f'Best Time: {self.best_times["3-1"]}', SIZE, (255, 0, 0), ((triggers['3-1'].x + X_OFFSET - scroll[0]) * SCALE_FACTOR_SETTING, (triggers['3-1'].y + Y_OFFSEET - scroll[1]) * SCALE_FACTOR_SETTING))
+
 
 
