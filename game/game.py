@@ -5,9 +5,11 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Add double jump capabilities
-#   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
 #   Fix menu sizes, polish them, adding controls to both menus
+#   Add double jump capabilities
+#   Combat refinement. Hold to charge a power attack. Damage based knock-back
+#   Projectile based enemy
+#   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering?)
 
