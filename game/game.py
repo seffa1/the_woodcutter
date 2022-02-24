@@ -5,13 +5,13 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Fix menu sizes, polish them, adding controls to both menus
-#   Add double jump capabilities
 #   Combat refinement. Hold to charge a power attack. Damage based knock-back
+#   Add double jump capabilities
 #   Projectile based enemy
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering?)
+#   Add saving and loading
 
 vec = pg.math.Vector2
 

@@ -135,11 +135,14 @@ class Shop_Menu:
         SIZE = 36
 
         draw_text(screen, f'{self.stat_upgrade_costs["health"][0]}', SIZE, Color.HEALTH.value,
-                  ((self.buttons[0].pos.x - scroll[0] + OFFSET_X)*SCALE_FACTOR_SETTING, (self.buttons[0].pos.y - scroll[1] + OFFSET_Y)*SCALE_FACTOR_SETTING))
+                  ((self.buttons[0].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING,
+                   (self.buttons[0].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
         draw_text(screen, f'{self.stat_upgrade_costs["stamina"][0]}', SIZE, Color.HEALTH.value,
-                  ((self.buttons[1].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING, (self.buttons[1].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
+                  ((self.buttons[1].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING,
+                   (self.buttons[1].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
         draw_text(screen, f'{self.stat_upgrade_costs["damage"][0]}', SIZE, Color.HEALTH.value,
-                  ((self.buttons[2].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING, (self.buttons[2].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
+                  ((self.buttons[2].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING,
+                   (self.buttons[2].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
 
         # Draw the upgrade levels symbols
         WIDTH = 36
