@@ -5,7 +5,7 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Combat refinement. Hold to charge a power attack. Damage based knock-back
+#   Combat refinement. Hold to charge a power attack.
 #   Add double jump capabilities
 #   Projectile based enemy
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)

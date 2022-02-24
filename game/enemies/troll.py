@@ -11,7 +11,7 @@ class Troll(Entity):
         self.animation_frames['idle'] = self.load_animation('assets/animations/troll/idle', [10, 10, 10, 10], True)
         self.animation_frames['walk'] = self.load_animation('assets/animations/troll/walk', [10, 10, 10, 10, 10, 10], True)
         self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [3, 4, 7, 7, 4, 4], True)
-        self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 20, 60, 120], True)
+        self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 20, 20, 20], True)
         self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 20], True)
         self.entity_manager = entity_manager
 
@@ -20,7 +20,7 @@ class Troll(Entity):
         self.MAX_HEALTH = 25
 
         # AI Constants
-        self.DAMAGES = {'attack_1': 25}
+        self.DAMAGES = {'attack_1': 75}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invincible for after taking damage
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
@@ -43,6 +43,7 @@ class Troll(Entity):
             self.attack_timer_float = 0
 
         else:
+            # Walk Left
             if player.rect.center[0] < (self.rect.center[0] - self.ATTACK_RANGE) and not self.attacking:
                 self.walk_right = False
                 self.walk_left = True
@@ -53,7 +54,8 @@ class Troll(Entity):
                 if self.attack_timer < 0:
                     self.attack_timer = 0
 
-            if player.rect.center[0] > (self.rect.center[0] + self.rect.width + self.ATTACK_RANGE) and not self.attacking:
+            # Walk Right
+            if player.rect.center[0] > (self.rect.center[0] + self.ATTACK_RANGE) and not self.attacking:
                 self.walk_left= False
                 self.walk_right = True
                 self.attack_timer_float -= 1 * dt
@@ -117,7 +119,6 @@ class Troll(Entity):
             coin.vel.x = x_vel
             self.entity_manager.add_entity(coin, coin.type)
 
-
     def hitboxes(self, dt):
         if not self.attacking:
             self.damage = 0
@@ -142,11 +143,22 @@ class Troll(Entity):
         if player.attack_rect:
             if self.rect.colliderect(player.attack_rect):
                 self.lose_health(player.damage)
+                # Knock Back Ourselves
+                if player.pos.x <= self.pos.x:
+                    self.vel.x += (1 + (player.damage / 50))  # Knockback scales with damage
+                elif player.pos.x > self.pos.x:
+                    self.vel.x -= (1 + (player.damage / 50))  # Knockback scales with damage
 
         # Check if we have damaged the player
         if self.attack_rect:
             if self.attack_rect.colliderect(player.rect):
                 player.lose_health(self.damage)
+                # Knock back player
+                if player.pos.x <= self.pos.x:
+                    player.vel.x -= (1 + (self.damage / 50))  # Knockback scales with damage
+                elif player.pos.x > self.pos.x:
+                    player.vel.x += (1 + (self.damage / 50))  # Knockback scales with damage
+
 
     def update(self, tile_rects, dt, player=None):
         self.check_aggro(player)  # update the aggro state of the entity
