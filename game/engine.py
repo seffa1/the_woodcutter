@@ -306,10 +306,6 @@ class Entity(pg.sprite.Sprite):
                 else:
                     self.respawn()
 
-            self.attacking = False
-            self.frame = 0
-            self.frame_float = 0
-
             # When the charge animation finished, it goes to hold
             if self.action == 'charge_up':
                 self.hold = True
@@ -317,6 +313,8 @@ class Entity(pg.sprite.Sprite):
                 return
 
             # Any non-looping actions get reset here
+            self.frame = 0
+            self.frame_float = 0
             self.attacking = False
             self.hurt = False
             self.roll = False
@@ -328,10 +326,13 @@ class Entity(pg.sprite.Sprite):
             self.attack_rect = None
             self.invincible = False
             self.rect.height = self.height
+
+
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
-        print(f'image ID {image_id}')
+
+
         # self.rect.width = self.image.get_width()
         # self.rect.height = self.image.get_height()
 
