@@ -55,6 +55,8 @@ class Entity(pg.sprite.Sprite):
         self.hurt = False  # When you get hit this animation triggers, and you cant take damage during it
         self.death = False  # Triggers the death animation, which once ended, kills the entity
         self.attack = {}  # Keeps track of which attack we are using, replace nums with attack names
+        self.charge_up = False
+        self.hold = False
         self.damage = 0  # Keeps track of how much damage our current attack is doing
         self.wall_jump = False
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
@@ -157,7 +159,6 @@ class Entity(pg.sprite.Sprite):
             else:  # Facing left
                 self.vel.x = -self.ROLL_VEL
 
-
         # Adjust position
         self.pos.x += self.vel.x * dt
         self.rect.topleft = self.pos
@@ -236,7 +237,7 @@ class Entity(pg.sprite.Sprite):
             return
 
         # Walking, running, and idle animations only get played if we arent attacking, rolling, jumping, or getting hurt
-        if not self.roll and not self.attacking and not self.jumping and not self.hurt:
+        if not self.roll and not self.attacking and not self.jumping and not self.hurt and not self.charge_up and not self.hold:
             # Idle check
             if abs(self.vel.x) <= walk_threshold:
                 self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'idle')
@@ -254,7 +255,7 @@ class Entity(pg.sprite.Sprite):
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
 
         else:
-            # Roll Check
+            # Roll Check - Will cancel attacks
             if self.roll:
                 self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'roll')
                 self.invincible_timer_float -= 1 * dt
@@ -265,10 +266,22 @@ class Entity(pg.sprite.Sprite):
                 # Change the hitbox height for rolling
                 self.rect.height = self.ROLL_HEIGHT
 
+            # Charge Check
+            if self.charge_up:
+                self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'charge_up')
+
+            # Hold check
+            if self.hold:
+                self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'hold')
+
             # Attack Check
             if self.attacking:
+                # Basic attack
                 if self.attack['1']:
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'attack_1')
+                # Swing attack
+                if self.attack['2']:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'swing')
 
             # Jumping Check
             if self.jumping and not self.attacking:
@@ -284,6 +297,7 @@ class Entity(pg.sprite.Sprite):
         self.frame_float += 1 * dt
         self.frame = int(round(self.frame_float, 0))
 
+        # If your animation frames come to an end
         if self.frame >= len(self.animation_frames[self.action]):
             if self.action == 'death':
                 if self.type != 'player':
@@ -292,13 +306,22 @@ class Entity(pg.sprite.Sprite):
                 else:
                     self.respawn()
 
+            self.attacking = False
             self.frame = 0
             self.frame_float = 0
+
+            # When the charge animation finished, it goes to hold
+            if self.action == 'charge_up':
+                self.hold = True
+                self.charge_up = False
+                return
+
             # Any non-looping actions get reset here
+            self.attacking = False
             self.hurt = False
             self.roll = False
-            self.attacking = False
             self.attack['1'] = False
+            self.attack['2'] = False
             self.attack_1_timer = 0
             self.attack_1_timer_float = 0
             self.jumping = False
@@ -308,6 +331,7 @@ class Entity(pg.sprite.Sprite):
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
+        print(f'image ID {image_id}')
         # self.rect.width = self.image.get_width()
         # self.rect.height = self.image.get_height()
 
@@ -320,7 +344,6 @@ class Entity(pg.sprite.Sprite):
             self.damage = self.DAMAGES['attack_1']
             self.attack_1_timer_float += 1 * dt
             self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
-            # self.attack_1_timer += 1
 
             if self.attack_1_timer > 24:  # 10 is to be adjusted as we go
                 if not self.flip:

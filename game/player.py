@@ -16,6 +16,10 @@ class Player(Entity):
         self.animation_frames['jump'] = self.load_animation('assets/animations/player/jump',[5, 5, 7, 7, 7, 7])
         self.animation_frames['hurt'] = self.load_animation('assets/animations/player/hurt',[5, 10, 5])
         self.animation_frames['death'] = self.load_animation('assets/animations/player/death',[5, 5, 10, 10, 20, 30])
+        # Charge attack - in progress
+        self.animation_frames['charge_up'] = self.load_animation('assets/animations/player/charge_up',[10, 10, 6])
+        self.animation_frames['hold'] = self.load_animation('assets/animations/player/hold',[1])
+        self.animation_frames['swing'] = self.load_animation('assets/animations/player/swing',[5, 5, 5])
         self.set_type('player')
 
         # Player stats
@@ -41,6 +45,7 @@ class Player(Entity):
         # Player Attacking
         self.DAMAGES = {'attack_1': 25}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
+        self.attack = {'1': False, '2': False}
 
     def add_coin(self, amount):
         """ Adds coins """
