@@ -54,7 +54,7 @@ class Entity(pg.sprite.Sprite):
         self.attacking = False  # Applies to any attack at all
         self.hurt = False  # When you get hit this animation triggers, and you cant take damage during it
         self.death = False  # Triggers the death animation, which once ended, kills the entity
-        self.attack = {}  # Keeps track of which attack we are using, replace nums with attack names
+        self.attack = {'1': False, '2': False}  # Keeps track of which attack we are using, replace nums with attack names
         self.charge_up = False
         self.hold = False
         self.damage = 0  # Keeps track of how much damage our current attack is doing
@@ -313,13 +313,11 @@ class Entity(pg.sprite.Sprite):
                 return
 
             # Any non-looping actions get reset here
-            self.frame = 0
-            self.frame_float = 0
             self.attacking = False
             self.hurt = False
             self.roll = False
             self.attack['1'] = False
-            self.attack['2'] = False
+            # self.attack['2'] = False
             self.attack_1_timer = 0
             self.attack_1_timer_float = 0
             self.jumping = False
@@ -327,11 +325,27 @@ class Entity(pg.sprite.Sprite):
             self.invincible = False
             self.rect.height = self.height
 
+            # If it is a looping animation, loops it
+            # A janky 'fix' for inherantly stupid code
+            # When an animation gets fixed, it resets the frames, THEN, it sets the image again
+            # So at the end of the animation it re-draws the first frame BEFORE switching to the next animation
+            # You can notice it except for the charge attack, so i manually am getting around it here
+            # Since i cant figure out a better fix right nowd
+            if not self.attack['2']:
+                self.frame = 0
+                self.frame_float = 0
+            else:
+                self.frame = len(self.animation_frames[self.action]) - 1
+
+            self.attack['2'] = False
+
+
+
+
 
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
-
 
         # self.rect.width = self.image.get_width()
         # self.rect.height = self.image.get_height()
