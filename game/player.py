@@ -45,6 +45,9 @@ class Player(Entity):
         # Player Attacking
         self.damages = {'attack_1': 25,
                         'charge_up': 0}
+        self.charge_damage_float = 0
+        self.MAX_CHARGE_DAMAGE = 100
+
 
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.attack = {'1': False, '2': False}
@@ -218,16 +221,74 @@ class Player(Entity):
             if self.attack_timer > 30:
                 self.attack_rect = None
 
+    def set_image(self, dt):
+        """ Update the current image """
+        self.frame_float += 1 * dt
+        self.frame = int(round(self.frame_float, 0))
+
+        # If your animation frames come to an end
+        if self.frame >= len(self.animation_frames[self.action]):
+            if self.action == 'death':
+                if self.type != 'player':
+                    self.kill()
+                    self.drop_loot()
+                else:
+                    self.respawn()
+
+            # When the charge animation finished, it goes to hold
+            if self.action == 'charge_up':
+                self.hold = True
+                self.charge_up = False
+                return
+
+            # Any non-looping actions get reset here
+            self.attacking = False
+            self.hurt = False
+            self.roll = False
+            self.attack['1'] = False
+            # self.attack['2'] = False
+            self.attack_timer = 0
+            self.attack_timer_float = 0
+            self.jumping = False
+            self.attack_rect = None
+            self.invincible = False
+            self.rect.height = self.height
+
+            # If it is a looping animation, loops it
+            # A janky 'fix' for inherantly stupid code
+            # When an animation gets fixed, it resets the frames, THEN, it sets the image again
+            # So at the end of the animation it re-draws the first frame BEFORE switching to the next animation
+            # You can notice it except for the charge attack, so i manually am getting around it here
+            # Since i cant figure out a better fix right nowd
+            if not self.attack['2']:
+                self.frame = 0
+                self.frame_float = 0
+            else:
+                self.frame = len(self.animation_frames[self.action]) - 1
+
+                # Resets charge attack damage variable once animation ends
+                self.damages['charge_up'] = 0
+                self.charge_damage_float = 0
+
+            self.attack['2'] = False
+
+        image_id = self.animation_frames[self.action][self.frame]
+        image = self.animation_images[image_id]
+        self.image = image
+
+
     def draw(self, display, scroll, hitbox=False, attack_box=True):
+        # Draw the player hitbox ( DEBUGGING )
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)
 
 
-        # Flip the image if we need to, and then blit it
+        # Draw the player
         player_image = pg.transform.flip(self.image, self.flip, False)
         display.blit(player_image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
 
+        # Draw the attack hitbox ( DEBUGGING )
         if attack_box:
             if self.attack_rect is not None:
                 attack_rect_scrolled = pg.Rect(self.attack_rect.x - scroll[0],
@@ -235,12 +296,27 @@ class Player(Entity):
                                                         self.attack_rect.width, self.attack_rect.height)
                 pg.draw.rect(display, (255, 0, 0), attack_rect_scrolled)
 
+    def charge_attack(self, dt):
+        if not self.hold:
+            return
+
+        # Charge up the damage value for the charge attack hold
+        self.charge_damage_float += 1 * dt
+        if self.charge_damage_float > self.MAX_CHARGE_DAMAGE:
+            self.charge_damage_float = self.MAX_CHARGE_DAMAGE
+        # Set the damage variable
+        self.damages['charge_up'] = int(round(self.charge_damage_float, 0))
+        self.damage = self.damages['charge_up']
+
+
+
     def update(self, tile_rects, dt, player=None):
         self.check_dead()
         self.move(tile_rects, dt)  # Update players position
         self.actions(dt)  # Determine the player's action
         self.gain_stamina(dt)  # Regain stamina
         self.set_image(dt)  # Set the image based on the player's action
+        self.charge_attack(dt)
         self.hitboxes(dt)  # Update any hit boxes from player's attack
 
 

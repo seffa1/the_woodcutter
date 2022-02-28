@@ -111,6 +111,12 @@ class Game:
                     self.player.walk_right = True
                 if event.key == pg.K_a and not self.player.hold and not self.player.charge_up:
                     self.player.walk_left = True
+                # Flipping while charging
+                if event.key == pg.K_d and (self.player.charge_up or self.player.hold):
+                    self.player.flip = False
+                if event.key == pg.K_a and (self.player.charge_up or self.player.hold):
+                    self.player.flip = True
+
                 # Jumping
                 if event.key == pg.K_w and not self.player.roll:  # Cant jump while rolling
                     if self.player.stamina >= self.player.STAMINA_USE['jump']:
@@ -205,7 +211,7 @@ class Game:
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
         # Draw the UI on top of the screen
-        self.UI.draw(self.screen, self.player, self.dt, self.clock, self.level_manager)
+        self.UI.draw(self.screen, self.player, self.dt, self.clock, self.level_manager, self.scroll)
 
         # Draw the timer on top of the screen
         self.level_manager.draw_timer(self.screen)

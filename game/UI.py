@@ -1,13 +1,13 @@
 import pygame as pg
 from .utils import draw_text, Color
-from enum import Enum
+from .settings import SCALE_FACTOR_SETTING
 
 
 class UI:
     def __init__(self):
         self.dev_tools = True
 
-    def draw(self, screen, player, dt, clock, level_manager):
+    def draw(self, screen, player, dt, clock, level_manager, scroll):
         # Dev tools
         if self.dev_tools:
             SIZE = 20
@@ -23,6 +23,8 @@ class UI:
             draw_text(screen, f'Air Timer: {player.air_timer}', SIZE, (255, 0, 0), (X, 163))
             mouse_pos = pg.mouse.get_pos()
             draw_text(screen, f'Mouse Pos: {mouse_pos}', SIZE, (255, 0, 0), (X, 183))
+            draw_text(screen, f'Charge damage: {player.damages["charge_up"]}', SIZE, (255, 0, 0), (X, 203))
+            draw_text(screen, f'Damage: {player.damage}', SIZE, (255, 0, 0), (X, 223))
             # draw_text(screen, f'Collisions: {player.collision_types}', SIZE, (255, 0, 0), (900, 183))
             # draw_text(screen, f'Invincibility: {player.invincible}', SIZE, (255, 0, 0), (X, 163))
 
@@ -39,3 +41,9 @@ class UI:
 
         # Weapon Damage
         draw_text(screen, f"Damage: {player.damages['attack_1']}", 25, (255, 0, 0), (250, 65))
+
+        # Charge attack bar
+        charge_attack_rect = pg.Rect((player.pos.x - scroll[0]) * SCALE_FACTOR_SETTING,
+                                     (player.pos.y - scroll[1] - 10) * SCALE_FACTOR_SETTING,
+                                     player.damages['charge_up'], 10)
+        pg.draw.rect(screen, Color.DAMAGE.value, charge_attack_rect)
