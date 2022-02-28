@@ -23,15 +23,15 @@ class Entity(pg.sprite.Sprite):
         # Timers
         self.air_timer = 0  # Keeps track of how many frames youve been in 'coyote time'
         self.air_timer_float = 0  # Keeps track of how many frames youve been in 'coyote time'
-        self.attack_1_timer = 0  # Keeps track of the attack_1 frames for hitbox creation
-        self.attack_1_timer_float = 0  # Uses dt to track percise frame rate independent adjustments
+        self.attack_timer = 0  # Keeps track of the attack_1 frames for hitbox creation
+        self.attack_timer_float = 0  # Uses dt to track percise frame rate independent adjustments
         self.invincible_timer = 0
         self.invincible_timer_float = 0
         self.wall_jump_timer = 0
 
         # 'Constants' that can be leveled up
         self.run_acc = .2  # Gets added to the walking speed
-        self.DAMAGES = {'attack_1': 25}
+        self.damages = {'attack_1': 25}
 
         # Constants
         self.WALK_ACC = WALK_ACC  # How much we instead to accelerate when we press a key
@@ -206,7 +206,7 @@ class Entity(pg.sprite.Sprite):
             self.jumping = False
         else:
             self.air_timer_float += 1 * dt
-            self.air_timer = int(round(self.air_timer_float), 0)
+            self.air_timer = int(round(self.air_timer_float, 0))
 
 
     def change_actions(self, current_action, current_frame, frame_float, new_action):
@@ -321,8 +321,8 @@ class Entity(pg.sprite.Sprite):
             self.roll = False
             self.attack['1'] = False
             # self.attack['2'] = False
-            self.attack_1_timer = 0
-            self.attack_1_timer_float = 0
+            self.attack_timer = 0
+            self.attack_timer_float = 0
             self.jumping = False
             self.attack_rect = None
             self.invincible = False
@@ -359,16 +359,16 @@ class Entity(pg.sprite.Sprite):
             return
 
         if self.attack['1']:
-            self.damage = self.DAMAGES['attack_1']
-            self.attack_1_timer_float += 1 * dt
-            self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
+            self.damage = self.damages['attack_1']
+            self.attack_timer_float += 1 * dt
+            self.attack_timer = int(round(self.attack_timer_float, 0))
 
-            if self.attack_1_timer > 24:  # 10 is to be adjusted as we go
+            if self.attack_timer > 24:  # 10 is to be adjusted as we go
                 if not self.flip:
                     self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
                 else:
                     self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
-            if self.attack_1_timer > 30:
+            if self.attack_timer > 30:
                 self.attack_rect = None
 
     def update(self, tile_rects, dt, player=None):

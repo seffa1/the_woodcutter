@@ -29,8 +29,8 @@ class Troll(Entity):
 
         # AI Controller use
         self.aggro = False
-        self.attack_timer = 0  # Used when we are not in aggro
-        self.attack_timer_float = 0
+        self.attack_cooldown = 0  # Used when we are not in aggro
+        self.attack_cooldown_float = 0
 
     def AI_controller(self, player, dt):
         if self.death:
@@ -39,67 +39,67 @@ class Troll(Entity):
         if not self.aggro:
             self.walk_right = False
             self.walk_left = False
-            self.attack_timer = 0
-            self.attack_timer_float = 0
+            self.attack_cooldown = 0
+            self.attack_cooldown_float = 0
 
         else:
             # Walk Left
             if player.rect.center[0] < (self.rect.center[0] - self.ATTACK_RANGE) and not self.attacking:
                 self.walk_right = False
                 self.walk_left = True
-                self.attack_timer_float -= 1 * dt
-                self.attack_timer = int(round(self.attack_timer_float, 0))
-                if self.attack_timer_float < 0:
-                    self.attack_timer_float = 0
-                if self.attack_timer < 0:
-                    self.attack_timer = 0
+                self.attack_cooldown_float -= 1 * dt
+                self.attack_cooldown = int(round(self.attack_cooldown_float, 0))
+                if self.attack_cooldown_float < 0:
+                    self.attack_cooldown_float = 0
+                if self.attack_cooldown < 0:
+                    self.attack_cooldown = 0
 
             # Walk Right
             if player.rect.center[0] > (self.rect.center[0] + self.ATTACK_RANGE) and not self.attacking:
                 self.walk_left= False
                 self.walk_right = True
-                self.attack_timer_float -= 1 * dt
-                self.attack_timer = int(round(self.attack_timer_float, 0))
-                if self.attack_timer_float < 0:
-                    self.attack_timer_float = 0
-                if self.attack_timer < 0:
-                    self.attack_timer = 0
+                self.attack_cooldown_float -= 1 * dt
+                self.attack_cooldown = int(round(self.attack_cooldown_float, 0))
+                if self.attack_cooldown_float < 0:
+                    self.attack_cooldown_float = 0
+                if self.attack_cooldown < 0:
+                    self.attack_cooldown = 0
 
             # Attack Left
             if (self.rect.center[0] - self.ATTACK_RANGE) < player.rect.center[0] <= self.rect.center[0]:
                 self.walk_right = False
                 self.walk_left = False
                 self.flip = True
-                if self.attack_timer <= 1 and not self.hurt:
+                if self.attack_cooldown <= 1 and not self.hurt:
                     self.attacking = True
                     self.attack['1'] = True
-                    self.attack_timer = self.ATTACK_COOLDOWN
-                    self.attack_timer_float = self.ATTACK_COOLDOWN
+                    self.attack_cooldown = self.ATTACK_COOLDOWN
+                    self.attack_cooldown_float = self.ATTACK_COOLDOWN
                 else:
-                    self.attack_timer_float -= 1 * dt
-                    self.attack_timer = int(round(self.attack_timer_float, 0))
-                    if self.attack_timer_float < 0:
-                        self.attack_timer_float = 0
-                    if self.attack_timer < 0:
-                        self.attack_timer = 0
+                    self.attack_cooldown_float -= 1 * dt
+                    self.attack_cooldown = int(round(self.attack_cooldown_float, 0))
+                    if self.attack_cooldown_float < 0:
+                        self.attack_cooldown_float = 0
+                    if self.attack_cooldown < 0:
+                        self.attack_cooldown = 0
 
             # Attack Right
             if self.rect.center[0] < player.rect.center[0] < (self.rect.center[0] + self.ATTACK_RANGE):
                 self.walk_right = False
                 self.walk_left = False
                 self.flip = False
-                if self.attack_timer <= 1 and not self.hurt:
+                if self.attack_cooldown <= 1 and not self.hurt:
                     self.attacking = True
                     self.attack['1'] = True
-                    self.attack_timer = self.ATTACK_COOLDOWN
-                    self.attack_timer_float = self.ATTACK_COOLDOWN
+                    self.attack_cooldown = self.ATTACK_COOLDOWN
+                    self.attack_cooldown_float = self.ATTACK_COOLDOWN
                 else:
-                    self.attack_timer_float -= 1 * dt
-                    self.attack_timer = int(round(self.attack_timer_float, 0))
-                    if self.attack_timer_float < 0:
-                        self.attack_timer_float = 0
-                    if self.attack_timer < 0:
-                        self.attack_timer = 0
+                    self.attack_cooldown_float -= 1 * dt
+                    self.attack_cooldown = int(round(self.attack_cooldown_float, 0))
+                    if self.attack_cooldown_float < 0:
+                        self.attack_cooldown_float = 0
+                    if self.attack_cooldown < 0:
+                        self.attack_cooldown = 0
 
     def check_aggro(self, player):
         """ Checks if the player is within certain aggro distances """
@@ -126,16 +126,16 @@ class Troll(Entity):
 
         if self.attack['1']:
             self.damage = self.DAMAGES['attack_1']
-            self.attack_1_timer_float += 1 * dt
-            self.attack_1_timer = int(round(self.attack_1_timer_float, 0))
+            self.attack_timer_float += 1 * dt
+            self.attack_timer = int(round(self.attack_timer_float, 0))
             # self.attack_1_timer += 1
 
-            if self.attack_1_timer > 15:  # 10 is to be adjusted as we go
+            if self.attack_timer > 15:  # 10 is to be adjusted as we go
                 if not self.flip:
                     self.attack_rect = pg.Rect(self.rect.right - 25, self.rect.centery - 8, 45, 30)
                 else:
                     self.attack_rect = pg.Rect(self.rect.left - 15, self.rect.centery - 8, 45, 30)
-            if self.attack_1_timer > 20:
+            if self.attack_timer > 20:
                 self.attack_rect = None
 
     def check_damages(self, player):
@@ -169,7 +169,7 @@ class Troll(Entity):
         self.hitboxes(dt)  # Update any hit boxes from attack
         self.check_damages(player)
 
-    def draw(self, display, scroll, hitbox=False, attack_box=False):
+    def draw(self, display, scroll, hitbox=False, attack_box=True):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)

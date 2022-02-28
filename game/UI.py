@@ -38,4 +38,4 @@ class UI:
         draw_text(screen, f'Coins: {player.coins}', 25, (255, 0, 0), (15, 65))
 
         # Weapon Damage
-        draw_text(screen, f"Damage: {player.DAMAGES['attack_1']}", 25, (255, 0, 0), (250, 65))
+        draw_text(screen, f"Damage: {player.damages['attack_1']}", 25, (255, 0, 0), (250, 65))

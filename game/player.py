@@ -43,7 +43,9 @@ class Player(Entity):
         self.STAMINA_USE = {'attack_1': 15, 'roll': 20, 'jump': 10}
 
         # Player Attacking
-        self.DAMAGES = {'attack_1': 25}
+        self.damages = {'attack_1': 25,
+                        'charge_up': 0}
+
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.attack = {'1': False, '2': False}
 
@@ -182,6 +184,56 @@ class Player(Entity):
             if self.collision_types['left'] and not self.collision_types['bottom']:
                 self.vel.x = self.WALL_JUMP_VEL
             self.vel.y = self.JUMP_VEL
+
+    def hitboxes(self, dt):
+        if not self.attacking:
+            self.damage = 0
+            self.attack_timer_float = 0
+            return
+
+        # Hit box spawner could be made into a general use function instead of being specific
+        if self.attack['1']:
+            self.damage = self.damages['attack_1']
+            self.attack_timer_float += 1 * dt
+            self.attack_timer = int(round(self.attack_timer_float, 0))
+
+            if self.attack_timer > 24:  # 10 is to be adjusted as we go
+                if not self.flip:
+                    self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
+                else:
+                    self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
+            if self.attack_timer > 30:
+                self.attack_rect = None
+
+        if self.attack['2']:
+            self.damage = self.damages['charge_up']
+            self.attack_timer_float += 1 * dt
+            self.attack_timer = int(round(self.attack_timer_float, 0))
+
+            if self.attack_timer > 4:  # 10 is to be adjusted as we go
+                if not self.flip:
+                    self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
+                else:
+                    self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
+            if self.attack_timer > 30:
+                self.attack_rect = None
+
+    def draw(self, display, scroll, hitbox=False, attack_box=True):
+        if hitbox:
+            hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
+            pg.draw.rect(display, (0, 255, 0), hit_rect)
+
+
+        # Flip the image if we need to, and then blit it
+        player_image = pg.transform.flip(self.image, self.flip, False)
+        display.blit(player_image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
+
+        if attack_box:
+            if self.attack_rect is not None:
+                attack_rect_scrolled = pg.Rect(self.attack_rect.x - scroll[0],
+                                                        self.attack_rect.y - scroll[1],
+                                                        self.attack_rect.width, self.attack_rect.height)
+                pg.draw.rect(display, (255, 0, 0), attack_rect_scrolled)
 
     def update(self, tile_rects, dt, player=None):
         self.check_dead()

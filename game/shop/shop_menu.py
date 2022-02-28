@@ -96,7 +96,7 @@ class Shop_Menu:
                 return
             player.coins -= self.stat_upgrade_costs['damage'].popleft()
             self.stat_upgrades['damage'] += 1
-            player.DAMAGES['attack_1'] += UPGRADE_AMOUNTS['damage']
+            player.damages['attack_1'] += UPGRADE_AMOUNTS['damage']
 
     def update(self, tile_rects, dt, player):
         """ Update the buttons, passing in a mouse rect and mouse actions"""
