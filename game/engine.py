@@ -22,6 +22,7 @@ class Entity(pg.sprite.Sprite):
 
         # Timers
         self.air_timer = 0  # Keeps track of how many frames youve been in 'coyote time'
+        self.air_timer_float = 0  # Keeps track of how many frames youve been in 'coyote time'
         self.attack_1_timer = 0  # Keeps track of the attack_1 frames for hitbox creation
         self.attack_1_timer_float = 0  # Uses dt to track percise frame rate independent adjustments
         self.invincible_timer = 0
@@ -200,11 +201,13 @@ class Entity(pg.sprite.Sprite):
 
         # Updates from y-axis collisions
         if self.collision_types['bottom'] or self.collision_types['right'] or self.collision_types['left']:
-            self.air_timer = 0
+            self.air_timer_float = 0
             self.wall_jump_timer = 0
             self.jumping = False
         else:
-            self.air_timer += 1
+            self.air_timer_float += 1 * dt
+            self.air_timer = int(round(self.air_timer_float), 0)
+
 
     def change_actions(self, current_action, current_frame, frame_float, new_action):
         """ Only reset animation frames if going from one animation to another """
