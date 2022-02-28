@@ -57,6 +57,8 @@ class Game:
         # User Interface
         self.UI = UI()
 
+        # pg.key.set_repeat(1) Testing this out
+
     def run(self):
         self.playing = True
         self.last_time = time.time()  # For frame rate independence
@@ -111,10 +113,15 @@ class Game:
                     self.player.walk_right = True
                 if event.key == pg.K_a and not self.player.hold and not self.player.charge_up:
                     self.player.walk_left = True
+
                 # Flipping while charging
-                if event.key == pg.K_d and (self.player.charge_up or self.player.hold):
+                if event.key == pg.K_d and self.player.charge_up:
                     self.player.flip = False
-                if event.key == pg.K_a and (self.player.charge_up or self.player.hold):
+                if event.key == pg.K_a and self.player.charge_up:
+                    self.player.flip = True
+                if event.key == pg.K_d and self.player.hold:
+                    self.player.flip = False
+                if event.key == pg.K_a and self.player.hold:
                     self.player.flip = True
 
                 # Jumping

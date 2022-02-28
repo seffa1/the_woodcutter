@@ -215,9 +215,9 @@ class Player(Entity):
 
             if self.attack_timer > 4:  # 10 is to be adjusted as we go
                 if not self.flip:
-                    self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
+                    self.attack_rect = pg.Rect(self.rect.right - (10 + (0.15 * self.damage))/2, self.rect.centery - 8, 10 + (0.15 * self.damage), 23)
                 else:
-                    self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
+                    self.attack_rect = pg.Rect(self.rect.left - (10 + (0.15 * self.damage))/2, self.rect.centery - 8, 10 + (0.15 * self.damage), 23)
             if self.attack_timer > 30:
                 self.attack_rect = None
 
@@ -276,7 +276,6 @@ class Player(Entity):
         image = self.animation_images[image_id]
         self.image = image
 
-
     def draw(self, display, scroll, hitbox=False, attack_box=True):
         # Draw the player hitbox ( DEBUGGING )
         if hitbox:
@@ -301,16 +300,15 @@ class Player(Entity):
             return
 
         # Charge up the damage value for the charge attack hold
-        self.charge_damage_float += 1 * dt
+        self.charge_damage_float += 2 * dt
         if self.charge_damage_float > self.MAX_CHARGE_DAMAGE:
             self.charge_damage_float = self.MAX_CHARGE_DAMAGE
         # Set the damage variable
         self.damages['charge_up'] = int(round(self.charge_damage_float, 0))
         self.damage = self.damages['charge_up']
 
-
-
     def update(self, tile_rects, dt, player=None):
+
         self.check_dead()
         self.move(tile_rects, dt)  # Update players position
         self.actions(dt)  # Determine the player's action
