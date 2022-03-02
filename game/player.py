@@ -46,9 +46,8 @@ class Player(Entity):
         self.damages = {'attack_1': 25,
                         'charge_up': 0}
         self.charge_damage_float = 0
+        self.CHARGE_SPEED = 5
         self.MAX_CHARGE_DAMAGE = 100
-
-
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.attack = {'1': False, '2': False}
 
@@ -300,12 +299,13 @@ class Player(Entity):
             return
 
         # Charge up the damage value for the charge attack hold
-        self.charge_damage_float += 2 * dt
+        self.charge_damage_float += self.CHARGE_SPEED * dt
         if self.charge_damage_float > self.MAX_CHARGE_DAMAGE:
             self.charge_damage_float = self.MAX_CHARGE_DAMAGE
         # Set the damage variable
         self.damages['charge_up'] = int(round(self.charge_damage_float, 0))
         self.damage = self.damages['charge_up']
+
 
     def update(self, tile_rects, dt, player=None):
 

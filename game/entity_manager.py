@@ -1,6 +1,7 @@
 import pygame as pg
 from .engine import Entity
 from .enemies.troll import Troll
+from .enemies.projectile import Projectile
 from .traps.spikes import Spikes
 from .traps.electric_trap import Electric_Trap
 from .objects.coin import Coin
@@ -42,6 +43,8 @@ class Entity_Manager:
         elif type == 'shop':
             entity = Shop(x, y, width, height, type, WALK_ACC, FRIC, rotate)
             self.shop_object.append(entity)
+        elif type == 'projectile':
+            entity = Projectile(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         else:
             raise 'Entity Type was not defined'
 

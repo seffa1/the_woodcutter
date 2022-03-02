@@ -57,7 +57,7 @@ class Game:
         # User Interface
         self.UI = UI()
 
-        # pg.key.set_repeat(1) Testing this out
+
 
     def run(self):
         self.playing = True
@@ -71,6 +71,8 @@ class Game:
             self.dt = time.time() - self.last_time
             self.dt *= 60
             self.last_time = time.time()
+
+            pg.key.set_repeat()  # Testing this out, its not doing what it says it does
 
             self.events()
             self.update()
@@ -100,7 +102,8 @@ class Game:
             # Check special keys
             mods = pg.key.get_mods()
             if mods & pg.KMOD_SHIFT and self.player.stamina > self.player.STAMINA_RUN_DRAIN:
-                self.player.run = True
+                if not self.player.hold and not self.player.charge_up:
+                    self.player.run = True
             else:
                 self.player.run = False
 

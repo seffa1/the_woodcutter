@@ -208,7 +208,6 @@ class Entity(pg.sprite.Sprite):
             self.air_timer_float += 1 * dt
             self.air_timer = int(round(self.air_timer_float, 0))
 
-
     def change_actions(self, current_action, current_frame, frame_float, new_action):
         """ Only reset animation frames if going from one animation to another """
         if current_action != new_action:
