@@ -44,7 +44,7 @@ class Entity_Manager:
             entity = Shop(x, y, width, height, type, WALK_ACC, FRIC, rotate)
             self.shop_object.append(entity)
         elif type == 'projectile':
-            entity = Projectile(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+            entity = Projectile(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
         else:
             raise 'Entity Type was not defined'
 

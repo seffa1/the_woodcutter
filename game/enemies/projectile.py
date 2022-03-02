@@ -3,6 +3,7 @@ import pygame as pg
 from game.utils import calc_distance, Color
 from game.objects.coin import Coin
 import random, math
+from .bullet import Bullet
 
 
 class Projectile(Entity):
@@ -13,13 +14,15 @@ class Projectile(Entity):
         # AI Constants
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
-        self.PROJECTILE_SPEED = 40
+        self.PROJECTILE_SPEED = 3
+        self.ATTACK_COOLDOWN = 40
 
         # AI Controller use
         self.aggro = False
         self.attack_cooldown = 0  # Used when we are not in aggro
         self.attack_cooldown_float = 0
         self.rotate = rotate
+        self.entity_manager = entity_manager
 
         # Debugging
         self.aim_rect = pg.Rect(x, y, 10, 5)
@@ -64,6 +67,12 @@ class Projectile(Entity):
         # Instantiate a bullet projectile with X vel and Y vel
         # Bullet projectile will check for collisions with the player, or get destroyed at a coordinate ( out of bounds)
         self.rotate = math.atan(X_vel / Y_vel) * 360 / (math.pi * 2)
+        bullet = Bullet(self.pos.x, self.pos.y, 10, 10)
+        bullet.vel.x = X_vel
+        bullet.vel.y = Y_vel
+        self.entity_manager.add_entity(bullet, bullet.type)
+        self.attack_cooldown_float = self.ATTACK_COOLDOWN
+        self.attack_cooldown = self.ATTACK_COOLDOWN
 
     def actions(self, dt):
         """ Determine the current action and update the image accordingly """
