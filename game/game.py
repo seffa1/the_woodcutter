@@ -108,6 +108,7 @@ class Game:
 
             # Check the rest of the keys
             if event.type == pg.KEYDOWN:
+                # Pausing
                 if event.key == pg.K_ESCAPE:
                     self.playing = False
                 # Walking

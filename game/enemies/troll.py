@@ -16,8 +16,8 @@ class Troll(Entity):
         self.entity_manager = entity_manager
 
         # Troll Stats
-        self.health = 25
-        self.MAX_HEALTH = 25
+        self.health = 100
+        self.MAX_HEALTH = 100
 
         # AI Constants
         self.DAMAGES = {'attack_1': 75}
