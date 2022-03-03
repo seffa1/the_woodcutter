@@ -234,5 +234,5 @@ class Game:
             shop = self.level_manager.get_level().entity_manager.shop_object[0]
             shop.draw_menu(self.display, self.scroll, self.screen)
 
-        # Draw the entire diaplay at once
+        # Draw the entire display at once
         pg.display.flip()
