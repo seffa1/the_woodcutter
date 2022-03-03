@@ -138,13 +138,11 @@ class Player(Entity):
 
         # X-axis collision updates
 
-
         # Y axis
         self.acc.y = self.GRAV * dt
         self.vel.y += self.acc.y
         if self.vel.y > self.MAX_FALL_SPEED:
             self.vel.y = self.MAX_FALL_SPEED
-
 
         self.pos.y += self.vel.y * dt
         self.rect.topleft = self.pos
@@ -182,9 +180,11 @@ class Player(Entity):
         if self.air_timer < self.AIR_TIME:
             self.jumping = True
             if self.collision_types['right'] and not self.collision_types['bottom']:
-                self.vel.x = -self.WALL_JUMP_VEL
+                # self.vel.x = -self.WALL_JUMP_VEL
+                self.vel.x -= self.WALL_JUMP_VEL
             if self.collision_types['left'] and not self.collision_types['bottom']:
-                self.vel.x = self.WALL_JUMP_VEL
+                # self.vel.x = self.WALL_JUMP_VEL
+                self.vel.x += self.WALL_JUMP_VEL
             self.vel.y = self.JUMP_VEL
 
     def hitboxes(self, dt):
