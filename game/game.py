@@ -57,7 +57,6 @@ class Game:
         self.UI = UI()
 
 
-
     def run(self):
         self.playing = True
         self.last_time = time.time()  # For frame rate independence
@@ -69,6 +68,8 @@ class Game:
             # So everything that moves get multiplied by 2, animation frames get cycled at a factor of 2
             self.dt = time.time() - self.last_time
             self.dt *= 60
+            if self.dt > 10:
+                self.dt = 10
             self.last_time = time.time()
 
             pg.key.set_repeat()  # Testing this out, its not doing what it says it does
@@ -84,6 +85,11 @@ class Game:
                 pg.quit()
                 sys.exit()
 
+            # Check activate level trigger if you left click
+            mouse_actions = pg.mouse.get_pressed()
+            if mouse_actions[0]:
+                self.level_manager.check_change_level(self.player)
+
             # Check respawn
             if event.type == pg.USEREVENT + 1:
                 self.player.health = self.player.max_health
@@ -98,7 +104,7 @@ class Game:
                 self.player.stamina = self.player.max_stamina
                 self.player.stamina_float = self.player.max_stamina
 
-            # Check special keys
+            # Check sprint
             mods = pg.key.get_mods()
             if mods & pg.KMOD_SHIFT and self.player.stamina > self.player.STAMINA_RUN_DRAIN:
                 if not self.player.hold and not self.player.charge_up:
@@ -156,11 +162,6 @@ class Game:
                         self.player.walk_left = False
                         self.player.walk_right = False
 
-
-                # Change levels - (Change this to a mouse click) # TODO Change level trigger to a mouse click
-                if event.key == pg.K_RETURN:
-                    self.level_manager.check_change_level(self.player)
-
             if event.type == pg.KEYUP:
                 # Charge attack release
                 if event.key == pg.K_v:
@@ -169,7 +170,6 @@ class Game:
                         self.player.hold = False
                         self.player.attacking = True
                         self.player.attack['2'] = True
-
 
                 # Walk cancel
                 if event.key == pg.K_d:
