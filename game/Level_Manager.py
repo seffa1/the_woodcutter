@@ -61,7 +61,6 @@ class Level_Manager:
         """ Only gets called when the player presses enter from the game event loop,
         then checks if a player is colliding with a level trigger. """
         if not self.get_level().collided_trigger:
-            print("Not collided!")
             return
 
         trigger = self.get_level().collided_trigger

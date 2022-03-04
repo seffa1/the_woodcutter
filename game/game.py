@@ -5,12 +5,14 @@ from .player import Player
 from .UI import UI
 
 # TODO
+#   Finish level design
+#   Add saving and loading
 #   Add double jump capabilities?
 #   Projectile based enemy - add assets
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering?)
-#   Add saving and loading
+
 
 vec = pg.math.Vector2
 
@@ -55,7 +57,6 @@ class Game:
 
         # User Interface
         self.UI = UI()
-
 
     def run(self):
         self.playing = True

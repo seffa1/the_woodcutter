@@ -12,7 +12,7 @@ class Troll(Entity):
         self.animation_frames['walk'] = self.load_animation('assets/animations/troll/walk', [10, 10, 10, 10, 10, 10], True)
         self.animation_frames['attack_1'] = self.load_animation('assets/animations/troll/attack_1', [3, 4, 7, 7, 4, 4], True)
         self.animation_frames['death'] = self.load_animation('assets/animations/troll/death', [10, 10, 20, 20, 20], True)
-        self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 20], True)
+        self.animation_frames['hurt'] = self.load_animation('assets/animations/troll/hurt', [5, 10], True)
         self.entity_manager = entity_manager
 
         # Troll Stats
@@ -20,7 +20,7 @@ class Troll(Entity):
         self.MAX_HEALTH = 100
 
         # AI Constants
-        self.DAMAGES = {'attack_1': 75}
+        self.DAMAGES = {'attack_1': 25}
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invincible for after taking damage
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
@@ -122,6 +122,7 @@ class Troll(Entity):
     def hitboxes(self, dt):
         if not self.attacking:
             self.damage = 0
+            self.attack_rect = None
             return
 
         if self.attack['1']:
@@ -159,6 +160,54 @@ class Troll(Entity):
                 elif player.pos.x > self.pos.x:
                     player.vel.x += (1 + (self.damage / 50))  # Knockback scales with damage
 
+    def actions(self, dt):
+        """ Determine the current action and update the image accordingly """
+        walk_threshold = 0.5
+
+        # Flip check
+        if self.vel.x > 0:
+            self.flip = False
+        if self.vel.x < 0:
+            self.flip = True
+
+        # Death check
+        if self.death:
+            self.walk_right = False
+            self.walk_left = False
+            self.attacking = False
+            self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'death')
+            return
+
+        # Damage check
+        if self.hurt:
+            self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'hurt')
+            self.attacking = False
+            return
+
+        # Walking, running, and idle animations only get played if we arent attacking, rolling, jumping, or getting hurt
+        if not self.attacking and not self.hurt:
+            # Idle check
+            if abs(self.vel.x) <= walk_threshold:
+                self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'idle')
+
+            # Walking / Running Check
+            if self.vel.x > walk_threshold:
+                if not self.run:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'walk')
+                else:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
+            if self.vel.x < -walk_threshold:
+                if not self.run:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'walk')
+                else:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
+
+        else:
+            # Attack Check
+            if self.attacking:
+                # Basic attack
+                if self.attack['1']:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'attack_1')
 
     def update(self, tile_rects, dt, player=None):
         self.check_aggro(player)  # update the aggro state of the entity
