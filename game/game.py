@@ -98,7 +98,7 @@ class Game:
                 self.player.stamina = self.player.max_stamina
                 self.player.stamina_float = self.player.max_stamina
 
-            # Check special keys
+            # Check sprint
             mods = pg.key.get_mods()
             if mods & pg.KMOD_SHIFT and self.player.stamina > self.player.STAMINA_RUN_DRAIN:
                 if not self.player.hold and not self.player.charge_up:
@@ -156,10 +156,14 @@ class Game:
                         self.player.walk_left = False
                         self.player.walk_right = False
 
-
-                # Change levels - (Change this to a mouse click) # TODO Change level trigger to a mouse click
-                if event.key == pg.K_RETURN:
+                # Check activate level trigger - (Change this to a mouse click) # TODO Change level trigger to a mouse click
+                mouse_actions = pg.mouse.get_pressed() # Not sure why this is not working smoothly?
+                # If you left click
+                if mouse_actions[0]:
                     self.level_manager.check_change_level(self.player)
+
+                # if event.key == pg.K_RETURN:
+                #     self.level_manager.check_change_level(self.player)
 
             if event.type == pg.KEYUP:
                 # Charge attack release
