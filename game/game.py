@@ -16,7 +16,7 @@ from .UI import UI
 vec = pg.math.Vector2
 
 class Game:
-    def __init__(self, screen, clock, display, WINDOW_SIZE, SCALE_FACTOR):
+    def __init__(self, screen, clock, display, WINDOW_SIZE, SCALE_FACTOR, load_data=None):
         # Game setup
         self.screen = screen
         self.clock = clock
@@ -57,6 +57,29 @@ class Game:
 
         # User Interface
         self.UI = UI()
+
+        # Configure game with load data
+        if load_data is not None:
+            print("Load Data:")
+            print(load_data)
+
+            # Configure player data
+            self.player.coins = load_data['player']['coins']
+            self.player.max_health = load_data['player']['max_health']
+            self.player.health = load_data['player']['health']
+            self.player.stamina_float = load_data['player']['stamina']
+            self.player.max_stamina = load_data['player']['max_stamina']
+            self.player.damages['attack_1'] = load_data['player']['attack_1_damage']
+
+            # Configure the shop_menu data
+            shop_menu = self.level_manager.levels['0-1'].entity_manager.shop_object[0].shop_menu
+            shop_menu.stat_upgrade_costs = load_data['shop']['upgrade_costs']
+            shop_menu.stat_upgrades = load_data['shop']['stat_upgrades']
+
+            # Configure the timer data
+            timer = self.level_manager.time_manager
+            timer.best_times = load_data['time']['best_times']
+
 
     def run(self):
         self.playing = True

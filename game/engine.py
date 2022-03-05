@@ -1,11 +1,9 @@
 import pygame as pg
 import math
 
-
 vec = pg.math.Vector2
 
 
-# Any object in the game i think?
 class Entity(pg.sprite.Sprite):
     def __init__(self, x: int, y: int, width: int, height: int, type: str=None, WALK_ACC=0, FRIC=0, rotate=None):
         super().__init__()

@@ -31,6 +31,7 @@ class StartMenu:
 
         # Saving and Loading Manager
         self.save_load_manager = Save_Load_Manager('.wood', 'save_data')
+        self.load_data = None
 
     def load_background(self, name: str, qty: int):
         path = 'assets/images/backgrounds/' + name + '/'
@@ -55,7 +56,8 @@ class StartMenu:
             self.events()
             self.update()
             self.draw(self.screen)
-        return True
+        # Return load data?
+        return (True, self.load_data)
 
     def events(self):
         for event in pg.event.get():
@@ -77,21 +79,18 @@ class StartMenu:
         if mouse_actions[0]:
             # Play button
             if self.mouse_rect.colliderect(self.button_rects[0]):
+                # Start a new game from scratch
                 self.menu_running = False
+
             # Load button
             elif self.mouse_rect.colliderect(self.button_rects[1]):
                 print("Loading game...")
-
                 # Extract game data
                 load_data = self.save_load_manager.load('Saved_Game')
-
-                # Pass game data to the main file
-
-                # Main file passes the load data into the game
-
-                # Game checks if it has load data on start up
-
-                # Builds the game with the data
+                # Save data to class to return in the run loop
+                self.load_data = load_data
+                # Close the start menu and start game loop in main
+                self.menu_running = False
 
             # Boards button
             elif self.mouse_rect.colliderect(self.button_rects[2]):
