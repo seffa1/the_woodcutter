@@ -15,6 +15,7 @@ class Level_Trigger:
         self.GREEN = (0, 0, 255)
         self.color = (255, 0, 0)
         self.collided = False
+        self.collide_text = False
 
     def update(self, player):
         """ Checks if the player has attacked the trigger and reports it to the level manager """
@@ -22,10 +23,14 @@ class Level_Trigger:
             if self.rect.colliderect(player.attack_rect):
                 self.color = self.GREEN
                 self.collided = True
-
         else:
             self.color = self.RED
             self.collided = False
+
+        if self.rect.colliderect(player.rect):
+            self.collide_text = True
+        else:
+            self.collide_text = False
 
     def draw(self, display, scroll, hitbox=True):
         if self.image is not None:
@@ -33,6 +38,6 @@ class Level_Trigger:
         if hitbox:
             scrolled_rect = pg.Rect(self.x - scroll[0], self.y - scroll[1], self.rect.width, self.rect.height)
         pg.draw.rect(display, self.color, scrolled_rect)
-        if self.collided:
+        if self.collide_text:
             draw_text(display, f'Travel to {self.level_to_go_to}', 15, (0, 0, 0), (self.x - scroll[0] + self.rect.width + 5, self.y - scroll[1] - 5))
 

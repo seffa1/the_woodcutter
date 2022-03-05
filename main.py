@@ -29,6 +29,8 @@ def main():
         start_data = start_menu.run()
         playing = start_data[0]
         load_data = start_data[1]
+        # load_data = None
+        # playing = True
 
         # Start the main game loop, with optional data
         while playing:

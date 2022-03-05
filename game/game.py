@@ -6,7 +6,8 @@ from .UI import UI
 
 # TODO
 #   Finish level design
-#   Add saving and loading
+#   Lock finishing a level until all enemies defeated
+#   Make levels look nice
 #   Add double jump capabilities?
 #   Projectile based enemy - add assets
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
@@ -33,7 +34,7 @@ class Game:
         self.scroll = [0, 0]  # The scroll rounded to an int
         self.OFFSET_X = WINDOW_SIZE[0] / SCALE_FACTOR / 2
         # self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 2
-        self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 2
+        self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 1.25
 
         # Player
         self.player = Player(703, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
