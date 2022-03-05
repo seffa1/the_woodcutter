@@ -17,15 +17,15 @@ class Level_Trigger:
         self.collided = False
 
     def update(self, player):
-        """ Checks if the player has collided, then prompts them to press enter """
-        if self.rect.colliderect(player.rect):
-            self.color = self.GREEN
-            self.collided = True
+        """ Checks if the player has attacked the trigger and reports it to the level manager """
+        if player.attack_rect:
+            if self.rect.colliderect(player.attack_rect):
+                self.color = self.GREEN
+                self.collided = True
 
         else:
             self.color = self.RED
             self.collided = False
-
 
     def draw(self, display, scroll, hitbox=True):
         if self.image is not None:

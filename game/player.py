@@ -16,7 +16,6 @@ class Player(Entity):
         self.animation_frames['jump'] = self.load_animation('assets/animations/player/jump',[5, 5, 7, 7, 7, 7])
         self.animation_frames['hurt'] = self.load_animation('assets/animations/player/hurt',[5, 10, 5])
         self.animation_frames['death'] = self.load_animation('assets/animations/player/death',[5, 5, 10, 10, 20, 30])
-        # Charge attack - in progress
         self.animation_frames['charge_up'] = self.load_animation('assets/animations/player/charge_up',[3, 4, 6])
         self.animation_frames['hold'] = self.load_animation('assets/animations/player/hold',[1])
         self.animation_frames['swing'] = self.load_animation('assets/animations/player/swing',[5, 5, 5])
@@ -278,6 +277,7 @@ class Player(Entity):
         self.image = image
 
     def draw(self, display, scroll, hitbox=False, attack_box=True):
+        """ Draws the player, and if enabled, their hitbox and any attack hit boxes """
         # Draw the player hitbox ( DEBUGGING )
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
@@ -297,7 +297,7 @@ class Player(Entity):
                 pg.draw.rect(display, (255, 0, 0), attack_rect_scrolled)
 
     def charge_attack(self, dt):
-        ''' Update the charge damage if we are holding the charge '''
+        """ Update the charge damage if we are holding the charge """
         if not self.hold:
             return
         # If we have no more stamina

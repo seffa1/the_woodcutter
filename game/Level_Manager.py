@@ -8,6 +8,10 @@ class Level_Manager:
         self.levels = {}
         self.current_level = None
 
+        # Prevents play from triggering triggers many times due to the hitbox colliding
+        self.level_change_timer = 0
+        self.CHANGE_COOLDOWN = 60
+
         # Calls down to the current level's tile manager, and gets updated collidable rects each framee
         self.tile_rects = []
         self.collided_trigger = None
@@ -20,10 +24,14 @@ class Level_Manager:
 
     def set_level(self, ID: str, player):
         """ Changes the current level getting updated, then moves the player to that levels respawn point """
+        if self.level_change_timer > 0:
+            return
+
         if ID in self.levels:
             self.current_level = ID
             level = self.get_level()
             player.set_position(level.respawn_point[0], level.respawn_point[1])
+            self.level_change_timer = self.CHANGE_COOLDOWN
         else:
             raise "You are trying to set to a level that does not exist"
 
@@ -32,9 +40,11 @@ class Level_Manager:
         return self.levels[self.current_level]
 
     def update(self, player, dt):
+        self.level_change_timer -= 1
         self.tile_rects = self.get_level().tile_manager.tile_rects
         self.get_level().update(player, self.tile_rects, dt)
         self.time_manager.update()
+        self.check_change_level(player)
 
     def draw_background(self, scroll, display):
         self.get_level().draw_background(scroll, display)

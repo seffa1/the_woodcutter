@@ -342,9 +342,6 @@ class Entity(pg.sprite.Sprite):
             self.attack['2'] = False
 
 
-
-
-
         image_id = self.animation_frames[self.action][self.frame]
         image = self.animation_images[image_id]
         self.image = image
