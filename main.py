@@ -21,22 +21,23 @@ def main():
     start_menu = StartMenu(screen, clock)
     game_menu = GameMenu(screen, clock)
 
-    # implement game
-    game = Game(screen, clock, display, WINDOW_SIZE, SCALE_FACTOR)
-
     # Program loop
     running = True
     while running:
 
-        # start menu goes here
-        # playing = start_menu.run()
-        playing = True
+        # Start menu returns true if you dont quick, and returns load data if you loaded
+        start_data = start_menu.run()
+        playing = start_data[0]
+        load_data = start_data[1]
 
+        # Start the main game loop, with optional data
         while playing:
+            # create game object
+            game = Game(screen, clock, display, WINDOW_SIZE, SCALE_FACTOR, load_data)
             # game loop here
             game.run()
             # pause loop here
-            playing = game_menu.run()
+            playing = game_menu.run(game)
             running = playing
 
 

@@ -34,9 +34,6 @@ class Time_Manager:
 
         self.show_current_time = False
 
-    def update(self):
-        pass
-
     def draw_timer(self, screen):
         # For debugging
         # draw_text(screen, f'Best Times: {self.best_times}', 25, (255, 0, 0), (WINDOW_SIZE_SETTING[0] / 2 - 540, 35))

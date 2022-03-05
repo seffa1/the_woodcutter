@@ -43,7 +43,6 @@ class Level_Manager:
         self.level_change_timer -= 1
         self.tile_rects = self.get_level().tile_manager.tile_rects
         self.get_level().update(player, self.tile_rects, dt)
-        self.time_manager.update()
         self.check_change_level(player)
 
     def draw_background(self, scroll, display):

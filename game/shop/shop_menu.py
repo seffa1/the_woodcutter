@@ -25,6 +25,7 @@ class Shop_Menu:
             'health': deque([COSTS[0], COSTS[1], COSTS[2], 'Max']),
             'stamina': deque([COSTS[0], COSTS[1], COSTS[2], 'Max']),
             'damage': deque([COSTS[0], COSTS[1], COSTS[2], 'Max']) }
+
         # Tracks amount of upgrades done for each stat
         self.stat_upgrades = {
             'health': 0,
@@ -123,7 +124,6 @@ class Shop_Menu:
         self.scroll = scroll
         # Draw the menu
         screen.blit(self.image, ((self.pos.x - scroll[0])*SCALE_FACTOR_SETTING, (self.pos.y - scroll[1])*SCALE_FACTOR_SETTING))
-
 
         # Draw the buttons
         for button in self.buttons:
