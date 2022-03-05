@@ -29,14 +29,14 @@ def main():
     while running:
 
         # start menu goes here
-        # playing = start_menu.run()
+        playing = start_menu.run()
         playing = True
 
         while playing:
             # game loop here
             game.run()
             # pause loop here
-            playing = game_menu.run()
+            playing = game_menu.run(game)
             running = playing
 
 

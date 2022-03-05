@@ -218,7 +218,7 @@ class Troll(Entity):
         self.hitboxes(dt)  # Update any hit boxes from attack
         self.check_damages(player)
 
-    def draw(self, display, scroll, hitbox=False, attack_box=True):
+    def draw(self, display, scroll, hitbox=False, attack_box=False):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)

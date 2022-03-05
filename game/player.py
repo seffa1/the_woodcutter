@@ -276,7 +276,7 @@ class Player(Entity):
         image = self.animation_images[image_id]
         self.image = image
 
-    def draw(self, display, scroll, hitbox=False, attack_box=True):
+    def draw(self, display, scroll, hitbox=False, attack_box=False):
         """ Draws the player, and if enabled, their hitbox and any attack hit boxes """
         # Draw the player hitbox ( DEBUGGING )
         if hitbox:

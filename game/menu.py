@@ -1,6 +1,7 @@
 import pygame as pg
 import sys
 from .utils import *
+from .Save_Load_Manager import Save_Load_Manager
 # from .settings import WINDOW_SIZE
 
 
@@ -27,6 +28,9 @@ class StartMenu:
         self.play_color = self.DEFAULT_COLOR
         self.load_color = self.DEFAULT_COLOR
         self.boards_color = self.DEFAULT_COLOR
+
+        # Saving and Loading Manager
+        self.save_load_manager = Save_Load_Manager('.wood', 'save_data')
 
     def load_background(self, name: str, qty: int):
         path = 'assets/images/backgrounds/' + name + '/'
@@ -77,6 +81,18 @@ class StartMenu:
             # Load button
             elif self.mouse_rect.colliderect(self.button_rects[1]):
                 print("Loading game...")
+
+                # Extract game data
+                load_data = self.save_load_manager.load('Saved_Game')
+
+                # Pass game data to the main file
+
+                # Main file passes the load data into the game
+
+                # Game checks if it has load data on start up
+
+                # Builds the game with the data
+
             # Boards button
             elif self.mouse_rect.colliderect(self.button_rects[2]):
                 print("Loading Leaderboards...")
@@ -94,8 +110,6 @@ class StartMenu:
             self.boards_color = self.HOVER_COLOR
         else:
             self.boards_color = self.DEFAULT_COLOR
-
-
 
     def draw(self, screen):
         screen.fill((0, 0, 0))
@@ -149,6 +163,9 @@ class GameMenu:
         self.load_color = self.DEFAULT_COLOR
         self.boards_color = self.DEFAULT_COLOR
 
+        # Saving and Loading Manager
+        self.save_load_manager = Save_Load_Manager('.wood', 'save_data')
+
     def load_buttons(self):
         play_button = pg.Rect(self.screen_size[0] / 2 - 138, (self.screen_size[1] / 2 - self.logo.get_height() / 2) + 232, 260, 100)
         self.button_rects.append(play_button)
@@ -165,12 +182,12 @@ class GameMenu:
             image = pg.image.load(path + str(i) + '.png')
             self.background_images.append(image)
 
-    def run(self):
+    def run(self, game):
         self.menu_running = True
         while self.menu_running:
             self.clock.tick(60)
             self.events()
-            self.update()
+            self.update(game)
             self.draw(self.screen)
         return self.playing
 
@@ -184,7 +201,7 @@ class GameMenu:
                     self.playing = False
                     self.menu_running = False
 
-    def update(self):
+    def update(self, game):
         # Update the mouse position
         mouse_pos = pg.mouse.get_pos()
         mouse_actions = pg.mouse.get_pressed()  # 0 = left click
@@ -199,9 +216,14 @@ class GameMenu:
             elif self.mouse_rect.colliderect(self.button_rects[1]):
                 self.playing = False
                 self.menu_running = False
+
             # Save button
             elif self.mouse_rect.colliderect(self.button_rects[2]):
                 print("Saving Game...")
+
+                # Need to extract the meta data from the game
+                self.save_load_manager.save(game, 'Saved_Game')
+
 
         # Update text colors if you hover over them
         if self.mouse_rect.colliderect(self.button_rects[0]):

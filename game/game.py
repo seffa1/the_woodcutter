@@ -13,7 +13,6 @@ from .UI import UI
 #   Batch Rendering of ground for less collisions checks
 #   Only checking collisions on tiles close to player (Add chunk rendering?)
 
-
 vec = pg.math.Vector2
 
 class Game:
