@@ -87,10 +87,29 @@ class Game:
                 pg.quit()
                 sys.exit()
 
-            # Check activate level trigger if you left click
+            # Quick Attack
             mouse_actions = pg.mouse.get_pressed()
-            if mouse_actions[0]:
-                self.level_manager.check_change_level(self.player)
+            if mouse_actions[0] and not self.player.roll and not self.player.attacking:
+                if self.player.stamina >= self.player.STAMINA_USE['attack_1']:
+                    self.player.attacking = True
+                    self.player.attack['1'] = True
+                    self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
+
+            # Charge up attack
+            if mouse_actions[2] and not self.player.roll and not self.player.attacking:
+                if self.player.stamina >= self.player.STAMINA_USE['attack_1']:
+                    self.player.charge_up = True
+                    self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
+                    self.player.walk_left = False
+                    self.player.walk_right = False
+
+            # Charge attack release
+            if not mouse_actions[2]:
+                if self.player.hold or self.player.charge_up:
+                    self.player.charge_up = False
+                    self.player.hold = False
+                    self.player.attacking = True
+                    self.player.attack['2'] = True
 
             # Check respawn
             if event.type == pg.USEREVENT + 1:
@@ -149,30 +168,8 @@ class Game:
                         self.player.invincible_timer = self.player.INVINCIBLE_FRAMES
                         self.player.invincible_timer_float = self.player.INVINCIBLE_FRAMES
                         self.player.use_stamina(self.player.STAMINA_USE['roll'])
-                # Attacking - Cant attack while rolling
-                if event.key == pg.K_c and not self.player.roll and not self.player.attacking:
-                    if self.player.stamina >= self.player.STAMINA_USE['attack_1']:
-                        self.player.attacking = True
-                        self.player.attack['1'] = True
-                        self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
-
-                # Charge up - only if the player is not rolling or attacking
-                if event.key == pg.K_v and not self.player.roll and not self.player.attacking:
-                    if self.player.stamina >= self.player.STAMINA_USE['attack_1']:
-                        self.player.charge_up = True
-                        self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
-                        self.player.walk_left = False
-                        self.player.walk_right = False
 
             if event.type == pg.KEYUP:
-                # Charge attack release
-                if event.key == pg.K_v:
-                    if self.player.hold or self.player.charge_up:
-                        self.player.charge_up = False
-                        self.player.hold = False
-                        self.player.attacking = True
-                        self.player.attack['2'] = True
-
                 # Walk cancel
                 if event.key == pg.K_d:
                     self.player.walk_right = False

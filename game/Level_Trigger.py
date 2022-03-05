@@ -26,7 +26,6 @@ class Level_Trigger:
             self.color = self.RED
             self.collided = False
 
-
     def draw(self, display, scroll, hitbox=True):
         if self.image is not None:
             display.blit(self.image, (self.x - scroll[0], self.y - scroll[1]))
