@@ -12,12 +12,12 @@ class Player(Entity):
         self.animation_frames['walk'] = self.load_animation('assets/animations/player/walk',[5, 5, 5, 5, 5, 5])
         self.animation_frames['run'] = self.load_animation('assets/animations/player/run',[5, 5, 5, 5, 5, 5])
         self.animation_frames['roll'] = self.load_animation('assets/animations/player/roll',[2, 2, 5, 5, 2, 2])
-        self.animation_frames['attack_1'] = self.load_animation('assets/animations/player/attack_1',[10, 10, 6, 5, 5, 5])
+        self.animation_frames['attack_1'] = self.load_animation('assets/animations/player/attack_1',[2, 2, 4, 4, 4, 4])
         self.animation_frames['jump'] = self.load_animation('assets/animations/player/jump',[5, 5, 7, 7, 7, 7])
         self.animation_frames['hurt'] = self.load_animation('assets/animations/player/hurt',[5, 10, 5])
         self.animation_frames['death'] = self.load_animation('assets/animations/player/death',[5, 5, 10, 10, 20, 30])
         # Charge attack - in progress
-        self.animation_frames['charge_up'] = self.load_animation('assets/animations/player/charge_up',[10, 10, 6])
+        self.animation_frames['charge_up'] = self.load_animation('assets/animations/player/charge_up',[3, 4, 6])
         self.animation_frames['hold'] = self.load_animation('assets/animations/player/hold',[1])
         self.animation_frames['swing'] = self.load_animation('assets/animations/player/swing',[5, 5, 5])
         self.set_type('player')
@@ -40,7 +40,7 @@ class Player(Entity):
         self.max_stamina = 100
         self.STAMINA_RUN_DRAIN = .3
         self.STAMINA_REGEN_RATE = 5.25
-        self.STAMINA_USE = {'attack_1': 15, 'roll': 20, 'jump': 10}
+        self.STAMINA_USE = {'attack_1': 5, 'roll': 20, 'jump': 10}
 
         # Player Attacking
         self.damages = {'attack_1': 25,
@@ -71,7 +71,7 @@ class Player(Entity):
 
     def gain_stamina(self, dt):
         """ For stamina recovery """
-        if self.run or self.attacking or self.roll:
+        if self.run or self.attacking or self.roll or self.hold:
             return
         self.stamina_float += self.STAMINA_REGEN_RATE * dt
         self.stamina = int(round(self.stamina_float, 0))
@@ -188,6 +188,8 @@ class Player(Entity):
             self.vel.y = self.JUMP_VEL
 
     def hitboxes(self, dt):
+        ''' Creates a hitbox which starts and stops from a timer after an attack is used. '''
+        # Check if we are attacking
         if not self.attacking:
             self.damage = 0
             self.attack_timer_float = 0
@@ -199,13 +201,13 @@ class Player(Entity):
             self.attack_timer_float += 1 * dt
             self.attack_timer = int(round(self.attack_timer_float, 0))
 
-            if self.attack_timer > 24:  # 10 is to be adjusted as we go
+            if self.attack_timer > 14:  # 10 is to be adjusted as we go
                 if not self.flip:
                     self.attack_rect = pg.Rect(self.rect.right, self.rect.centery - 8, 10, 23)
                 else:
                     self.attack_rect = pg.Rect(self.rect.left, self.rect.centery - 8, 10, 23)
-            if self.attack_timer > 30:
-                self.attack_rect = None
+            # if self.attack_timer > 30:
+            #     self.attack_rect = None
 
         if self.attack['2']:
             self.damage = self.damages['charge_up']
@@ -295,20 +297,27 @@ class Player(Entity):
                 pg.draw.rect(display, (255, 0, 0), attack_rect_scrolled)
 
     def charge_attack(self, dt):
+        ''' Update the charge damage if we are holding the charge '''
         if not self.hold:
+            return
+        # If we have no more stamina
+        if self.stamina <= 0:
             return
 
         # Charge up the damage value for the charge attack hold
         self.charge_damage_float += self.CHARGE_SPEED * dt
         if self.charge_damage_float > self.MAX_CHARGE_DAMAGE:
             self.charge_damage_float = self.MAX_CHARGE_DAMAGE
+
         # Set the damage variable
         self.damages['charge_up'] = int(round(self.charge_damage_float, 0))
         self.damage = self.damages['charge_up']
 
+        # Drain stamina
+        self.drain_stamina(1, dt)
+
 
     def update(self, tile_rects, dt, player=None):
-
         self.check_dead()
         self.move(tile_rects, dt)  # Update players position
         self.actions(dt)  # Determine the player's action

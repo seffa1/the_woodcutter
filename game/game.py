@@ -33,7 +33,8 @@ class Game:
         self.true_scroll = [0, 0]  # The scroll as a percise float
         self.scroll = [0, 0]  # The scroll rounded to an int
         self.OFFSET_X = WINDOW_SIZE[0] / SCALE_FACTOR / 2
-        self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 2
+        # self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 2
+        self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 2
 
         # Player
         self.player = Player(703, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)

@@ -18,8 +18,6 @@ class Level_Trigger:
 
     def update(self, player):
         """ Checks if the player has collided, then prompts them to press enter """
-
-
         if self.rect.colliderect(player.rect):
             self.color = self.GREEN
             self.collided = True
