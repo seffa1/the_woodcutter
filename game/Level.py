@@ -2,6 +2,7 @@ import pygame as pg
 from .entity_manager import Entity_Manager
 from .tile_manager import Tile_Manager
 from .Level_Trigger import Level_Trigger
+from .settings import WINDOW_SIZE_SETTING, SCALE_FACTOR_SETTING
 
 
 class Level:
@@ -9,7 +10,7 @@ class Level:
         self.level_ID = level_ID
         self.TILE_SIZE = TILE_SIZE
         self.display = display
-        self.background_images = []
+        self.background_images = []  # [scaled_img, paralax, offset_y]
         self.entity_manager = Entity_Manager(level_ID)
         self.tile_manager = Tile_Manager(level_ID, TILE_SIZE)
         self.level_triggers = {}  # '0-1': Level_trigger ---> Contains level_trigger objects with name of the level they go to
@@ -34,19 +35,40 @@ class Level:
         with open(file_path, 'r') as file:
             for line in file:
                 line = line.split(',')
+                # How much paralax gets added to each layer
                 paralax_dif = line[1]
+                # Keeps track of paralax so different layers get different amount of paralax
                 paralax = 0
+                # Loads the images
                 total_images = line[2]
+                # Offset Y
+                offset_y = int(line[3])
+                # Scale
+                scale = int(line[4])
                 for i in range(0, int(total_images)):
+                    # Load the image
                     img_path = line[0] + str(i + 1) + '.png'
                     image = pg.image.load(img_path).convert_alpha()
-                    scaled_img = pg.transform.scale(image, (self.display.get_width()*float(line[3]), self.display.get_height()*float(line[3])))
-                    self.background_images.append([scaled_img, paralax])
+
+                    # Scale the image
+                    blit_size = (WINDOW_SIZE_SETTING[0]/SCALE_FACTOR_SETTING * scale, WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING * scale)
+                    scaled_img = pg.transform.scale(image, blit_size)
+
+                    # Add image to array
+                    self.background_images.append([scaled_img, paralax, offset_y, scale])
+                    # Increment paralax for next layer
                     paralax += float(paralax_dif)
 
     def draw_background(self, scroll, display):
         for image in self.background_images:
-            display.blit(image[0], (-image[1]*scroll[0], -image[1]*scroll[1] - image[0].get_height()/10))
+            paralax_x = image[1]
+            paralax_y = 1
+            # paralax = 0
+            OFFSET_Y = image[2]
+            # Draw the background 3 times wide
+            display.blit(image[0], (-paralax_x * scroll[0], -paralax_y * scroll[1] + OFFSET_Y))
+            display.blit(image[0], (-paralax_x * scroll[0] + image[0].get_width(), -paralax_y * scroll[1] + OFFSET_Y))
+            display.blit(image[0], (-paralax_x * scroll[0] + image[0].get_width()*2, -paralax_y * scroll[1] + OFFSET_Y))
 
     def draw_tiles(self, scroll, TILE_SIZE, display):
         self.tile_manager.draw(scroll, TILE_SIZE, display)

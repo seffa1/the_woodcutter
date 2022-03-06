@@ -59,10 +59,10 @@ class Projectile(Entity):
         Y_vel = delta_y * normalizer
 
         self.x_vel, self.y_vel = X_vel, Y_vel
-        print(f'magnitude {magnitude}')
-        print(f'normalizer {normalizer}')
-        print(f'X {self.x_vel}')
-        print(f'Y {self.y_vel}\n')
+        # print(f'magnitude {magnitude}')
+        # print(f'normalizer {normalizer}')
+        # print(f'X {self.x_vel}')
+        # print(f'Y {self.y_vel}\n')
 
         # Instantiate a bullet projectile with X vel and Y vel
         # Bullet projectile will check for collisions with the player, or get destroyed at a coordinate ( out of bounds)

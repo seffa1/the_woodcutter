@@ -36,8 +36,8 @@ class Game:
         # self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 2
         self.OFFSET_Y = WINDOW_SIZE[1] / SCALE_FACTOR / 3 * 1.25
 
-        # Player
-        self.player = Player(703, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
+        # Player 780,185
+        self.player = Player(800, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
         # Level Manager
         self.level_manager = Level_Manager()
@@ -52,9 +52,6 @@ class Game:
         self.level_manager.load_level('3-2', self.TILE_SIZE, display)
         self.level_manager.load_level('3-3', self.TILE_SIZE, display)
         self.level_manager.set_level('0-1', self.player)
-
-        # Player
-        self.player = Player(154, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
         # User Interface
         self.UI = UI()
