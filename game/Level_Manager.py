@@ -1,7 +1,9 @@
+import random
+
 import pygame as pg
 from .Level import Level
 from .Time_Manager import Time_Manager
-
+from .audio_manager import Audio_Manager
 
 class Level_Manager:
     def __init__(self):
@@ -19,19 +21,34 @@ class Level_Manager:
         # Create time manager to keep track of each levels best timers
         self.time_manager = Time_Manager()
 
+        # Audio Manager
+        self.audio_manager = Audio_Manager()
+        self.audio_manager.play_music(random.choice(['Home_Music_1', 'Home_Music_2']))
+
     def load_level(self, ID: str, TILE_SIZE: int, display):
         self.levels[ID] = Level(ID, TILE_SIZE, display)
 
     def set_level(self, ID: str, player):
-        """ Changes the current level getting updated, then moves the player to that levels respawn point """
+        """ Changes the current level getting updated, then moves the player to that levels respawn point.
+         Queues the music as well. """
         if self.level_change_timer > 0:
             return
 
+        # Change level
         if ID in self.levels:
             self.current_level = ID
             level = self.get_level()
+            # Move player to spawn point
             player.set_position(level.respawn_point[0], level.respawn_point[1])
+            # Add cooldown for level changing
             self.level_change_timer = self.CHANGE_COOLDOWN
+            # Queue the music
+            if ID == '0-1':
+                self.audio_manager.play_music(random.choice(['Home_Music_1', 'Home_Music_2']))
+            else:
+                self.audio_manager.play_music(random.choice(['Battle_Music_1', 'Battle_Music_2', 'Battle_Music_3']))
+
+
         else:
             raise "You are trying to set to a level that does not exist"
 

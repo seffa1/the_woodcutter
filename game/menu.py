@@ -2,6 +2,7 @@ import pygame as pg
 import sys
 from .utils import *
 from .Save_Load_Manager import Save_Load_Manager
+from .audio_manager import Audio_Manager
 # from .settings import WINDOW_SIZE
 
 
@@ -11,9 +12,7 @@ class StartMenu:
         self.screen = screen
         self.clock = clock
         self.screen_size = self.screen.get_size()
-
         self.logo = pg.transform.scale(pg.image.load('assets/images/ui/Logo.png').convert_alpha(), (900, 390))
-
         self.background_images = []  # List of background images (since they are setup for paralax)
         self.load_background('forest_4', 7)
 
@@ -32,6 +31,10 @@ class StartMenu:
         # Saving and Loading Manager
         self.save_load_manager = Save_Load_Manager('.wood', 'save_data')
         self.load_data = None
+
+        # Audio Manager
+        self.audio_manager = Audio_Manager()
+        self.audio_manager.play_music('Start_Screen')
 
     def load_background(self, name: str, qty: int):
         path = 'assets/images/backgrounds/' + name + '/'
@@ -56,7 +59,7 @@ class StartMenu:
             self.events()
             self.update()
             self.draw(self.screen)
-        # Return load data?
+        self.audio_manager.stop()
         return (True, self.load_data)
 
     def events(self):

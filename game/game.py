@@ -1,5 +1,5 @@
 import pygame as pg
-import sys, time
+import sys, time, random
 from .Level_Manager import Level_Manager
 from .player import Player
 from .UI import UI
@@ -39,7 +39,7 @@ class Game:
         # Player
         self.player = Player(703, 229, 30, 35, 'player', WALK_ACC=.3, FRIC=-.15)
 
-        # Managers
+        # Level Manager
         self.level_manager = Level_Manager()
         self.level_manager.load_level('0-1', self.TILE_SIZE, display)
         self.level_manager.load_level('1-1', self.TILE_SIZE, display)
@@ -156,11 +156,12 @@ class Game:
             else:
                 self.player.run = False
 
-            # Check the rest of the keys
             if event.type == pg.KEYDOWN:
+
                 # Pausing
                 if event.key == pg.K_ESCAPE:
                     self.playing = False
+
                 # Walking
                 if event.key == pg.K_d and not self.player.hold and not self.player.charge_up:
                     self.player.walk_right = True
