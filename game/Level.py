@@ -29,6 +29,21 @@ class Level:
         self.entity_manager.update(tile_rects, dt, player)
         self.check_triggers(player)
 
+    def load_background(self, path):
+        file_path = path + self.level_ID + '/backgrounds.txt'
+        with open(file_path, 'r') as file:
+            for line in file:
+                line = line.split(',')
+                paralax_dif = line[1]
+                paralax = 0
+                total_images = line[2]
+                for i in range(0, int(total_images)):
+                    img_path = line[0] + str(i + 1) + '.png'
+                    image = pg.image.load(img_path).convert_alpha()
+                    scaled_img = pg.transform.scale(image, (self.display.get_width()*float(line[3]), self.display.get_height()*float(line[3])))
+                    self.background_images.append([scaled_img, paralax])
+                    paralax += float(paralax_dif)
+
     def draw_background(self, scroll, display):
         for image in self.background_images:
             display.blit(image[0], (-image[1]*scroll[0], -image[1]*scroll[1] - image[0].get_height()/10))
@@ -64,18 +79,3 @@ class Level:
             level_trigger.update(player)
             if level_trigger.collided:
                 self.collided_trigger = level_trigger
-
-    def load_background(self, path):
-        file_path = path + self.level_ID + '/backgrounds.txt'
-        with open(file_path, 'r') as file:
-            for line in file:
-                line = line.split(',')
-                paralax_dif = line[1]
-                paralax = 0
-                total_images = line[2]
-                for i in range(0, int(total_images)):
-                    img_path = line[0] + str(i + 1) + '.png'
-                    image = pg.image.load(img_path).convert_alpha()
-                    scaled_img = pg.transform.scale(image, (self.display.get_width()*float(line[3]), self.display.get_height()*float(line[3])))
-                    self.background_images.append([scaled_img, paralax])
-                    paralax += float(paralax_dif)

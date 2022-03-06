@@ -19,7 +19,6 @@ class Audio_Manager:
 
         # Load Sounds
 
-
     def play_sound(self, name, volume):
         """ Plays a stored sound file with a given volume from 0 to 1. """
         sound_effect = pg.mixer.Sound(self.sounds[name])
