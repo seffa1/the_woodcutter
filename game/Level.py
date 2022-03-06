@@ -26,7 +26,6 @@ class Level:
         self.entity_manager = Entity_Manager(self.level_ID)
 
     def update(self, player, tile_rects, dt):
-        self.tile_manager.update()
         self.entity_manager.update(tile_rects, dt, player)
         self.check_triggers(player)
 
