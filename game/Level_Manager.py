@@ -36,18 +36,19 @@ class Level_Manager:
 
         # Change level
         if ID in self.levels:
+            # Queue the music, only if its a differnet level (so it doesnt restart on a respawn)
+            if ID != self.current_level:
+                if ID == '0-1':
+                    self.audio_manager.play_music(random.choice(['Home_Music_1', 'Home_Music_2']))
+                else:
+                    self.audio_manager.play_music(random.choice(['Battle_Music_1', 'Battle_Music_2', 'Battle_Music_3']))
+            # Set the new level
             self.current_level = ID
             level = self.get_level()
             # Move player to spawn point
             player.set_position(level.respawn_point[0], level.respawn_point[1])
             # Add cooldown for level changing
             self.level_change_timer = self.CHANGE_COOLDOWN
-            # Queue the music
-            if ID == '0-1':
-                self.audio_manager.play_music(random.choice(['Home_Music_1', 'Home_Music_2']))
-            else:
-                self.audio_manager.play_music(random.choice(['Battle_Music_1', 'Battle_Music_2', 'Battle_Music_3']))
-
 
         else:
             raise "You are trying to set to a level that does not exist"

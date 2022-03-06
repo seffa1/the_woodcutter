@@ -139,7 +139,6 @@ class Game:
                 self.player.health = self.player.max_health
                 self.player.action = 'idle'
                 self.player.death = False
-                # self.level_manager.get_level().respawn_level()
 
                 self.level_manager.set_level(self.level_manager.current_level, self.player)
                 self.player.set_position(self.level_manager.get_level().respawn_point[0],
