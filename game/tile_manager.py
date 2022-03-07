@@ -1,5 +1,6 @@
 import pygame as pg
 from .settings import SCALE_FACTOR_SETTING, WINDOW_SIZE_SETTING
+import random
 
 
 class Tile_Manager:
@@ -11,7 +12,7 @@ class Tile_Manager:
         self.ID = ID
         self.level_map = []  # 2D array of numbers from the tiles.txt file
         self.tile_rects = []
-        self.sprites= {}
+        self.sprites = {}
         # display_size = (WINDOW_SIZE_SETTING[0], WINDOW_SIZE_SETTING[1])
         display_size = (WINDOW_SIZE_SETTING[0]/SCALE_FACTOR_SETTING, WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING)
         self.batch = pg.Surface(display_size).convert_alpha()
@@ -63,6 +64,8 @@ class Tile_Manager:
         self.sprites['grass_horizontal_left'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_29.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         self.sprites['grass_horizontal_mid'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_30.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         self.sprites['dirt'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        # TODO - add trees, bushes
+        # TODO - Random chance to draw a grass decorative on top of a top grass tile - much easier if we got the batch system working
 
 
     def add_tile_rects(self):
@@ -96,7 +99,6 @@ class Tile_Manager:
                 # Grass top
                 if tile == '2':
                     display.blit(self.sprites['grass_top'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-                    # TODO - Random chance to draw a grass decorative
 
                 # Grass right
                 if tile == '3':
@@ -134,12 +136,12 @@ class Tile_Manager:
                 if tile == 'o':
                     pass
 
-                # Pine tree
-                if tile == 'p':
-                    pass
-
                 # Birch tree
                 if tile == 'b':
+                    pass
+
+                # Pine tree
+                if tile == 'p':
                     pass
 
                 x += 1
