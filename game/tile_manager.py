@@ -12,6 +12,7 @@ class Tile_Manager:
         self.level_map = []  # 2D array of numbers from the tiles.txt file
         self.tile_rects = []
         self.sprites= {}
+        # display_size = (WINDOW_SIZE_SETTING[0], WINDOW_SIZE_SETTING[1])
         display_size = (WINDOW_SIZE_SETTING[0]/SCALE_FACTOR_SETTING, WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING)
         self.batch = pg.Surface(display_size).convert_alpha()
 
@@ -72,7 +73,7 @@ class Tile_Manager:
         which is a function of the array position and TILE_SIZE (size of the tile image). """
         # Iterate through 2D array
         y = 0
-        # display.blit(self.batch, (1000-scroll[0], -200-scroll[1])) # Not working yet
+        # display.blit(self.batch, (-scroll[0], -scroll[1])) # Not working yet
         for layer in self.level_map:
             x = 0
             # Blit the tile associated with the number
