@@ -1,4 +1,4 @@
-80,185,40,80,1-1,assets/images/UML_1.png,
-1000,0,40,80,2-1,assets/images/UML_1.png,
-250,229,40,80,2-3,assets/images/UML_1.png,
-517,380,40,80,3-1,assets/images/UML_1.png,
+400,185,40,80,1-1,assets/images/UML_1.png,
+500,185,40,80,2-1,assets/images/UML_1.png,
+600,185,40,80,3-1,assets/images/UML_1.png,
+1100,185,40,80,2-3,assets/images/UML_1.png,

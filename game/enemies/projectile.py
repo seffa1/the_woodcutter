@@ -15,7 +15,7 @@ class Projectile(Entity):
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
         self.PROJECTILE_SPEED = 3
-        self.ATTACK_COOLDOWN = 40
+        self.ATTACK_COOLDOWN = 120
 
         # AI Controller use
         self.aggro = False
@@ -59,10 +59,10 @@ class Projectile(Entity):
         Y_vel = delta_y * normalizer
 
         self.x_vel, self.y_vel = X_vel, Y_vel
-        print(f'magnitude {magnitude}')
-        print(f'normalizer {normalizer}')
-        print(f'X {self.x_vel}')
-        print(f'Y {self.y_vel}\n')
+        # print(f'magnitude {magnitude}')
+        # print(f'normalizer {normalizer}')
+        # print(f'X {self.x_vel}')
+        # print(f'Y {self.y_vel}\n')
 
         # Instantiate a bullet projectile with X vel and Y vel
         # Bullet projectile will check for collisions with the player, or get destroyed at a coordinate ( out of bounds)
