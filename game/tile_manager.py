@@ -50,10 +50,20 @@ class Tile_Manager:
 
     def load_sprites(self):
         """ Creates images for the tiles """
-        self.sprites['grass_tile_top'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_02.png').convert_alpha(),
-                                                 (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['dirt_tile'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha(),
-                                            (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_top'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_02.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_top_left'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_01.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_top_right'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_03.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_left'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_10.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_right'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_12.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_bottom'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_05.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_vertical_mid'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_50.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_vertical_top'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_49.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_vertical_bottom'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_51.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_horizontal_right'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_31.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_horizontal_left'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_29.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_horizontal_mid'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_30.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['dirt'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+
 
     def add_tile_rects(self):
         """ Adds all collidible tiles to the tile rect array for collision detection for game entities. """
@@ -62,7 +72,7 @@ class Tile_Manager:
             x = 0
             for tile in layer:
                 # Check if the tile is a collidable
-                if tile == '2':
+                if tile in ['2', '3', '4', '5', '6', '7', '8']:
                     self.tile_rects.append(
                         pg.Rect(x * self.TILE_SIZE, y * self.TILE_SIZE, self.TILE_SIZE, self.TILE_SIZE))
                 x += 1
@@ -78,13 +88,52 @@ class Tile_Manager:
             x = 0
             # Blit the tile associated with the number
             for tile in layer:
-                if tile == '1': # TODO Remove this once batch renderer is done
+                # Dirt block
+                if tile == '1':
                     # Use array position X TILE_SIZE to get positions
-                    display.blit(self.sprites['dirt_tile'],
-                                      (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                    display.blit(self.sprites['dirt'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass top
                 if tile == '2':
-                    display.blit(self.sprites['grass_tile_top'],
-                                      (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                    display.blit(self.sprites['grass_top'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                    # TODO - Random chance to draw a grass decorative
+
+                # Grass right
+                if tile == '3':
+                    display.blit(self.sprites['grass_right'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass left
+                if tile == '4':
+                    display.blit(self.sprites['grass_left'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass bottom
+                if tile == '5':
+                    display.blit(self.sprites['grass_bottom'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass top right
+                if tile == '6':
+                    display.blit(self.sprites['grass_top_right'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass top left
+                if tile == '7':
+                    display.blit(self.sprites['grass_top_left'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass vertical mid
+                if tile == '8':
+                    display.blit(self.sprites['grass_vertical_mid'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Oak tree
+                if tile == 'o':
+                    pass
+
+                # Pine tree
+                if tile == 'p':
+                    pass
+
+                # Birch tree
+                if tile == 'b':
+                    pass
+
                 x += 1
             y += 1
 
