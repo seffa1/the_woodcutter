@@ -122,6 +122,14 @@ class Tile_Manager:
                 if tile == '8':
                     display.blit(self.sprites['grass_vertical_mid'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
 
+                # Grass vertical bottom
+                if tile == '9':
+                    display.blit(self.sprites['grass_vertical_bottom'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass vertical top
+                if tile == 'a':
+                    display.blit(self.sprites['grass_vertical_top'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
                 # Oak tree
                 if tile == 'o':
                     pass
