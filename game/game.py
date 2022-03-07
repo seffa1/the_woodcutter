@@ -5,10 +5,8 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Finish level design
-#   Lock finishing a level until all enemies defeated
 #   Make levels look nice
-#   Add double jump capabilities?
+#   Lock finishing a level until all enemies defeated
 #   Projectile based enemy - add assets
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
 #   Batch Rendering of ground for less collisions checks
@@ -49,8 +47,6 @@ class Game:
         self.level_manager.load_level('2-2', self.TILE_SIZE, display)
         self.level_manager.load_level('2-3', self.TILE_SIZE, display)
         self.level_manager.load_level('3-1', self.TILE_SIZE, display)
-        self.level_manager.load_level('3-2', self.TILE_SIZE, display)
-        self.level_manager.load_level('3-3', self.TILE_SIZE, display)
         self.level_manager.set_level('0-1', self.player)
 
         # User Interface

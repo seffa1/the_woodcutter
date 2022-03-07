@@ -15,7 +15,7 @@ class Projectile(Entity):
         self.AGGRO_RANGE = 200
         self.DEAGGRO_RANGE = 400
         self.PROJECTILE_SPEED = 3
-        self.ATTACK_COOLDOWN = 40
+        self.ATTACK_COOLDOWN = 120
 
         # AI Controller use
         self.aggro = False
