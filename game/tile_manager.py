@@ -51,17 +51,20 @@ class Tile_Manager:
 
     def load_sprites(self):
         """ Creates images for the tiles """
-        self.sprites['grass_1'] = pg.transform.scale(pg.image.load('assets/images/decorations/grass/1.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['grass_2'] = pg.transform.scale(pg.image.load('assets/images/decorations/grass/2.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['grass_3'] = pg.transform.scale(pg.image.load('assets/images/decorations/grass/3.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['grass_4'] = pg.transform.scale(pg.image.load('assets/images/decorations/grass/6.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['tree_1'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/1.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['tree_2'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/2.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['tree_3'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/3.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['tree_4'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/5.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['tree_5'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/6.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['tree_6'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/pine/1.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
-        self.sprites['tree_7'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/pine/3.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        # Decorations --------------------------------------------------------------------------------------------------
+        self.sprites['grass_1'] = pg.transform.scale(pg.image.load('assets/images/decorations/grass/1.png').convert_alpha(), (14, 9))
+        self.sprites['grass_2'] = pg.transform.scale(pg.image.load('assets/images/decorations/grass/2.png').convert_alpha(), (16, 13))
+        self.sprites['grass_3'] = pg.transform.scale(pg.image.load('assets/images/decorations/grass/3.png').convert_alpha(), (8, 7))
+        self.sprites['grass_4'] = pg.transform.scale(pg.image.load('assets/images/decorations/grass/6.png').convert_alpha(), (16, 11))
+        self.sprites['tree_1'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/1.png').convert_alpha(), (176, 240))
+        self.sprites['tree_2'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/2.png').convert_alpha(), (96, 128))
+        self.sprites['tree_3'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/3.png').convert_alpha(), (96, 128))
+        self.sprites['tree_4'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/5.png').convert_alpha(), (96, 144))
+        self.sprites['tree_5'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/6.png').convert_alpha(), (96, 144))
+        self.sprites['tree_6'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/pine/1.png').convert_alpha(), (37, 204))
+        self.sprites['tree_7'] = pg.transform.scale(pg.image.load('assets/images/decorations/trees/pine/3.png').convert_alpha(), (23, 112))
+
+        # Tiles --------------------------------------------------------------------------------------------------------
         self.sprites['dirt'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         self.sprites['grass_top'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_02.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         self.sprites['grass_top_left'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_01.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
@@ -118,7 +121,7 @@ class Tile_Manager:
         # display.blit(self.batch, (-scroll[0], -scroll[1])) # Not working yet
         for layer in self.level_map:
             x = 0
-            # Blit the tile associated with the number
+            # Tiles ----------------------------------------------------------------------------------------------------
             for tile in layer:
                 # Dirt block
                 if tile == '1':
@@ -231,18 +234,39 @@ class Tile_Manager:
 
                 # DECORATIONS ------------------------------------------------------------------------------------------
 
-                # Decorative Grass 1 - Change the scale factor so they arent getting scaled to the TILE SIZE
+                # Decorative Grass 1
                 if tile == 's':
-                    display.blit(self.sprites['tree_1'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                    display.blit(self.sprites['grass_1'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] + 15))
                 # Decorative Grass 1
                 if tile == 't':
-                    display.blit(self.sprites['grass_2'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                    display.blit(self.sprites['grass_2'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] + 13))
                 # Decorative Grass 1
                 if tile == 'u':
-                    display.blit(self.sprites['grass_3'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                    display.blit(self.sprites['grass_3'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] + 18))
                 # Decorative Grass 1
                 if tile == 'v':
-                    display.blit(self.sprites['grass_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+                    display.blit(self.sprites['grass_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] + 13))
+                # Decorative Grass 1
+                if tile == 'w':
+                    display.blit(self.sprites['tree_1'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 210))
+                # Decorative Grass 1
+                if tile == 'x':
+                    display.blit(self.sprites['tree_2'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
+                # Decorative Grass 1
+                if tile == 'y':
+                    display.blit(self.sprites['tree_3'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
+                # Decorative Grass 1
+                if tile == 'z':
+                    display.blit(self.sprites['tree_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
+                # Decorative Grass 1
+                if tile == '!':
+                    display.blit(self.sprites['tree_5'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
+                # Decorative Grass 1
+                if tile == '@':
+                    display.blit(self.sprites['tree_6'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
+                # Decorative Grass 1
+                if tile == '#':
+                    display.blit(self.sprites['tree_7'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 80))
 
 
 
