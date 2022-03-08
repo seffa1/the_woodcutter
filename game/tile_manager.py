@@ -69,6 +69,17 @@ class Tile_Manager:
         self.sprites['grass_horizontal_right'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_31.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         self.sprites['grass_horizontal_left'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_29.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         self.sprites['grass_horizontal_mid'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_30.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_1'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_18.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_2'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_27.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_3'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_33.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_4'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_35.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_5'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_37.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_6'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_39.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_7'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_48.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_8'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_42.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_9'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_26.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_10'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_17.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
+        self.sprites['grass_corners_11'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_40.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         self.sprites['dirt'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_11.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         # TODO - add trees, bushes
         # TODO - Random chance to draw a grass decorative on top of a top grass tile - much easier if we got the batch system working
@@ -81,7 +92,7 @@ class Tile_Manager:
             x = 0
             for tile in layer:
                 # Check if the tile is a collidable
-                if tile in ['2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c']:
+                if tile in ['2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'h', 'i', 'j', 'p', 'r']:
                     self.tile_rects.append(
                         pg.Rect(x * self.TILE_SIZE, y * self.TILE_SIZE, self.TILE_SIZE, self.TILE_SIZE))
                 x += 1
@@ -162,16 +173,61 @@ class Tile_Manager:
                 if tile == 'g':
                     display.blit(self.sprites['grass_top_right_corner'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
 
-                # Oak tree
+                # Grass horizontal right
+                if tile == 'h':
+                    display.blit(self.sprites['grass_horizontal_right'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass horizontal left
+                if tile == 'i':
+                    display.blit(self.sprites['grass_horizontal_left'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass horizontal mid
+                if tile == 'j':
+                    display.blit(self.sprites['grass_horizontal_mid'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass corner left vertical high
+                if tile == 'k':
+                    display.blit(self.sprites['grass_corners_3'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass corner right vertical high
                 if tile == 'l':
+                    display.blit(self.sprites['grass_corners_8'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass corners double top
+                if tile == 'm':
+                    display.blit(self.sprites['grass_corners_9'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass corners double bottom
+                if tile == 'n':
+                    display.blit(self.sprites['grass_corners_10'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass corner left vertical low
+                if tile == 'o':
+                    display.blit(self.sprites['grass_corners_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass corner top horizontal right low
+                if tile == 'p':
+                    display.blit(self.sprites['grass_corners_6'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass corner right vertical low
+                if tile == 'q':
+                    display.blit(self.sprites['grass_corners_11'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+                # Grass corner top horizontal left low
+                if tile == 'r':
+                    display.blit(self.sprites['grass_corners_5'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
+
+
+                # Oak tree
+                if tile == 'w':
                     pass
 
                 # Birch tree
-                if tile == 'm':
+                if tile == 'x':
                     pass
 
                 # Pine tree
-                if tile == 'n':
+                if tile == 'y':
                     pass
 
                 x += 1

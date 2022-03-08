@@ -1,7 +1,7 @@
 import pygame as pg
 from game.game import Game
 from game.menu import StartMenu, GameMenu
-from game.settings import WINDOW_SIZE_SETTING, SCALE_FACTOR_SETTING
+from game.settings import WINDOW_SIZE_SETTING, SCALE_FACTOR_SETTING, START_MENU_ON
 
 
 def main():
@@ -26,11 +26,13 @@ def main():
     while running:
 
         # Start menu returns true if you dont quick, and returns load data if you loaded
-        # start_data = start_menu.run()
-        # playing = start_data[0]
-        # load_data = start_data[1]
-        load_data = None
-        playing = True
+        if START_MENU_ON:
+            start_data = start_menu.run()
+            playing = start_data[0]
+            load_data = start_data[1]
+        else:
+            load_data = None
+            playing = True
 
         # Start the main game loop, with optional data
         while playing:

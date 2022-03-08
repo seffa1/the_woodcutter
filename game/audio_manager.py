@@ -1,5 +1,5 @@
 import pygame as pg
-
+from .settings import SOUND_ON
 
 class Audio_Manager:
     def __init__(self):
@@ -27,8 +27,10 @@ class Audio_Manager:
         # Only one music track can be playing at a time
         # Volume ranges from 0 to 1. Use decimal values
 
-    def play_music(self, name, volume=0, num=-1):
+    def play_music(self, name, volume=1, num=-1):
         """ Plays a stored music file with a given volume and loop count. """
+        if not SOUND_ON:
+            return
         pg.mixer.music.set_volume(volume)
         pg.mixer.music.load(self.music[name])
         # num determines how long the music plays, -1 means the music will loop indefinetly

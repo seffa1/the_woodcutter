@@ -6,4 +6,4 @@
 750,200,46,43,electric_trap,0,0,90,
 740,450,46,43,electric_trap,0,0,270,
 995,152,46,43,electric_trap,0,0,0,
-1427,297,46,43,electric_trap,0,0,0,
+1427,200,46,43,electric_trap,0,0,0,
