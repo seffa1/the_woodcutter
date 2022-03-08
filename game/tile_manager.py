@@ -81,7 +81,7 @@ class Tile_Manager:
             x = 0
             for tile in layer:
                 # Check if the tile is a collidable
-                if tile in ['2', '3', '4', '5', '6', '7', '8', '9', 'a']:
+                if tile in ['2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c']:
                     self.tile_rects.append(
                         pg.Rect(x * self.TILE_SIZE, y * self.TILE_SIZE, self.TILE_SIZE, self.TILE_SIZE))
                 x += 1
