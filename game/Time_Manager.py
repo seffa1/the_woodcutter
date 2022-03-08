@@ -41,7 +41,7 @@ class Time_Manager:
         # Timer is drawn to the screen
         if not self.show_current_time:
             return
-        timer = round(time.time()  - self.level_start_time, 2)
+        timer = round(time.time() - self.level_start_time, 2)
         draw_text(screen, f'Current Time: {timer}', 25, (255, 0, 0), (WINDOW_SIZE_SETTING[0] / 2 - 140, 10))
 
     def draw_best_times(self, scroll, triggers, screen):
