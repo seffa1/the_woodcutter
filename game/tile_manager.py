@@ -234,37 +234,37 @@ class Tile_Manager:
 
                 # DECORATIONS ------------------------------------------------------------------------------------------
 
-                # Decorative Grass 1
+                # Decorative Grass 1 - grass
                 if tile == 's':
                     display.blit(self.sprites['grass_1'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] + 15))
-                # Decorative Grass 1
+                # Decorative Grass 2 - flower
                 if tile == 't':
                     display.blit(self.sprites['grass_2'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] + 13))
-                # Decorative Grass 1
+                # Decorative Grass 3 - grass
                 if tile == 'u':
                     display.blit(self.sprites['grass_3'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] + 18))
-                # Decorative Grass 1
+                # Decorative Grass 4 - flower
                 if tile == 'v':
                     display.blit(self.sprites['grass_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] + 13))
-                # Decorative Grass 1
+                # Decorative Tree 1 - oak
                 if tile == 'w':
                     display.blit(self.sprites['tree_1'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 210))
-                # Decorative Grass 1
+                # Decorative Tree 2 - oak
                 if tile == 'x':
                     display.blit(self.sprites['tree_2'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
-                # Decorative Grass 1
+                # Decorative Tree 3 - Oak
                 if tile == 'y':
                     display.blit(self.sprites['tree_3'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
-                # Decorative Grass 1
+                # Decorative Tree 4 - birch
                 if tile == 'z':
                     display.blit(self.sprites['tree_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
-                # Decorative Grass 1
+                # Decorative Tree 5 - birch
                 if tile == '!':
                     display.blit(self.sprites['tree_5'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
-                # Decorative Grass 1
+                # Decorative Tree 6 - pine
                 if tile == '@':
                     display.blit(self.sprites['tree_6'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
-                # Decorative Grass 1
+                # Decorative Tree 7 - Pine
                 if tile == '#':
                     display.blit(self.sprites['tree_7'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 80))
 
