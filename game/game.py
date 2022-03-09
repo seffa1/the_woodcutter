@@ -215,7 +215,7 @@ class Game:
 
     def draw(self):
         # Fill the background
-        self.display.fill((0, 0, 0))
+        self.display.fill((56, 27, 26))
 
         # Draw the background
         self.level_manager.draw_background(self.scroll, self.display)

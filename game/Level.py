@@ -20,6 +20,13 @@ class Level:
         self.load_background('game/levels/')
         self.load_respawn_point('game/levels/')
 
+        self.underground_1 = pg.transform.scale(pg.image.load('assets/images/backgrounds/underground/1.png').convert_alpha(),
+                                              (WINDOW_SIZE_SETTING[0] / SCALE_FACTOR_SETTING, WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING))
+
+        self.underground_2 = pg.transform.scale(
+            pg.image.load('assets/images/backgrounds/underground/2.png').convert_alpha(),
+            (WINDOW_SIZE_SETTING[0] / SCALE_FACTOR_SETTING, WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING))
+
         self.collided_trigger = None
 
     def respawn_level(self):
@@ -68,6 +75,18 @@ class Level:
             display.blit(image[0], (-paralax_x * scroll[0], -paralax_y * scroll[1] + OFFSET_Y))
             display.blit(image[0], (-paralax_x * scroll[0] + image[0].get_width(), -paralax_y * scroll[1] + OFFSET_Y))
             display.blit(image[0], (-paralax_x * scroll[0] + image[0].get_width()*2, -paralax_y * scroll[1] + OFFSET_Y))
+
+        # Draw the underground part 1
+        display.blit(self.underground_2, (-scroll[0] * 0.45, -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - 110))
+        display.blit(self.underground_2, (-scroll[0] * 0.45 + self.underground_2.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - 110))
+        display.blit(self.underground_2, (-scroll[0] * 0.45 - self.underground_2.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - 110))
+        display.blit(self.underground_2, (-scroll[0] * 0.45 + self.underground_2.get_width() * 2, -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - 110))
+
+        # Draw the underground part 2
+        display.blit(self.underground_1, (-scroll[0] * 0.8, -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80) )
+        display.blit(self.underground_1, (-scroll[0] * 0.8 + self.underground_1.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
+        display.blit(self.underground_1, (-scroll[0] * 0.8 - self.underground_1.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
+        display.blit(self.underground_1, (-scroll[0] * 0.8+ self.underground_1.get_width() * 2, -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
 
     def draw_tiles(self, scroll, TILE_SIZE, display):
         self.tile_manager.draw(scroll, TILE_SIZE, display)

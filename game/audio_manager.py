@@ -27,7 +27,7 @@ class Audio_Manager:
         # Only one music track can be playing at a time
         # Volume ranges from 0 to 1. Use decimal values
 
-    def play_music(self, name, volume=1, num=-1):
+    def play_music(self, name, volume=.25, num=-1):
         """ Plays a stored music file with a given volume and loop count. """
         if not SOUND_ON:
             return
