@@ -5,7 +5,6 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Make levels look nice
 #   Lock finishing a level until all enemies defeated
 #   Projectile based enemy - add assets
 #   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)

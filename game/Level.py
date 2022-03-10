@@ -27,6 +27,8 @@ class Level:
             pg.image.load('assets/images/backgrounds/underground/2.png').convert_alpha(),
             (WINDOW_SIZE_SETTING[0] / SCALE_FACTOR_SETTING, WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING))
 
+        self.clouds_1 = pg.transform.scale(pg.image.load('assets/images/backgrounds/clouds/clouds_3.png').convert_alpha(), (2500, 300))
+
         self.collided_trigger = None
 
     def respawn_level(self):
@@ -87,6 +89,13 @@ class Level:
         display.blit(self.underground_1, (-scroll[0] * 0.8 + self.underground_1.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
         display.blit(self.underground_1, (-scroll[0] * 0.8 - self.underground_1.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
         display.blit(self.underground_1, (-scroll[0] * 0.8+ self.underground_1.get_width() * 2, -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
+
+        # Draw the clouds
+        display.blit(self.clouds_1, (-scroll[0] * .9 - 500, -scroll[1] - 200))
+        display.blit(self.clouds_1, (-scroll[0] * .9 - 500, -scroll[1] - self.clouds_1.get_height()))
+        # display.blit(self.clouds_1, (-scroll[0] * 1 + self.clouds_1.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - self.clouds_1.get_height() * 2))
+        # display.blit(self.clouds_1, (-scroll[0] * 1 - self.clouds_1.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - self.clouds_1.get_height() * 2))
+        # display.blit(self.clouds_1, (-scroll[0] * 1 + self.clouds_1.get_width() * 2, -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - self.clouds_1.get_height() * 2))
 
     def draw_tiles(self, scroll, TILE_SIZE, display):
         self.tile_manager.draw(scroll, TILE_SIZE, display)
