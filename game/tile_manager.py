@@ -127,99 +127,75 @@ class Tile_Manager:
                 if tile == '1':
                     # Use array position X TILE_SIZE to get positions
                     display.blit(self.sprites['dirt'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass top
                 if tile == '2':
                     display.blit(self.sprites['grass_top'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass right
                 if tile == '3':
                     display.blit(self.sprites['grass_right'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass left
                 if tile == '4':
                     display.blit(self.sprites['grass_left'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass bottom
                 if tile == '5':
                     display.blit(self.sprites['grass_bottom'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass top right
                 if tile == '6':
                     display.blit(self.sprites['grass_top_right'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass top left
                 if tile == '7':
                     display.blit(self.sprites['grass_top_left'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass vertical mid
                 if tile == '8':
                     display.blit(self.sprites['grass_vertical_mid'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass vertical bottom
                 if tile == '9':
                     display.blit(self.sprites['grass_vertical_bottom'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass vertical top
                 if tile == 'a':
                     display.blit(self.sprites['grass_vertical_top'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass bottom right
                 if tile == 'b':
                     display.blit(self.sprites['grass_bottom_right'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass bottom left
                 if tile == 'c':
                     display.blit(self.sprites['grass_bottom_left'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass bottom left corner
                 if tile == 'd':
                     display.blit(self.sprites['grass_bottom_left_corner'],(x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass bottom right corner
                 if tile == 'e':
                     display.blit(self.sprites['grass_bottom_right_corner'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass top left corner
                 if tile == 'f':
                     display.blit(self.sprites['grass_top_left_corner'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass top right corner
                 if tile == 'g':
                     display.blit(self.sprites['grass_top_right_corner'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass horizontal right
                 if tile == 'h':
                     display.blit(self.sprites['grass_horizontal_right'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass horizontal left
                 if tile == 'i':
                     display.blit(self.sprites['grass_horizontal_left'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass horizontal mid
                 if tile == 'j':
                     display.blit(self.sprites['grass_horizontal_mid'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass corner left vertical high
                 if tile == 'k':
                     display.blit(self.sprites['grass_corners_3'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass corner right vertical high
                 if tile == 'l':
                     display.blit(self.sprites['grass_corners_8'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass corners double top
                 if tile == 'm':
                     display.blit(self.sprites['grass_corners_9'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass corners double bottom
                 if tile == 'n':
                     display.blit(self.sprites['grass_corners_10'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass corner left vertical low
                 if tile == 'o':
                     display.blit(self.sprites['grass_corners_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
-
                 # Grass corner top horizontal right low
                 if tile == 'p':
                     display.blit(self.sprites['grass_corners_6'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1]))
@@ -257,7 +233,7 @@ class Tile_Manager:
                     display.blit(self.sprites['tree_3'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
                 # Decorative Tree 4 - birch
                 if tile == 'z':
-                    display.blit(self.sprites['tree_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
+                    display.blit(self.sprites['tree_4'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 110))
                 # Decorative Tree 5 - birch
                 if tile == '!':
                     display.blit(self.sprites['tree_5'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 100))
