@@ -78,17 +78,18 @@ class Level:
             display.blit(image[0], (-paralax_x * scroll[0] + image[0].get_width(), -paralax_y * scroll[1] + OFFSET_Y))
             display.blit(image[0], (-paralax_x * scroll[0] + image[0].get_width()*2, -paralax_y * scroll[1] + OFFSET_Y))
 
-        # Draw the underground part 1
+        # Draw the underground part 1 - green
         display.blit(self.underground_2, (-scroll[0] * 0.45, -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - 110))
         display.blit(self.underground_2, (-scroll[0] * 0.45 + self.underground_2.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - 110))
         display.blit(self.underground_2, (-scroll[0] * 0.45 - self.underground_2.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - 110))
         display.blit(self.underground_2, (-scroll[0] * 0.45 + self.underground_2.get_width() * 2, -scroll[1] + WINDOW_SIZE_SETTING[1] / SCALE_FACTOR_SETTING - 110))
 
-        # Draw the underground part 2
+        # Draw the underground part 2 - brown
         display.blit(self.underground_1, (-scroll[0] * 0.8, -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80) )
         display.blit(self.underground_1, (-scroll[0] * 0.8 + self.underground_1.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
         display.blit(self.underground_1, (-scroll[0] * 0.8 - self.underground_1.get_width(), -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
-        display.blit(self.underground_1, (-scroll[0] * 0.8+ self.underground_1.get_width() * 2, -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
+        display.blit(self.underground_1, (-scroll[0] * 0.8 + self.underground_1.get_width() * 2, -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
+        display.blit(self.underground_1, (-scroll[0] * 0.8 + self.underground_1.get_width() * 3, -scroll[1] + WINDOW_SIZE_SETTING[1]/SCALE_FACTOR_SETTING- 80))
 
         # Draw the clouds
         display.blit(self.clouds_1, (-scroll[0] * .9 - 500, -scroll[1] - 200))
