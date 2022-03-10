@@ -31,9 +31,6 @@ class Level_Manager:
     def set_level(self, ID: str, player):
         """ Changes the current level getting updated, then moves the player to that levels respawn point.
          Queues the music as well. """
-        if self.level_change_timer > 0:
-            return
-
         # Change level
         if ID in self.levels:
             # Queue the music, only if its a differnet level (so it doesnt restart on a respawn)
@@ -47,8 +44,7 @@ class Level_Manager:
             level = self.get_level()
             # Move player to spawn point
             player.set_position(level.respawn_point[0], level.respawn_point[1])
-            # Add cooldown for level changing
-            self.level_change_timer = self.CHANGE_COOLDOWN
+
 
         else:
             raise "You are trying to set to a level that does not exist"
@@ -87,8 +83,18 @@ class Level_Manager:
     def check_change_level(self, player):
         """ Only gets called when the player presses enter from the game event loop,
         then checks if a player is colliding with a level trigger. """
+        # Check if player hit the trigger
         if not self.get_level().collided_trigger:
             return
+
+        if self.level_change_timer > 0:
+            return
+
+        # Check if all enemies on the level are dead
+        for group in self.get_level().entity_manager.groups.values():
+            for entity in group:
+                if entity.type in ['troll']:
+                    return
 
         trigger = self.get_level().collided_trigger
         self.set_level(trigger.level_to_go_to, player)
@@ -100,4 +106,7 @@ class Level_Manager:
         # If we are going back to the main world, stop the timer
         if trigger.level_to_go_to == '0-1':
             self.time_manager.stop_timer()
+
+        # Add cooldown for level changing
+        self.level_change_timer = self.CHANGE_COOLDOWN
 

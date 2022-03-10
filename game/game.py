@@ -5,11 +5,9 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Lock finishing a level until all enemies defeated
-#   Projectile based enemy - add assets
-#   Finish a level loop (figure out how items respawn or dont respawn ecah run, timers, medals?)
-#   Batch Rendering of ground for less collisions checks
-#   Only checking collisions on tiles close to player (Add chunk rendering?)
+#   Finish the game progression loop
+#   Batch Rendering of ground for less collisions checks. Only draw tiles that are within a certain distance from the player
+#   Or add a methdod to check if a tile is within the disiable screen, then use that to determine if a tile gets drawn
 
 vec = pg.math.Vector2
 
