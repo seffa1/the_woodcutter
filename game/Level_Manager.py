@@ -9,7 +9,7 @@ from .settings import SCALE_FACTOR_SETTING
 class Level_Manager:
     def __init__(self):
         self.levels = {}
-        self.current_level = None
+        self.current_level = '0-1'
 
         # Prevents play from triggering triggers many times due to the hitbox colliding
         self.level_change_timer = 0
@@ -33,22 +33,25 @@ class Level_Manager:
         """ Changes the current level getting updated, then moves the player to that levels respawn point.
          Queues the music as well. """
         # Change level
-        if ID in self.levels:
-            # Queue the music, only if its a differnet level (so it doesnt restart on a respawn)
-            if ID != self.current_level:
-                if ID == '0-1':
-                    self.audio_manager.play_music(random.choice(['Home_Music_1', 'Home_Music_2']))
-                else:
-                    self.audio_manager.play_music(random.choice(['Battle_Music_1', 'Battle_Music_2', 'Battle_Music_3']))
-            # Set the new level
-            self.current_level = ID
-            level = self.get_level()
-            # Move player to spawn point
-            player.set_position(level.respawn_point[0], level.respawn_point[1])
-
-
-        else:
+        if ID not in self.levels:
             raise "You are trying to set to a level that does not exist"
+
+        # Queue the music, only if its a differnet level (so it doesnt restart on a respawn)
+        if ID[0] != self.current_level[0]:
+            if ID == '0-1':
+                self.audio_manager.play_music(random.choice(['Home_Music_1', 'Home_Music_2']))
+            else:
+                self.audio_manager.play_music(random.choice(['Battle_Music_1', 'Battle_Music_2', 'Battle_Music_3']))
+
+        # Set the new level
+        self.current_level = ID
+        level = self.get_level()
+        # Generate the enemies for that level
+        level.entity_manager.load_enemies()
+        # Move player to spawn point
+        player.set_position(level.respawn_point[0], level.respawn_point[1])
+
+
 
     def get_level(self):
         """ Returns the current level object """
@@ -84,7 +87,6 @@ class Level_Manager:
             screen.blit(image, ((-scroll[0] + 312) * SCALE_FACTOR_SETTING, (-scroll[1] + 192) * SCALE_FACTOR_SETTING))
             screen.blit(image, ((-scroll[0] + 910) * SCALE_FACTOR_SETTING, (-scroll[1] + 312) * SCALE_FACTOR_SETTING))
             # screen.blit(image, (600, 200))
-
 
     def draw_timer(self, screen):
         self.time_manager.draw_timer(screen)

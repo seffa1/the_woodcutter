@@ -17,15 +17,29 @@ class Entity_Manager:
         self.shop_object = []  # Stores the shop here for easy access by the game to update it independently
         self.load_entities()
 
-
     def load_entities(self):
+        """ Loads all non-enemies for a level. Enemy generation is separate because it has to happen more than once. """
         path = 'game/levels/' + self.ID + '/entities.txt'
         with open(path, 'r') as entity_file:
             for line in entity_file:
                 entity_data_list = line.split(',')
-                self.create_entity(int(entity_data_list[0]), int(entity_data_list[1]), int(entity_data_list[2]),
-                                   int(entity_data_list[3]), entity_data_list[4], float(entity_data_list[5]),
-                                   float(entity_data_list[6]), float(entity_data_list[7]))
+                if entity_data_list[4] not in ['troll']:
+                    self.create_entity(int(entity_data_list[0]), int(entity_data_list[1]), int(entity_data_list[2]),
+                                       int(entity_data_list[3]), entity_data_list[4], float(entity_data_list[5]),
+                                       float(entity_data_list[6]), float(entity_data_list[7]))
+
+    def load_enemies(self):
+        """ Regerates the enemies for a level when you travel to it. This is called by the level manager since it
+        will happen each time you travel to a world. """
+        path = 'game/levels/' + self.ID + '/entities.txt'
+        with open(path, 'r') as entity_file:
+            for line in entity_file:
+                entity_data_list = line.split(',')
+                # Only create entities that are enemy types
+                if entity_data_list[4] in ['troll']:
+                    self.create_entity(int(entity_data_list[0]), int(entity_data_list[1]), int(entity_data_list[2]),
+                                       int(entity_data_list[3]), entity_data_list[4], float(entity_data_list[5]),
+                                       float(entity_data_list[6]), float(entity_data_list[7]))
 
 
     def create_entity(self, x, y, width, height, type, WALK_ACC, FRIC, rotate):
