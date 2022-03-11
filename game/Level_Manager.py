@@ -1,9 +1,10 @@
 import random
-
 import pygame as pg
 from .Level import Level
 from .Time_Manager import Time_Manager
 from .audio_manager import Audio_Manager
+from .settings import SCALE_FACTOR_SETTING
+
 
 class Level_Manager:
     def __init__(self):
@@ -76,6 +77,14 @@ class Level_Manager:
         if self.current_level == '0-1':
             triggers = self.levels['0-1'].level_triggers
             self.time_manager.draw_best_times(scroll, triggers, screen)
+
+    def draw_cave_entrances(self, scroll, screen):
+        if self.current_level == '0-1':
+            image = pg.transform.scale(pg.image.load('assets/images/misc/cave_entrance.png').convert_alpha(), (484, 220))
+            screen.blit(image, ((-scroll[0] + 312) * SCALE_FACTOR_SETTING, (-scroll[1] + 192) * SCALE_FACTOR_SETTING))
+            screen.blit(image, ((-scroll[0] + 910) * SCALE_FACTOR_SETTING, (-scroll[1] + 312) * SCALE_FACTOR_SETTING))
+            # screen.blit(image, (600, 200))
+
 
     def draw_timer(self, screen):
         self.time_manager.draw_timer(screen)

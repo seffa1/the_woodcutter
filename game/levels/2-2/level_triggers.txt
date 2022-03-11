@@ -1,1 +1,1 @@
-960,370,40,80,2-3,assets/images/UML_1.png,
+960,360,40,80,2-3,assets/images/UML_1.png,2,

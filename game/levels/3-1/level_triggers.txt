@@ -1,1 +1,1 @@
-846,230,40,80,3-2,assets/images/UML_1.png,
+846,230,40,80,3-2,assets/images/UML_1.png,2,

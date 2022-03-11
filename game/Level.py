@@ -36,7 +36,7 @@ class Level:
 
     def update(self, player, tile_rects, dt):
         self.entity_manager.update(tile_rects, dt, player)
-        self.check_triggers(player)
+        self.check_triggers(player, dt)
 
     def load_background(self, path):
         file_path = path + self.level_ID + '/backgrounds.txt'
@@ -113,7 +113,7 @@ class Level:
         with open(file_path, 'r') as file:
             for line in file:
                 line = line.split(',')
-                trigger = Level_Trigger(int(line[0]), int(line[1]), int(line[2]), int(line[3]), line[4], line[5])
+                trigger = Level_Trigger(int(line[0]), int(line[1]), int(line[2]), int(line[3]), line[4], line[5], line[6])
                 self.level_triggers[line[4]] = trigger
 
     def load_respawn_point(self, path):
@@ -123,9 +123,9 @@ class Level:
                 line = line.split(',')
                 self.respawn_point = [int(line[0]), int(line[1])]
 
-    def check_triggers(self, player):
+    def check_triggers(self, player, dt):
         self.collided_trigger = None
         for level_trigger in self.level_triggers.values():
-            level_trigger.update(player)
+            level_trigger.update(player, dt)
             if level_trigger.collided:
                 self.collided_trigger = level_trigger

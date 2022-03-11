@@ -6,8 +6,6 @@ from .traps.spikes import Spikes
 from .traps.electric_trap import Electric_Trap
 from .objects.coin import Coin
 from .objects.chest import Chest
-from .objects.flag_home import Flag_Home
-from .objects.flag_swamp import Flag_Swamp
 from.shop.shop import Shop
 
 
@@ -47,10 +45,6 @@ class Entity_Manager:
             self.shop_object.append(entity)
         elif type == 'projectile':
             entity = Projectile(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
-        elif type == 'flag_home':
-            entity = Flag_Home(x, y, width, height, type, WALK_ACC, FRIC, rotate)
-        elif type == 'flag_swamp':
-            entity = Flag_Swamp(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         else:
             raise 'Entity Type was not defined'
 

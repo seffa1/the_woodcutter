@@ -237,8 +237,13 @@ class Game:
         # Draw player
         self.player.draw(self.display, self.scroll)
 
+
+
         # Scale up the display to the screen size, then draw it onto the screen
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
+
+        # Draw cave entrances
+        self.level_manager.draw_cave_entrances(self.scroll, self.screen)
 
         # Draw the UI on top of the screen
         self.UI.draw(self.screen, self.player, self.dt, self.clock, self.level_manager, self.scroll)
