@@ -5,8 +5,15 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Level triggers assets or locations
-#   Finish the game progression loop
+#   Make level triggers look like caves
+#   Enemies respawn when you load a world
+#   Collectibles on the map to collect
+#   Bronze/silver/gold ranking system based on collected items and time
+#   Small cut scene when you load into a world
+#   NPC walking outside the house
+#   Talk to NPC to access store and get instructions
+#   Add sound effects
+#   Optimizations:
 #   Batch Rendering of ground for less collisions checks. Only draw tiles that are within a certain distance from the player
 #   Or add a methdod to check if a tile is within the disiable screen, then use that to determine if a tile gets drawn
 
