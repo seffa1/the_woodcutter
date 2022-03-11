@@ -58,6 +58,8 @@ class Entity(pg.sprite.Sprite):
         self.hold = False
         self.damage = 0  # Keeps track of how much damage our current attack is doing
         self.wall_jump = False
+        self.slide_right = False
+        self.slide_left = False
         self.collision_types = {'top': False, 'bottom': False, 'left': False, 'right': False}
 
         # Animation / Rendering

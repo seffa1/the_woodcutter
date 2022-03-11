@@ -5,7 +5,6 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Wall slide animation
 #   Collectibles on the map to collect
 #   Bronze/silver/gold ranking system based on collected items and time
 #   Small cut scene when you load into a world

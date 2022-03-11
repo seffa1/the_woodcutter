@@ -19,6 +19,9 @@ class Player(Entity):
         self.animation_frames['charge_up'] = self.load_animation('assets/animations/player/charge_up',[3, 4, 6])
         self.animation_frames['hold'] = self.load_animation('assets/animations/player/hold',[1])
         self.animation_frames['swing'] = self.load_animation('assets/animations/player/swing',[5, 5, 5])
+        self.animation_frames['slide_left'] = self.load_animation('assets/animations/player/slide_left',[1], True)
+        self.animation_frames['slide_right'] = self.load_animation('assets/animations/player/slide_right',[1])
+        self.animation_frames['swing'] = self.load_animation('assets/animations/player/swing',[5, 5, 5])
         self.set_type('player')
 
         # Player stats
@@ -42,8 +45,7 @@ class Player(Entity):
         self.STAMINA_USE = {'attack_1': 5, 'roll': 20, 'jump': 10}
 
         # Player Attacking
-        self.damages = {'attack_1': 25,
-                        'charge_up': 0}
+        self.damages = {'attack_1': 25, 'charge_up': 0}
         self.charge_damage_float = 0
         self.CHARGE_SPEED = 5
         self.MAX_CHARGE_DAMAGE = 100
@@ -147,7 +149,7 @@ class Player(Entity):
         self.rect.topleft = self.pos
 
         # Check for collisions in the y axis
-        hit_list = self.collision_test(self.rect, tile_rects) # TODO The hit list is growing over time, causing the program to crash
+        hit_list = self.collision_test(self.rect, tile_rects)
         for tile in hit_list:
             # If you are falling
             if self.vel.y > 0:
@@ -170,9 +172,13 @@ class Player(Entity):
             self.air_timer += 1
 
         # Wall grab check
+        self.slide_right = False
+        self.slide_left = False
         if self.walk_right and self.collision_types['right'] and not self.collision_types['bottom'] and not self.walk_left and self.vel.y > 0:
             self.vel.y = 1
+            self.slide_right = True
         if self.walk_left and self.collision_types['left'] and not self.collision_types['bottom'] and not self.walk_right and self.vel.y > 0:
+            self.slide_left = True
             self.vel.y = 1
 
     def jump(self):
@@ -220,6 +226,86 @@ class Player(Entity):
                     self.attack_rect = pg.Rect(self.rect.left - (10 + (0.15 * self.damage))/2, self.rect.centery - 8, 10 + (0.15 * self.damage), 23)
             if self.attack_timer > 30:
                 self.attack_rect = None
+
+    def actions(self, dt):
+        """ Determine the current action and update the image accordingly """
+        walk_threshold = 0.5
+
+        # Flip check
+        if self.vel.x > 0:
+            self.flip = False
+        if self.vel.x < 0:
+            self.flip = True
+
+        # Death check
+        if self.death:
+            self.walk_right = False
+            self.walk_left = False
+            self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'death')
+            return
+
+        # Damage check
+        if self.hurt:
+            self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'hurt')
+            return
+
+        if self.slide_right:
+            self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'slide_right')
+            return
+        if self.slide_left:
+            self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'slide_left')
+            return
+
+        # Walking, running, and idle animations only get played if we arent attacking, rolling, jumping, or getting hurt
+        if not self.roll and not self.attacking and not self.jumping and not self.hurt and not self.charge_up and not self.hold:
+            # Idle check
+            if abs(self.vel.x) <= walk_threshold:
+                self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'idle')
+
+            # Walking / Running Check
+            if self.vel.x > walk_threshold:
+                if not self.run:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'walk')
+                else:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
+            if self.vel.x < -walk_threshold:
+                if not self.run:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'walk')
+                else:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
+
+        else:
+            # Roll Check - Will cancel attacks
+            if self.roll:
+                self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'roll')
+                self.invincible_timer_float -= 1 * dt
+                self.invincible_timer = int(round(self.invincible_timer_float, 0))
+                if self.invincible_timer_float <= 0:
+                    self.invincible_timer_float = 0
+                    self.invincible = False
+                # Change the hitbox height for rolling
+                self.rect.height = self.ROLL_HEIGHT
+
+            # Charge Check
+            if self.charge_up:
+                self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'charge_up')
+
+            # Hold check
+            if self.hold:
+                self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'hold')
+
+            # Attack Check
+            if self.attacking:
+                # Basic attack
+                if self.attack['1']:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'attack_1')
+                # Swing attack
+                if self.attack['2']:
+                    self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'swing')
+
+            # Jumping Check
+            if self.jumping and not self.attacking:
+                self.action, self.frame, self.frame_float, = self.change_actions(self.action, self.frame, self.frame_float, 'jump')
 
     def set_image(self, dt):
         """ Update the current image """
@@ -282,7 +368,6 @@ class Player(Entity):
         if hitbox:
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)
-
 
         # Draw the player
         player_image = pg.transform.flip(self.image, self.flip, False)
