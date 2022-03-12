@@ -51,8 +51,6 @@ class Level_Manager:
         # Move player to spawn point
         player.set_position(level.respawn_point[0], level.respawn_point[1])
 
-
-
     def get_level(self):
         """ Returns the current level object """
         return self.levels[self.current_level]
@@ -101,10 +99,10 @@ class Level_Manager:
         if self.level_change_timer > 0:
             return
 
-        # Check if all enemies on the level are dead
+        # Check if all enemies on the level are dead and all collectibles collected
         for group in self.get_level().entity_manager.groups.values():
             for entity in group:
-                if entity.type in ['troll']:
+                if entity.type in ['troll', 'collectible']:
                     return
 
         trigger = self.get_level().collided_trigger

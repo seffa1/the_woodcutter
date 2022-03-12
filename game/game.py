@@ -6,14 +6,18 @@ from .UI import UI
 
 # TODO
 #   Collectibles on the map to collect
-#   Bronze/silver/gold ranking system based on collected items and time
+#   Cant finish a level until all collectibles collected
+#   Show remaining enemies and collectables on the map
+#   Bronze/silver/gold ranking system based on time
 #   Small cut scene when you load into a world
+#   Result cut scene when you exit a world
 #   NPC walking outside the house
 #   Talk to NPC to access store and get instructions
 #   Add sound effects
 #   Optimizations:
 #   Batch Rendering of ground for less collisions checks. Only draw tiles that are within a certain distance from the player
-#   Or add a methdod to check if a tile is within the disiable screen, then use that to determine if a tile gets drawn
+#   Or add a method to check if a tile is within the disiable screen, then use that to determine if a tile gets drawn
+#   Add the ability to return to 0-1 somehow
 
 vec = pg.math.Vector2
 
@@ -152,6 +156,13 @@ class Game:
                 self.player.run = False
 
             if event.type == pg.KEYDOWN:
+
+                # Laptop quick attack
+                if event.key == pg.K_m and not self.player.roll and not self.player.attacking:
+                    if self.player.stamina >= self.player.STAMINA_USE['attack_1']:
+                        self.player.attacking = True
+                        self.player.attack['1'] = True
+                        self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
 
                 # Pausing
                 if event.key == pg.K_ESCAPE:
