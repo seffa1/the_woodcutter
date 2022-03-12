@@ -5,9 +5,6 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Collectibles on the map to collect
-#   Cant finish a level until all collectibles collected
-#   Show remaining enemies and collectables on the map
 #   Bronze/silver/gold ranking system based on time
 #   Small cut scene when you load into a world
 #   Result cut scene when you exit a world
@@ -246,8 +243,6 @@ class Game:
         # Draw player
         self.player.draw(self.display, self.scroll)
 
-
-
         # Scale up the display to the screen size, then draw it onto the screen
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
@@ -259,6 +254,9 @@ class Game:
 
         # Draw the timer on top of the screen
         self.level_manager.draw_timer(self.screen)
+
+        # Draw remaining enemies and colecltibles
+        self.level_manager.draw_enemy_collectibles_left(self.screen)
 
         # Draw the best times
         self.level_manager.draw_best_times(self.scroll, self.screen)

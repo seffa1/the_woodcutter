@@ -24,7 +24,7 @@ class Entity_Manager:
         with open(path, 'r') as entity_file:
             for line in entity_file:
                 entity_data_list = line.split(',')
-                if entity_data_list[4] not in ['troll']:
+                if entity_data_list[4] not in ['troll', 'collectible']:
                     self.create_entity(int(entity_data_list[0]), int(entity_data_list[1]), int(entity_data_list[2]),
                                        int(entity_data_list[3]), entity_data_list[4], float(entity_data_list[5]),
                                        float(entity_data_list[6]), float(entity_data_list[7]))
@@ -41,7 +41,6 @@ class Entity_Manager:
                     self.create_entity(int(entity_data_list[0]), int(entity_data_list[1]), int(entity_data_list[2]),
                                        int(entity_data_list[3]), entity_data_list[4], float(entity_data_list[5]),
                                        float(entity_data_list[6]), float(entity_data_list[7]))
-
 
     def create_entity(self, x, y, width, height, type, WALK_ACC, FRIC, rotate):
         """ Instantiates and entity and adds it to the appropriate group or creates a group for it """
@@ -78,7 +77,6 @@ class Entity_Manager:
             self.groups[type] = pg.sprite.Group()
         finally:
             self.groups[type].add(entity)
-
 
     def update(self, tile_rects, dt, player):
         for group in list(self.groups.values()):
