@@ -295,6 +295,23 @@ class GameMenu:
         draw_text(self.screen, f'Silver: {thresholds["1-1"]["silver"]}', 36, (255, 255, 255), (89, 220))
         draw_text(self.screen, f'Bronze: {thresholds["1-1"]["bronze"]}', 36, (255, 255, 255), (89, 260))
 
+        # World Two Scores
+        screen.blit(times_frame, (555, 15))
+        draw_text(self.screen, 'World Two Score', 36, (255, 255, 255), (629, 30))
+        if scores['2-1'] is not None:
+            minutes_2 = int(round(scores["2-1"] // 60, 0))
+            seconds_2 = int(round((scores["2-1"]) - (scores["2-1"] // 60) * 60, 0))
+            if seconds_2 < 10:
+                seconds_2 = '0' + str(seconds_2)
+            draw_text(self.screen, f'Best Time: {minutes_2}:{seconds_2} ', 36, (255, 255, 255), (629, 100))
+        else:
+            draw_text(self.screen, f'Best Time: {None} ', 36, (255, 255, 255), (629, 100))
+            draw_text(self.screen, f'Score: {None}', 36, (255, 255, 255), (629, 140))
+        draw_text(self.screen, f'Score: {medals["2-1"]}', 36, (255, 255, 255), (629, 140))
+        draw_text(self.screen, f'Gold: {thresholds["2-1"]["gold"]}', 36, (255, 255, 255), (629, 180))
+        draw_text(self.screen, f'Silver: {thresholds["2-1"]["silver"]}', 36, (255, 255, 255), (629, 220))
+        draw_text(self.screen, f'Bronze: {thresholds["2-1"]["bronze"]}', 36, (255, 255, 255), (629, 260))
+
 
         pg.display.flip()
 

@@ -119,12 +119,6 @@ class Level_Manager:
     def draw_triggers(self, scroll, display):
         self.get_level().draw_triggers(scroll, display)
 
-    def draw_best_times(self, scroll, screen):
-        """ Draws the best timers by the level entrances in the base world """
-        if self.current_level == '0-1':
-            triggers = self.levels['0-1'].level_triggers
-            self.time_manager.draw_best_times(scroll, triggers, screen)
-
     def draw_cave_entrances(self, scroll, screen):
         if self.current_level == '0-1':
             image = pg.transform.scale(pg.image.load('assets/images/misc/cave_entrance.png').convert_alpha(), (484, 220))

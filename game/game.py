@@ -5,7 +5,6 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Bronze/silver/gold ranking system based on time
 #   Small cut scene when you load into a world
 #   Result cut scene when you exit a world
 #   NPC walking outside the house
@@ -257,9 +256,6 @@ class Game:
 
         # Draw remaining enemies and colecltibles
         self.level_manager.draw_enemy_collectibles_left(self.screen)
-
-        # Draw the best times
-        self.level_manager.draw_best_times(self.scroll, self.screen)
 
         # Draw the shop menu
         if self.level_manager.current_level == '0-1':
