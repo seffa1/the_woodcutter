@@ -5,15 +5,16 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Collectibles on the map to collect
-#   Bronze/silver/gold ranking system based on collected items and time
+#   Bronze/silver/gold ranking system based on time
 #   Small cut scene when you load into a world
+#   Result cut scene when you exit a world
 #   NPC walking outside the house
 #   Talk to NPC to access store and get instructions
 #   Add sound effects
 #   Optimizations:
 #   Batch Rendering of ground for less collisions checks. Only draw tiles that are within a certain distance from the player
-#   Or add a methdod to check if a tile is within the disiable screen, then use that to determine if a tile gets drawn
+#   Or add a method to check if a tile is within the disiable screen, then use that to determine if a tile gets drawn
+#   Add the ability to return to 0-1 somehow
 
 vec = pg.math.Vector2
 
@@ -153,6 +154,13 @@ class Game:
 
             if event.type == pg.KEYDOWN:
 
+                # Laptop quick attack
+                if event.key == pg.K_m and not self.player.roll and not self.player.attacking:
+                    if self.player.stamina >= self.player.STAMINA_USE['attack_1']:
+                        self.player.attacking = True
+                        self.player.attack['1'] = True
+                        self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
+
                 # Pausing
                 if event.key == pg.K_ESCAPE:
                     self.playing = False
@@ -235,8 +243,6 @@ class Game:
         # Draw player
         self.player.draw(self.display, self.scroll)
 
-
-
         # Scale up the display to the screen size, then draw it onto the screen
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
@@ -248,6 +254,9 @@ class Game:
 
         # Draw the timer on top of the screen
         self.level_manager.draw_timer(self.screen)
+
+        # Draw remaining enemies and colecltibles
+        self.level_manager.draw_enemy_collectibles_left(self.screen)
 
         # Draw the best times
         self.level_manager.draw_best_times(self.scroll, self.screen)

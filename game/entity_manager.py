@@ -5,6 +5,7 @@ from .enemies.projectile import Projectile
 from .traps.spikes import Spikes
 from .traps.electric_trap import Electric_Trap
 from .objects.coin import Coin
+from .objects.collectible import Collectible
 from .objects.chest import Chest
 from.shop.shop import Shop
 
@@ -23,24 +24,23 @@ class Entity_Manager:
         with open(path, 'r') as entity_file:
             for line in entity_file:
                 entity_data_list = line.split(',')
-                if entity_data_list[4] not in ['troll']:
+                if entity_data_list[4] not in ['troll', 'collectible']:
                     self.create_entity(int(entity_data_list[0]), int(entity_data_list[1]), int(entity_data_list[2]),
                                        int(entity_data_list[3]), entity_data_list[4], float(entity_data_list[5]),
                                        float(entity_data_list[6]), float(entity_data_list[7]))
 
-    def load_enemies(self):
-        """ Regerates the enemies for a level when you travel to it. This is called by the level manager since it
+    def load_enemies(self):  # and collectibles
+        """ Regenerates the enemies and collectibles for a level when you travel to it. This is called by the level manager since it
         will happen each time you travel to a world. """
         path = 'game/levels/' + self.ID + '/entities.txt'
         with open(path, 'r') as entity_file:
             for line in entity_file:
                 entity_data_list = line.split(',')
                 # Only create entities that are enemy types
-                if entity_data_list[4] in ['troll']:
+                if entity_data_list[4] in ['troll', 'collectible']:
                     self.create_entity(int(entity_data_list[0]), int(entity_data_list[1]), int(entity_data_list[2]),
                                        int(entity_data_list[3]), entity_data_list[4], float(entity_data_list[5]),
                                        float(entity_data_list[6]), float(entity_data_list[7]))
-
 
     def create_entity(self, x, y, width, height, type, WALK_ACC, FRIC, rotate):
         """ Instantiates and entity and adds it to the appropriate group or creates a group for it """
@@ -54,6 +54,8 @@ class Entity_Manager:
             entity = Electric_Trap(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'coin':
             entity = Coin(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+        elif type == 'collectible':
+            entity = Collectible(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'shop':
             entity = Shop(x, y, width, height, type, WALK_ACC, FRIC, rotate)
             self.shop_object.append(entity)
@@ -75,7 +77,6 @@ class Entity_Manager:
             self.groups[type] = pg.sprite.Group()
         finally:
             self.groups[type].add(entity)
-
 
     def update(self, tile_rects, dt, player):
         for group in list(self.groups.values()):

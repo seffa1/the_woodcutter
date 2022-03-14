@@ -1,5 +1,6 @@
 import random
 import pygame as pg
+from .utils import draw_text, Color
 from .Level import Level
 from .Time_Manager import Time_Manager
 from .audio_manager import Audio_Manager
@@ -51,7 +52,35 @@ class Level_Manager:
         # Move player to spawn point
         player.set_position(level.respawn_point[0], level.respawn_point[1])
 
+    def check_change_level(self, player):
+        """ Only gets called when the player presses enter from the game event loop,
+        then checks if a player is colliding with a level trigger. """
+        # Check if player hit the trigger
+        if not self.get_level().collided_trigger:
+            return
 
+        if self.level_change_timer > 0:
+            return
+
+        # Check if all enemies on the level are dead and all collectibles collected
+        for group in self.get_level().entity_manager.groups.values():
+            for entity in group:
+                if entity.type in ['troll', 'collectible']:
+                    return
+
+        trigger = self.get_level().collided_trigger
+        self.set_level(trigger.level_to_go_to, player)
+
+        # If its the starting level in a world, start the timer
+        if trigger.level_to_go_to in ['1-1', '2-1', '3-1']:
+            self.time_manager.start_timer(trigger.level_to_go_to)
+
+        # If we are going back to the main world, stop the timer
+        if trigger.level_to_go_to == '0-1':
+            self.time_manager.stop_timer()
+
+        # Add cooldown for level changing
+        self.level_change_timer = self.CHANGE_COOLDOWN
 
     def get_level(self):
         """ Returns the current level object """
@@ -62,6 +91,21 @@ class Level_Manager:
         self.tile_rects = self.get_level().tile_manager.tile_rects
         self.get_level().update(player, self.tile_rects, dt)
         self.check_change_level(player)
+
+    # Drawing ----------------------------------------------------------------------------------------------------------
+    def draw_enemy_collectibles_left(self, screen):
+        """ Tells player how many enemies and collectibles are left on the level"""
+        if self.current_level == '0-1':
+            return
+
+        level = self.get_level()
+        enemies = level.entity_manager.groups.get('troll')
+        if enemies:
+            draw_text(screen, f'Enemies Remaining: {len(enemies)}', 25, Color.DAMAGE.value, (700, 50))
+
+        collectibles = level.entity_manager.groups.get('collectible')
+        if collectibles:
+            draw_text(screen, f'Orbs Remaining: {len(collectibles)}', 25, Color.DAMAGE.value, (700, 80))
 
     def draw_background(self, scroll, display):
         self.get_level().draw_background(scroll, display)
@@ -91,33 +135,5 @@ class Level_Manager:
     def draw_timer(self, screen):
         self.time_manager.draw_timer(screen)
 
-    def check_change_level(self, player):
-        """ Only gets called when the player presses enter from the game event loop,
-        then checks if a player is colliding with a level trigger. """
-        # Check if player hit the trigger
-        if not self.get_level().collided_trigger:
-            return
 
-        if self.level_change_timer > 0:
-            return
-
-        # Check if all enemies on the level are dead
-        for group in self.get_level().entity_manager.groups.values():
-            for entity in group:
-                if entity.type in ['troll']:
-                    return
-
-        trigger = self.get_level().collided_trigger
-        self.set_level(trigger.level_to_go_to, player)
-
-        # If its the starting level in a world, start the timer
-        if trigger.level_to_go_to in ['1-1', '2-1', '3-1']:
-            self.time_manager.start_timer(trigger.level_to_go_to)
-
-        # If we are going back to the main world, stop the timer
-        if trigger.level_to_go_to == '0-1':
-            self.time_manager.stop_timer()
-
-        # Add cooldown for level changing
-        self.level_change_timer = self.CHANGE_COOLDOWN
 
