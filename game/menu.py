@@ -190,7 +190,7 @@ class GameMenu:
             self.clock.tick(60)
             self.events()
             self.update(game)
-            self.draw(self.screen)
+            self.draw(self.screen, game)
         return self.playing
 
     def events(self):
@@ -200,7 +200,6 @@ class GameMenu:
                 sys.exit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    self.playing = False
                     self.menu_running = False
 
     def update(self, game):
@@ -241,7 +240,7 @@ class GameMenu:
         else:
             self.boards_color = self.DEFAULT_COLOR
 
-    def draw(self, screen):
+    def draw(self, screen, game):
         screen.fill((0, 0, 0))
         # draw_text(self.screen, 'Game Title Here', 100, (255, 255, 255), (0, self.screen_size[1]*0.3))
         # draw_text(self.screen, 'ENTER to play', 60, (255, 255, 255), (0, self.screen_size[1]*0.5))
@@ -273,6 +272,29 @@ class GameMenu:
         draw_text(self.screen, 'Jump ----------> W', 36, (255, 255, 255), (X + 200, Y + 400 + CONTROLS_OFFSET * 2))
         draw_text(self.screen, 'Roll ----------> Space', 36, (255, 255, 255), (X + 200, Y + 400 + CONTROLS_OFFSET * 3))
         draw_text(self.screen, 'Attack (Hold) -> C', 36, (255, 255, 255), (X + 200, Y + 400 + CONTROLS_OFFSET * 4))
+
+        # Draw the world times
+        scores = game.level_manager.time_manager.best_times
+        medals = game.level_manager.time_manager.medals
+        thresholds = game.level_manager.time_manager.medal_thresholds
+        # World One Scores
+        times_frame = pg.transform.scale(pg.image.load('assets/images/ui/level_time.png').convert_alpha(), (504, 300))
+        screen.blit(times_frame, (15,15))
+        draw_text(self.screen, 'World One Score', 36, (255, 255, 255), (89, 30))
+        if scores['1-1'] is not None:
+            minutes = int(round(scores["1-1"]//60,0))
+            seconds = int(round((scores["1-1"])-(scores["1-1"]//60)*60,0))
+            if seconds < 10:
+                seconds = '0' + str(seconds)
+            draw_text(self.screen, f'Best Time: {minutes}:{seconds} ', 36, (255, 255, 255), (89, 100))
+        else:
+            draw_text(self.screen, f'Best Time: {None} ', 36, (255, 255, 255), (89, 100))
+            draw_text(self.screen, f'Score: {None}', 36, (255, 255, 255), (89, 140))
+        draw_text(self.screen, f'Score: {medals["1-1"]}', 36, (255, 255, 255), (89, 140))
+        draw_text(self.screen, f'Gold: {thresholds["1-1"]["gold"]}', 36, (255, 255, 255), (89, 180))
+        draw_text(self.screen, f'Silver: {thresholds["1-1"]["silver"]}', 36, (255, 255, 255), (89, 220))
+        draw_text(self.screen, f'Bronze: {thresholds["1-1"]["bronze"]}', 36, (255, 255, 255), (89, 260))
+
 
         pg.display.flip()
 
