@@ -7,7 +7,6 @@ from .UI import UI
 # TODO
 #   Small cut scene when you load into a world
 #   Result cut scene when you exit a world
-#   NPC walking outside the house
 #   Talk to NPC to access store and get instructions
 #   Add sound effects
 #   Optimizations:
