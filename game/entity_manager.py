@@ -5,6 +5,7 @@ from .enemies.projectile import Projectile
 from .traps.spikes import Spikes
 from .traps.electric_trap import Electric_Trap
 from .objects.coin import Coin
+from .objects.old_man import Old_Man
 from .objects.collectible import Collectible
 from .objects.chest import Chest
 from.shop.shop import Shop
@@ -46,6 +47,8 @@ class Entity_Manager:
         """ Instantiates and entity and adds it to the appropriate group or creates a group for it """
         if type == 'troll':
             entity = Troll(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
+        elif type == 'old_man':
+            entity = Old_Man(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'chest':
             entity = Chest(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
         elif type == 'spikes':
