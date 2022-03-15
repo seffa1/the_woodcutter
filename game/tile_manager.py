@@ -96,10 +96,6 @@ class Tile_Manager:
         self.sprites['grass_corners_10'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_17.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
         self.sprites['grass_corners_11'] = pg.transform.scale(pg.image.load('assets/images/tiles/Tile_40.png').convert_alpha(), (self.TILE_SIZE, self.TILE_SIZE))
 
-        # TODO - add trees, bushes
-        # TODO - Random chance to draw a grass decorative on top of a top grass tile - much easier if we got the batch system working
-
-
     def add_tile_rects(self):
         """ Adds all collidible tiles to the tile rect array for collision detection for game entities. """
         y = 0

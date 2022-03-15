@@ -185,7 +185,7 @@ class Entity(pg.sprite.Sprite):
         self.rect.topleft = self.pos
 
         # Check for collisions in the y axis
-        hit_list = self.collision_test(self.rect, tile_rects) # TODO The hit list is growing over time, causing the program to crash
+        hit_list = self.collision_test(self.rect, tile_rects)
         for tile in hit_list:
             # If you are falling
             if self.vel.y > 0:

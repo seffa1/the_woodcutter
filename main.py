@@ -35,9 +35,10 @@ def main():
             playing = True
 
         # Start the main game loop, with optional data
+        # create game object
+        game = Game(screen, clock, display, WINDOW_SIZE, SCALE_FACTOR, load_data)
         while playing:
-            # create game object
-            game = Game(screen, clock, display, WINDOW_SIZE, SCALE_FACTOR, load_data)
+
             # game loop here
             game.run()
             # pause loop here
