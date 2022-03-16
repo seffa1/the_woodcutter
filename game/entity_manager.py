@@ -49,6 +49,8 @@ class Entity_Manager:
             entity = Troll(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
         elif type == 'old_man':
             entity = Old_Man(x, y, width, height, type, WALK_ACC, FRIC, rotate)
+            self.shop_object.append(entity)
+            return
         elif type == 'chest':
             entity = Chest(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
         elif type == 'spikes':
@@ -61,7 +63,6 @@ class Entity_Manager:
             entity = Collectible(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         elif type == 'shop':
             entity = Shop(x, y, width, height, type, WALK_ACC, FRIC, rotate)
-            self.shop_object.append(entity)
         elif type == 'projectile':
             entity = Projectile(x, y, width, height, type, WALK_ACC, FRIC, rotate, self)
         else:
@@ -86,13 +87,15 @@ class Entity_Manager:
             for entity in group:
                 entity.update(tile_rects, dt, player)
 
+        for entity in self.shop_object:
+            entity.update(tile_rects, dt, player)
+
     def draw(self, display, scroll, screen):
         for group in list(self.groups.values()):
             for entity in group:
-                if entity.image is not None and entity.type != 'shop':  # Shop gets drawn separately, in a different way
+                if entity.image is not None:  # Shop gets drawn separately, in a different way
                     entity.draw(display, scroll)
-                elif entity.image is not None and entity.type == 'shop':
-                    entity.draw(display, scroll, screen)
+
 
 
 

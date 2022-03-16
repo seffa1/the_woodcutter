@@ -118,7 +118,7 @@ class Shop_Menu:
                     self.buy_upgrade(button, player)
                     self.buy_switch = False
 
-    def draw(self, display, scroll, screen, hitbox=False, attack_box=False):
+    def draw(self, display, scroll, screen, hitbox=True, attack_box=False):
         """ Draw the menu background, then draw each button """
 
         self.scroll = scroll
@@ -134,15 +134,9 @@ class Shop_Menu:
         OFFSET_Y = 0
         SIZE = 36
 
-        draw_text(screen, f'{self.stat_upgrade_costs["health"][0]}', SIZE, Color.HEALTH.value,
-                  ((self.buttons[0].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING,
-                   (self.buttons[0].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
-        draw_text(screen, f'{self.stat_upgrade_costs["stamina"][0]}', SIZE, Color.HEALTH.value,
-                  ((self.buttons[1].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING,
-                   (self.buttons[1].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
-        draw_text(screen, f'{self.stat_upgrade_costs["damage"][0]}', SIZE, Color.HEALTH.value,
-                  ((self.buttons[2].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING,
-                   (self.buttons[2].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
+        draw_text(screen, f'{self.stat_upgrade_costs["health"][0]}', SIZE, Color.HEALTH.value,((self.buttons[0].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING,(self.buttons[0].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
+        draw_text(screen, f'{self.stat_upgrade_costs["stamina"][0]}', SIZE, Color.HEALTH.value,((self.buttons[1].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING,(self.buttons[1].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
+        draw_text(screen, f'{self.stat_upgrade_costs["damage"][0]}', SIZE, Color.HEALTH.value, ((self.buttons[2].pos.x - scroll[0] + OFFSET_X) * SCALE_FACTOR_SETTING, (self.buttons[2].pos.y - scroll[1] + OFFSET_Y) * SCALE_FACTOR_SETTING))
 
         # Draw the upgrade levels symbols
         WIDTH = 36

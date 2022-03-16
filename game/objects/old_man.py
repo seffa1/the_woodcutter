@@ -1,8 +1,9 @@
 from game.engine import Entity
 import pygame as pg
-from game.utils import calc_distance, Color
+from game.utils import calc_distance, Color, draw_text
 from game.objects.coin import Coin
 import random
+from game.shop.shop_menu import Shop_Menu
 
 
 class Old_Man(Entity):
@@ -11,6 +12,11 @@ class Old_Man(Entity):
         self.animation_frames['idle'] = self.load_animation('assets/animations/old_man/idle', [10, 10, 10, 10])
         self.animation_frames['walk'] = self.load_animation('assets/animations/old_man/walk', [10, 10, 10, 10, 10, 10])
         self.action = 'idle'
+
+        # For buying items
+        self.shop_menu = Shop_Menu(800, 380, 540, 330)
+        self.show_menu = False
+        self.can_talk = False  # Controlls when the 'but items' and 'talk' options are available, based on distance to the player
 
         # AI Controller use
         self.walk_left = False
@@ -44,8 +50,11 @@ class Old_Man(Entity):
         # If close to the player, go idle
         if calc_distance(self.pos.x, self.pos.y, player.pos.x, player.pos.y) < self.IDLE_RANGE:
             self.idle = True
+            self.can_talk = True
             self.walk_right = False
             self.walk_left = False
+        else:
+            self.can_talk = False
 
         # If walking and hit an xbound, walk the other way
         if self.pos.x <= self.LOWER_X_BOUND:
@@ -146,6 +155,9 @@ class Old_Man(Entity):
         self.image = image
 
     def update(self, tile_rects, dt, player=None):
+        if self.show_menu:
+            self.shop_menu.update(tile_rects, dt, player)
+
         self.AI_controller(player, dt)  # Updates the actions based on player's location
         self.move(tile_rects, dt)  # Update entity position
         self.actions(dt)  # Determine the entities's action
@@ -156,7 +168,27 @@ class Old_Man(Entity):
             hit_rect = pg.Rect(self.pos.x - scroll[0], self.pos.y - scroll[1], self.rect.width, self.rect.height)
             pg.draw.rect(display, (0, 255, 0), hit_rect)
 
-
         # Flip the image if we need to, and then blit it
         image = pg.transform.flip(self.image, self.flip, False)
         display.blit(image, (self.pos.x - scroll[0], self.pos.y - scroll[1]))
+
+    def draw_menu(self, display, scroll, screen):
+        """ This gets called independently from the draw function as it is drawing to the screen, not the display. """
+        if self.can_talk:
+            draw_text(screen, f'1: Talk', 50, (255, 255, 255), (15, 815))
+            draw_text(screen, f'2: Shop', 50, (255, 255, 255), (500, 815))
+
+            # Draw the menu
+            if self.show_menu:
+
+                self.shop_menu.draw(display, scroll, screen, hitbox=False, attack_box=False)
+        else:
+            self.show_menu = False
+
+    def toggle_menu(self):
+        """ Called from the game's event loop. """
+        if self.show_menu:
+            self.show_menu = False
+        else:
+            self.show_menu = True
+

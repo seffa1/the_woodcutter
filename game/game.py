@@ -159,6 +159,10 @@ class Game:
                         self.player.attack['1'] = True
                         self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
 
+                # Talking and shopping with the old man
+                if event.key == pg.K_2:  # Talk
+                    if self.level_manager.current_level == '0-1':
+                        self.level_manager.get_level().entity_manager.shop_object[0].toggle_menu()
                 # Pausing
                 if event.key == pg.K_ESCAPE:
                     self.playing = False
@@ -223,6 +227,7 @@ class Game:
 
 
     def draw(self):
+        # Drawn to display ---------------------------------------------------------------------------------------------
         # Fill the background
         self.display.fill((56, 27, 26))
 
@@ -238,9 +243,14 @@ class Game:
         # Draw the tiles
         self.level_manager.draw_tiles(self.scroll, self.TILE_SIZE, self.display)
 
+        # Draw the old man
+        if self.level_manager.current_level == '0-1':
+            self.level_manager.get_level().entity_manager.shop_object[0].draw(self.display, self.scroll)
+
         # Draw player
         self.player.draw(self.display, self.scroll)
 
+        # Drawn to screen ----------------------------------------------------------------------------------------------
         # Scale up the display to the screen size, then draw it onto the screen
         self.screen.blit(pg.transform.scale(self.display, self.WINDOW_SIZE), (0, 0))
 
@@ -249,6 +259,10 @@ class Game:
 
         # Draw the UI on top of the screen
         self.UI.draw(self.screen, self.player, self.dt, self.clock, self.level_manager, self.scroll)
+
+        # Draw the old man ui
+        if self.level_manager.current_level == '0-1':
+            self.level_manager.get_level().entity_manager.shop_object[0].draw_menu(self.display, self.scroll, self.screen)
 
         # Draw the timer on top of the screen
         self.level_manager.draw_timer(self.screen)
