@@ -7,6 +7,7 @@ class Collectible(Entity):
         super().__init__(x, y, width, height, type, WALK_ACC, FRIC, rotate)
         self.animation_frames['collectible'] = self.load_animation('assets/animations/collectible', [20, 10, 10])
         self.action = 'collectible'
+        self.load_sound('pickup', 'assets/sounds/objects/collectible_pickup.wav')
 
     def set_image(self, dt):
         """ Update the current image """
@@ -24,6 +25,7 @@ class Collectible(Entity):
     def check_pickup(self, player):
         """ If the player collides with our rect, kill ourselves """
         if self.rect.colliderect(player.rect):
+            self.play_sound('pickup', .1)
             self.kill()
 
     def update(self, tile_rects, dt, player):

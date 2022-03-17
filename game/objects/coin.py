@@ -1,5 +1,6 @@
 from game.engine import Entity
 import pygame as pg
+import random
 
 
 class Coin(Entity):
@@ -10,6 +11,8 @@ class Coin(Entity):
         self.EXP_AMOUNT = 1
         self.bounce = False  # Tracks the current bounce, prevent the top collision check from triggering
         self.can_bounce = True  # If a coins vel gets too low, it is no longer supposed to bounce, or else it will bounce infinetley
+        self.load_sound('pickup_1', 'assets/sounds/objects/coin_pickup_1.wav')
+        self.load_sound('pickup_2', 'assets/sounds/objects/coin_pickup_2.wav')
 
     def move(self, tile_rects, dt):
         self.bounce = False
@@ -123,6 +126,7 @@ class Coin(Entity):
         """ If the player collides with our rect, kill ourselves """
         if self.rect.colliderect(player.rect):
             player.add_coin(1)
+            self.play_sound(random.choice(['pickup_1', 'pickup_2']), .1)
             self.kill()
 
     def update(self, tile_rects, dt, player):

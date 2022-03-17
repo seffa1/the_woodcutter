@@ -32,6 +32,14 @@ class Troll(Entity):
         self.attack_cooldown = 0  # Used when we are not in aggro
         self.attack_cooldown_float = 0
 
+        # Audio
+        self.sounds = {}
+        self.load_sound('death_1', 'assets/sounds/enemies/orc_death_1.wav')
+        self.load_sound('death_2', 'assets/sounds/enemies/orc_death_2.wav')
+        self.load_sound('pain', 'assets/sounds/enemies/orc_pain.wav')
+        self.load_sound('drop_loot', 'assets/sounds/objects/coin_explosion.wav')
+        self.pain_sound = False  # Use to make the pain sound only play once, instead of every frame the hit box is colliding
+
     def AI_controller(self, player, dt):
         if self.death:
             return
@@ -111,6 +119,7 @@ class Troll(Entity):
     def drop_loot(self):
         """ This function must be defined the the children classes """
         amount = random.randint(5, 10)
+        self.play_sound('drop_loot', .2)
         for i in range(0, amount):
             coin = Coin(self.pos.x, self.pos.y, 9, 9, 'coin', 0, 0, 0)
             x_vel = random.randint(-4, 4)
@@ -143,12 +152,17 @@ class Troll(Entity):
         # Check if we have taken damage
         if player.attack_rect:
             if self.rect.colliderect(player.attack_rect):
+                if not self.pain_sound:
+                    self.play_sound('pain', .2)
+                    self.pain_sound = True
                 self.lose_health(player.damage)
                 # Knock Back Ourselves
                 if player.pos.x <= self.pos.x:
                     self.vel.x += (1 + (player.damage / 50))  # Knockback scales with damage
                 elif player.pos.x > self.pos.x:
                     self.vel.x -= (1 + (player.damage / 50))  # Knockback scales with damage
+        else:
+            self.pain_sound = False
 
         # Check if we have damaged the player
         if self.attack_rect:
@@ -159,6 +173,10 @@ class Troll(Entity):
                     player.vel.x -= (1 + (self.damage / 50))  # Knockback scales with damage
                 elif player.pos.x > self.pos.x:
                     player.vel.x += (1 + (self.damage / 50))  # Knockback scales with damage
+    def check_dead(self):
+        if self.health <= 0 or self.pos.y >= self.KILL_LIMIT_Y:
+            self.play_sound(random.choice(['death_1', 'death_2']), .2)
+            self.death = True
 
     def actions(self, dt):
         """ Determine the current action and update the image accordingly """

@@ -71,6 +71,20 @@ class Entity(pg.sprite.Sprite):
         self.frame = 0  # Keeps track of the current animation frame
         self.frame_float = 0
 
+        # Audio
+        self.sounds = {}
+
+    def load_sound(self, name: str, path: str) -> None:
+        self.sounds[name] = path
+
+    def play_sound(self, name, volume):
+        """ Plays a stored sound file with a given volume from 0 to 1. """
+        sound_effect = pg.mixer.Sound(self.sounds[name])
+        sound_effect.set_volume(volume)
+        sound_effect.play()
+        # Only one music track can be playing at a time
+        # Volume ranges from 0 to 1. Use decimal values
+
     # path = assets/animations/player/idle
     # frame_lengths = [10, 10, 20, 10] for each frame
     def load_animation(self, path: str, frame_lengths: list, flip=False):
