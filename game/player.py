@@ -27,7 +27,7 @@ class Player(Entity):
         self.set_type('player')
 
         # Player stats
-        self.coins = 300
+        self.coins = 0
         self.STAMINA_PER_LEVEL = 10  # How much leveling up stamina increases max stamina
         self.HEALTH_PER_LEVEL = 10
         self.SPEED_PER_LEVEL = .01  # Increases your running speed
@@ -43,14 +43,14 @@ class Player(Entity):
         self.stamina_float = 100
         self.max_stamina = 100
         self.STAMINA_RUN_DRAIN = .3
-        self.STAMINA_REGEN_RATE = 5.25
-        self.STAMINA_USE = {'attack_1': 5, 'roll': 20, 'jump': 10}
+        self.STAMINA_REGEN_RATE = .5
+        self.STAMINA_USE = {'attack_1': 15, 'roll': 20, 'jump': 20}
 
         # Player Attacking
-        self.damages = {'attack_1': 25, 'charge_up': 0}
+        self.damages = {'attack_1': 15, 'charge_up': 0}
         self.charge_damage_float = 0
         self.CHARGE_SPEED = 5
-        self.MAX_CHARGE_DAMAGE = 100
+        self.MAX_CHARGE_DAMAGE = self.damages['attack_1'] * 2
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.attack = {'1': False, '2': False}
 

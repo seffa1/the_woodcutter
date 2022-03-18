@@ -67,8 +67,8 @@ class Shop_Menu:
         self.buttons.append(button_3)
 
     def buy_upgrade(self, button, player):
-        ''' If player has enough money, and their are upgrades available for the button that was pressed,
-        removes player's coins and upgrades their stats '''
+        """ If player has enough money, and their are upgrades available for the button that was pressed,
+        removes player's coins and upgrades their stats """
 
         # How much the stats get upgraded each time they level up
         UPGRADE_AMOUNTS = {
@@ -119,6 +119,7 @@ class Shop_Menu:
             # Upgrade the player's stats
             self.play_sound('upgrade', .2)
             player.damages['attack_1'] += UPGRADE_AMOUNTS['damage']
+            player.MAX_CHARGE_DAMAGE = player.damages['attack_1'] * 2
 
     def update(self, tile_rects, dt, player):
         """ Update the buttons, passing in a mouse rect and mouse actions"""
