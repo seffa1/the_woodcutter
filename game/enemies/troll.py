@@ -37,6 +37,7 @@ class Troll(Entity):
         self.load_sound('death_1', 'assets/sounds/enemies/orc_death_1.wav')
         self.load_sound('death_2', 'assets/sounds/enemies/orc_death_2.wav')
         self.load_sound('pain', 'assets/sounds/enemies/orc_pain.wav')
+        self.load_sound('hit', 'assets/sounds/player/enemy_hit.wav')
         self.load_sound('drop_loot', 'assets/sounds/objects/coin_explosion.wav')
         self.pain_sound = False  # Use to make the pain sound only play once, instead of every frame the hit box is colliding
 
@@ -149,12 +150,15 @@ class Troll(Entity):
                 self.attack_rect = None
 
     def check_damages(self, player):
+        """ Checks if the player has any attack hitboxes, then checks if those hitboxes are colliding with our rect.
+        Does the same thing in the other way. Then either damages the player or takes damages and knocks back. """
         # Check if we have taken damage
         if player.attack_rect:
             if self.rect.colliderect(player.attack_rect):
                 if not self.pain_sound:
                     self.play_sound('pain', .2)
                     self.pain_sound = True
+                    self.play_sound('hit', .05)
                 self.lose_health(player.damage)
                 # Knock Back Ourselves
                 if player.pos.x <= self.pos.x:

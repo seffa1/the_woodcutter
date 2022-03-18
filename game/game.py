@@ -5,8 +5,6 @@ from .player import Player
 from .UI import UI
 
 # TODO
-#   Add sound effects
-#   Talk to NPC to access store and get instructions
 #   Small cut scene when you load into a world
 #   Result cut scene when you exit a world
 #   Optimizations:
@@ -160,9 +158,13 @@ class Game:
                         self.player.use_stamina(self.player.STAMINA_USE['attack_1'])
 
                 # Talking and shopping with the old man
-                if event.key == pg.K_2:  # Talk
+                if event.key == pg.K_2:  # Buy items
                     if self.level_manager.current_level == '0-1':
                         self.level_manager.get_level().entity_manager.shop_object[0].toggle_menu()
+                if event.key == pg.K_1:  # Talk items
+                    if self.level_manager.current_level == '0-1':
+                        self.level_manager.get_level().entity_manager.shop_object[0].talk()
+
                 # Pausing
                 if event.key == pg.K_ESCAPE:
                     self.playing = False

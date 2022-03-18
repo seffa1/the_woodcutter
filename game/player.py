@@ -1,3 +1,5 @@
+import random
+
 import pygame as pg
 from collections import deque
 from .engine import Entity
@@ -51,6 +53,16 @@ class Player(Entity):
         self.MAX_CHARGE_DAMAGE = 100
         self.DAMAGE_COOLDOWN = 25  # How many frames you are invinciple for after taking damage
         self.attack = {'1': False, '2': False}
+
+        # Sounds
+        self.load_sound('step_dirt', 'assets/sounds/player/dirt_one.wav')
+        self.load_sound('step_leaves', 'assets/sounds/player/leaves_one.wav')
+        self.load_sound('step_sand', 'assets/sounds/player/sand_one.wav')
+        self.load_sound('heavy_attack', 'assets/sounds/player/heavy_attack.wav')
+        self.load_sound('light_attack', 'assets/sounds/player/light_attack.wav')
+        self.attack_sound = False  # Makes attack sounds only play once, instead of every frame the player is attacking
+        self.walk_sound_timer_float = 0
+        self.WALK_SOUND_COOLDOWN = 30
 
     def add_coin(self, amount):
         """ Adds coins """
@@ -191,6 +203,7 @@ class Player(Entity):
                 # self.vel.x = self.WALL_JUMP_VEL
                 self.vel.x += self.WALL_JUMP_VEL
             self.vel.y = self.JUMP_VEL
+            self.play_sound('step_leaves', .2)
 
     def hitboxes(self, dt):
         ''' Creates a hitbox which starts and stops from a timer after an attack is used. '''
@@ -258,21 +271,45 @@ class Player(Entity):
 
         # Walking, running, and idle animations only get played if we arent attacking, rolling, jumping, or getting hurt
         if not self.roll and not self.attacking and not self.jumping and not self.hurt and not self.charge_up and not self.hold:
+            # Resets the attack sound variable
+            self.attack_sound = False
+
             # Idle check
             if abs(self.vel.x) <= walk_threshold:
                 self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'idle')
+                self.walk_sound_timer_float = 0
 
-            # Walking / Running Check
+            # Walking / Running Check with sounds playing
             if self.vel.x > walk_threshold:
                 if not self.run:
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'walk')
+                    if self.walk_sound_timer_float > 0:
+                        self.walk_sound_timer_float -= 1 * dt
+                    else:
+                        self.play_sound(random.choice(['step_dirt']), .075)
+                        self.walk_sound_timer_float += self.WALK_SOUND_COOLDOWN
                 else:
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
+                    if self.walk_sound_timer_float > 0:
+                        self.walk_sound_timer_float -= 2 * dt
+                    else:
+                        self.play_sound(random.choice(['step_dirt']), .075)
+                        self.walk_sound_timer_float += self.WALK_SOUND_COOLDOWN
             if self.vel.x < -walk_threshold:
                 if not self.run:
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'walk')
+                    if self.walk_sound_timer_float > 0:
+                        self.walk_sound_timer_float -= 1 * dt
+                    else:
+                        self.play_sound(random.choice(['step_dirt']), .075)
+                        self.walk_sound_timer_float += self.WALK_SOUND_COOLDOWN
                 else:
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'run')
+                    if self.walk_sound_timer_float > 0:
+                        self.walk_sound_timer_float -= 2 * dt
+                    else:
+                        self.play_sound(random.choice(['step_dirt']), .075)
+                        self.walk_sound_timer_float += self.WALK_SOUND_COOLDOWN
 
         else:
             # Roll Check - Will cancel attacks
@@ -298,10 +335,18 @@ class Player(Entity):
             if self.attacking:
                 # Basic attack
                 if self.attack['1']:
+                    if not self.attack_sound:
+                        self.play_sound('light_attack', .2)
+                        self.attack_sound = True
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'attack_1')
                 # Swing attack
                 if self.attack['2']:
+                    if not self.attack_sound:
+                        self.play_sound('heavy_attack', .2)
+                        self.attack_sound = True
                     self.action, self.frame, self.frame_float = self.change_actions(self.action, self.frame, self.frame_float, 'swing')
+            else:
+                self.attack_sound = False
 
             # Jumping Check
             if self.jumping and not self.attacking:

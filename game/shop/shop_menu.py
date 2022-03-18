@@ -36,6 +36,22 @@ class Shop_Menu:
         # You must let go of the mouse to then buy another upgrade
         self.buy_switch = True
 
+        # Sounds
+        self.sounds = {}
+        self.load_sound('upgrade', 'assets/sounds/ui/shop_purchase.wav')
+
+    def load_sound(self, name: str, path: str) -> None:
+        self.sounds[name] = path
+
+    def play_sound(self, name, volume):
+        """ Plays a stored sound file with a given volume from 0 to 1. """
+        sound_effect = pg.mixer.Sound(self.sounds[name])
+        sound_effect.set_volume(volume)
+        sound_effect.play()
+        # Only one music track can be playing at a time
+        # Volume ranges from 0 to 1. Use decimal values
+
+
     def load_buttons(self):
         """ Instantiates and adds buttons to self.buttons """
         BUTTON_WIDTH = 90
@@ -74,6 +90,7 @@ class Shop_Menu:
             player.coins -= self.stat_upgrade_costs['health'].popleft()
             self.stat_upgrades['health'] += 1
             # Upgrade the player's stats
+            self.play_sound('upgrade', .2)
             player.max_health += UPGRADE_AMOUNTS['health']
             player.health += UPGRADE_AMOUNTS['health']
 
@@ -85,6 +102,8 @@ class Shop_Menu:
                 return
             player.coins -= self.stat_upgrade_costs['stamina'].popleft()
             self.stat_upgrades['stamina'] += 1
+            # Upgrade the player's stats
+            self.play_sound('upgrade', .2)
             player.max_stamina += UPGRADE_AMOUNTS['stamina']
             player.stamina_float = player.max_stamina
             player.stamina = player.max_stamina
@@ -97,6 +116,8 @@ class Shop_Menu:
                 return
             player.coins -= self.stat_upgrade_costs['damage'].popleft()
             self.stat_upgrades['damage'] += 1
+            # Upgrade the player's stats
+            self.play_sound('upgrade', .2)
             player.damages['attack_1'] += UPGRADE_AMOUNTS['damage']
 
     def update(self, tile_rects, dt, player):

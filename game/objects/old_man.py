@@ -27,6 +27,13 @@ class Old_Man(Entity):
         self.LOWER_X_BOUND = 660  # How far left hes allowed to go
         self.UPPER_X_BOUND = 900  # How far right he is allowed to go
 
+        # Dialouge use
+        self.talk_amount = -1  # Number of times the player has talked with the old man
+        self.talking = False
+        self.dialouge = ['Greetings!', 'I am just an old man...', '...enjyoing the forest.',
+                         'However something has changed...', 'There are ogres walking around.',
+                         'They are not from here.', 'Please, can you help rid them?']
+
     def AI_controller(self, player, dt):
         """ Uses a timer and randomness to walk back and forth. Has to stay within a certain distance from the store though. """
         # If idle, random chance to walk
@@ -180,10 +187,18 @@ class Old_Man(Entity):
 
             # Draw the menu
             if self.show_menu:
-
                 self.shop_menu.draw(display, scroll, screen, hitbox=False, attack_box=False)
+
+            # Draw the dialouge
+            if self.talking:
+                if self.talk_amount > len(self.dialouge) - 1:
+                    self.talk_amount = 0
+                draw_text(screen, self.dialouge[self.talk_amount], 50, (255, 255, 255), (15, 700))
+
+
         else:
             self.show_menu = False
+            self.talking = False
 
     def toggle_menu(self):
         """ Called from the game's event loop. """
@@ -191,4 +206,11 @@ class Old_Man(Entity):
             self.show_menu = False
         else:
             self.show_menu = True
+
+    def talk(self):
+        if self.can_talk:
+            self.talk_amount += 1
+            self.talking = True
+
+
 
