@@ -74,7 +74,8 @@ class Shop_Menu:
         UPGRADE_AMOUNTS = {
             'health': 33,
             'stamina': 50,
-            'damage': 25
+            'damage': 25,
+            'stamina_recharge': .25
         }
 
         # HEALTH #
@@ -105,6 +106,7 @@ class Shop_Menu:
             # Upgrade the player's stats
             self.play_sound('upgrade', .2)
             player.max_stamina += UPGRADE_AMOUNTS['stamina']
+            player.STAMINA_REGEN_RATE += UPGRADE_AMOUNTS['stamina_recharge']
             player.stamina_float = player.max_stamina
             player.stamina = player.max_stamina
 

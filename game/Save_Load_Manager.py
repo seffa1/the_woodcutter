@@ -17,6 +17,7 @@ class Save_Load_Manager:
                        'stamina': player.stamina_float,
                        'max_stamina': player.max_stamina,
                        'attack_1_damage': player.damages['attack_1'],
+                       'stamina_recharge': player.STAMINA_REGEN_RATE
                        }
 
         # Extract shop data

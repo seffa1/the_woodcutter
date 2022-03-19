@@ -66,6 +66,7 @@ class Game:
             self.player.stamina_float = load_data['player']['stamina']
             self.player.max_stamina = load_data['player']['max_stamina']
             self.player.damages['attack_1'] = load_data['player']['attack_1_damage']
+            self.player.STAMINA_REGEN_RATE = load_data['player']['stamina_recharge']
 
             # Configure the shop_menu data
             shop_menu = self.level_manager.levels['0-1'].entity_manager.shop_object[0].shop_menu

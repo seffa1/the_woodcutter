@@ -42,7 +42,7 @@ class Time_Manager:
             # Set the medal earned for the level after converting to a datetime object for comparrison
             minutes = int(level_time//60)
             seconds = int(round(level_time - minutes*60))
-            level_time_dt = datetime.time(0, minutes, seconds)  # If seconds is > 60 this doesnt work
+            level_time_dt = datetime.time(0, minutes, seconds)
             if level_time_dt <= self.medal_thresholds[self.current_level]['bronze']:
                 # Dont set the medal if you have already got a better score
                 if self.medals[self.current_level] not in ['silver', 'gold']:
@@ -55,6 +55,19 @@ class Time_Manager:
 
         elif level_time < self.best_times[self.current_level]:
             self.best_times[self.current_level] = level_time
+            # Set the medal earned for the level after converting to a datetime object for comparrison
+            minutes = int(level_time // 60)
+            seconds = int(round(level_time - minutes * 60))
+            level_time_dt = datetime.time(0, minutes, seconds)
+            if level_time_dt <= self.medal_thresholds[self.current_level]['bronze']:
+                # Dont set the medal if you have already got a better score
+                if self.medals[self.current_level] not in ['silver', 'gold']:
+                    self.medals[self.current_level] = 'bronze'
+            if level_time_dt <= self.medal_thresholds[self.current_level]['silver']:
+                if self.medals[self.current_level] not in ['gold']:
+                    self.medals[self.current_level] = 'silver'
+            if level_time_dt <= self.medal_thresholds[self.current_level]['gold']:
+                self.medals[self.current_level] = 'gold'
 
         print(self.medals)
         self.show_current_time = False
