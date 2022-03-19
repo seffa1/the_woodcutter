@@ -26,7 +26,8 @@ class Save_Load_Manager:
 
         # Extract timer data
         timer = game.level_manager.time_manager
-        timing_data = {'best_times': timer.best_times}
+        timing_data = {'best_times': timer.best_times,
+                       'medals': timer.medals}
 
         # Packge up the data
         data = {'player': player_data,

@@ -1,7 +1,7 @@
 import pygame as pg
 from game.game import Game
 from game.menu import StartMenu, GameMenu
-from game.settings import WINDOW_SIZE_SETTING, SCALE_FACTOR_SETTING, START_MENU_ON
+from game.settings import WINDOW_SIZE_SETTING, SCALE_FACTOR_SETTING, START_MENU_ON, RUN_PROFILER
 
 
 def main():
@@ -47,4 +47,17 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if RUN_PROFILER:
+        import cProfile
+        import pstats
+
+        with cProfile.Profile() as pr:
+            main()
+
+        stats = pstats.Stats(pr)
+        stats.sort_stats(pstats.SortKey.TIME)
+        stats.print_stats()
+        stats.dump_stats(filename='main_profiling.prof')
+
+    else:
+        main()

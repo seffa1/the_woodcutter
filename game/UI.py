@@ -1,18 +1,14 @@
 import pygame as pg
 from .utils import draw_text, Color
-from .settings import SCALE_FACTOR_SETTING
+from .settings import SCALE_FACTOR_SETTING, DEV_TOOLS, FPS
 
 
 class UI:
-    def __init__(self):
-        self.dev_tools = True
-
     def draw(self, screen, player, dt, clock, level_manager, scroll):
         # Dev tools
-        if self.dev_tools:
+        if DEV_TOOLS:
             SIZE = 20
             X = 1300
-            draw_text(screen, f'fps: {round(clock.get_fps())}', SIZE, (255, 0, 0), (X, 3))
             draw_text(screen, f'player pos: {player.pos}', SIZE, (255, 0, 0), (X, 23))
             draw_text(screen, f'p_rect pos: {player.rect.topleft}', SIZE, (255, 0, 0), (X, 43))
             draw_text(screen, f'vel pos: {player.vel}', SIZE, (255, 0, 0), (X, 63))
@@ -27,6 +23,9 @@ class UI:
             draw_text(screen, f'Damage: {player.damage}', SIZE, (255, 0, 0), (X, 223))
             # draw_text(screen, f'Collisions: {player.collision_types}', SIZE, (255, 0, 0), (900, 183))
             # draw_text(screen, f'Invincibility: {player.invincible}', SIZE, (255, 0, 0), (X, 163))
+
+        if FPS:
+            draw_text(screen, f'fps: {round(clock.get_fps())}', 20, (255, 0, 0), (1300, 3))
 
         # Health Bar
         health_rect = pg.Rect(15, 15, player.health * 2.5, 20)
