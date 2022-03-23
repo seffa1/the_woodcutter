@@ -240,21 +240,6 @@ class Tile_Manager:
                 if tile == '#':
                     display.blit(self.sprites['tree_7'], (x * TILE_SIZE - scroll[0], y * TILE_SIZE - scroll[1] - 80))
 
-
-
-
-                # Oak tree
-                if tile == 'w':
-                    pass
-
-                # Birch tree
-                if tile == 'x':
-                    pass
-
-                # Pine tree
-                if tile == 'y':
-                    pass
-
                 x += 1
             y += 1
 

@@ -5,8 +5,8 @@ from .player import Player
 from .UI import UI
 
 # TODO
+#   Nicer looking UI
 #   Result cut scene when you exit a world
-#   Add the ability to return to 0-1 somehow
 #   Optimizations:
 #   Batch Rendering of ground for less collisions checks. Only draw tiles that are within a certain distance from the player
 #   Or add a method to check if a tile is within the disiable screen, then use that to determine if a tile gets drawn
